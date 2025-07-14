@@ -127,6 +127,7 @@ register_classes = (
     # DBMTExportUnityCSModToWorkSpaceSeperated,
     GenerateModWWMI,
     GenerateModYYSLS,
+    SSMTGenerateModUnityVSV2,
     SSMTGenerateModUnityCSV2,
     SSMTGenerateModUnityVS,
     GenerateModIdentityV,
