@@ -102,7 +102,7 @@ class PanelCollectionFunction(bpy.types.Panel):
     bl_idname = "VIEW3D_PT_SSMT_CollectionFunction_Panel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'SSMT'
+    bl_category = 'TheHerta'
     bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):

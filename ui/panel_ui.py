@@ -154,7 +154,7 @@ class PanelModelImportConfig(bpy.types.Panel):
     bl_idname = "VIEW3D_PT_CATTER_WorkSpace_IO_panel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'SSMT'
+    bl_category = 'TheHerta'
     bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
@@ -172,7 +172,7 @@ class PanelGenerateModConfig(bpy.types.Panel):
     bl_idname = "VIEW3D_PT_CATTER_GenerateMod_panel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'SSMT'
+    bl_category = 'TheHerta'
     bl_options = {'DEFAULT_CLOSED'}
 
     def draw(self, context):
@@ -208,7 +208,7 @@ class PanelButtons(bpy.types.Panel):
     bl_idname = "VIEW3D_PT_CATTER_Buttons_panel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'SSMT'
+    bl_category = 'TheHerta'
     
 
     def draw(self, context):
@@ -243,7 +243,7 @@ class PanelButtons(bpy.types.Panel):
         # operator_import_ib_vb.filepath = GlobalConfig.path_workspace_folder()
 
         layout.operator("ssmt.import_all_from_workspace_v2",icon='IMPORT')
-        # layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
+        layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
 
         if GlobalConfig.gamename == "HSR" :
             layout.operator("ssmt.generate_mod_hsr_32",text="生成XXMI格式Mod",icon='EXPORT')
@@ -260,7 +260,7 @@ class PanelButtons(bpy.types.Panel):
                 layout.operator("ssmt.generate_mod_unity_vs")
             elif GlobalConfig.get_game_category() == GameCategory.UnityCS:
                 layout.operator("ssmt.generate_mod_unity_cs")
-                # layout.operator("ssmt.generate_mod_unity_cs_v2")
+                layout.operator("ssmt.generate_mod_unity_cs_v2")
             else:
                 layout.label(text= "Generate Mod for " + GlobalConfig.gamename + " Not Supported Yet.")
 

@@ -24,10 +24,10 @@ from .migoto.migoto_import import *
 
 
 bl_info = {
-    "name": "SSMT",
-    "description": "SSMT",
+    "name": "TheHerta",
+    "description": "TheHerta",
     "blender": (3, 6, 0),
-    "version": (1, 7, 3),
+    "version": (1, 7, 4),
     "location": "View3D",
     "category": "Generic"
 }
@@ -40,7 +40,7 @@ class UpdaterPanel(bpy.types.Panel):
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_context = "objectmode"
-    bl_category = "SSMT"
+    bl_category = "TheHerta"
     bl_order = 99
     bl_options = {'DEFAULT_CLOSED'}
 
@@ -66,7 +66,7 @@ class UpdaterPanel(bpy.types.Panel):
 
 class HertaUpdatePreference(bpy.types.AddonPreferences):
     # Addon updater preferences.
-    bl_label = "SSMT 更新器"
+    bl_label = "TheHerta 更新器"
     bl_idname = __package__
 
 
