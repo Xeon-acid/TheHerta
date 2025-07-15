@@ -316,7 +316,11 @@ class M_IniHelperV3:
             for mkey in key_name_mkey_dict.values():
                 key_section = M_IniSection(M_SectionType.Key)
                 key_section.append("[KeySwap_" + str(key_number) + "]")
-                key_section.append("condition = $active" + str(key_number) + " == 1")
+                # key_section.append("condition = $active" + str(key_number) + " == 1")
+
+                # XXX 这里由于有BUG，我们固定用$active0来检测激活，不搞那么复杂了。
+                key_section.append("condition = $active0 == 1")
+
                 key_section.append("key = " + mkey.key_value)
                 key_section.append("type = cycle")
 

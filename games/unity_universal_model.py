@@ -591,9 +591,6 @@ class UnityUniversalModel:
 
 
     def generate_unity_cs_config_ini(self):
-        '''
-        test
-        '''
         config_ini_builder = M_IniBuilder()
 
         M_IniHelperV2.generate_hash_style_texture_ini(ini_builder=config_ini_builder,drawib_drawibmodel_dict=self.drawib_drawibmodel_dict)
@@ -630,15 +627,6 @@ class UnityUniversalModel:
         config_ini_builder.save_to_file(GlobalConfig.path_generate_mod_folder() + GlobalConfig.workspacename + ".ini")
         
     def generate_unity_vs_config_ini(self):
-        '''
-        Supported Games:
-        - Genshin Impact
-        - Honkai Impact 3rd
-        - Honkai StarRail
-        - Zenless Zone Zero
-        - Bloody Spell
-        - Unity-CPU-PreSkinning (All DX11 Unity games who allow 3Dmigoto inject, mostly used by GF2 now.)
-        '''
         config_ini_builder = M_IniBuilder()
 
         M_IniHelperV2.generate_hash_style_texture_ini(ini_builder=config_ini_builder,drawib_drawibmodel_dict=self.drawib_drawibmodel_dict)
