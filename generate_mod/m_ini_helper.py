@@ -7,7 +7,7 @@ from ..config.main_config import GlobalConfig
 from ..properties.properties_generate_mod import Properties_GenerateMod
 from .drawib_model_universal import DrawIBModelUniversal
 from .m_counter import M_Counter
-from ..migoto.migoto_format import ObjModel
+from ..migoto.migoto_format import ObjModel, M_Key
 
 class M_IniHelperV2:
     @classmethod
@@ -283,7 +283,7 @@ class M_IniHelperV3:
 
 
     @classmethod
-    def add_branch_key_sections(cls,ini_builder:M_IniBuilder,key_name_mkey_dict):
+    def add_branch_key_sections(cls,ini_builder:M_IniBuilder,key_name_mkey_dict:dict[str,M_Key]):
 
         if len(key_name_mkey_dict.keys()) != 0:
             constants_section = M_IniSection(M_SectionType.Constants)
@@ -321,7 +321,10 @@ class M_IniHelperV3:
                 # XXX 这里由于有BUG，我们固定用$active0来检测激活，不搞那么复杂了。
                 key_section.append("condition = $active0 == 1")
 
-                key_section.append("key = " + mkey.key_value)
+                if mkey.initialize_vk_str != "":
+                    key_section.append("key = " + mkey.initialize_vk_str)
+                else:
+                    key_section.append("key = " + mkey.key_value)
                 key_section.append("type = cycle")
 
                 key_value_number = len(mkey.value_list)

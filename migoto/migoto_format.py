@@ -50,7 +50,9 @@ class M_Key:
         self.key_name = ""
         self.key_value = ""
         self.value_list:list[int] = []
+        
         self.initialize_value = 0
+        self.initialize_vk_str = "" # 虚拟按键组合，遵循3Dmigoto的解析格式
 
         # 用于chain_key_list中传递使用，
         self.tmp_value = 0
@@ -77,7 +79,6 @@ class M_Condition:
             condition_str = condition_str[:-4] 
         
         self.condition_str = condition_str
-
 
     
 class ObjModel:
