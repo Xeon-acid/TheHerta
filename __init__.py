@@ -27,7 +27,7 @@ bl_info = {
     "name": "TheHerta",
     "description": "TheHerta",
     "blender": (3, 6, 0),
-    "version": (1, 7, 6),
+    "version": (1, 7, 7),
     "location": "View3D",
     "category": "Generic"
 }
@@ -122,7 +122,7 @@ register_classes = (
     SSMTImportAllFromCurrentWorkSpace,
     SSMTImportAllFromCurrentWorkSpaceV3,
     # 生成Mod功能
-    SSMTGenerateModHSR32,
+    SSMTGenerateModHSRV3,
     # DBMTExportUnityVSModToWorkSpaceSeperated,
     # DBMTExportUnityCSModToWorkSpaceSeperated,
     GenerateModWWMI,

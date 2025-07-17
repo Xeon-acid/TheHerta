@@ -242,23 +242,29 @@ class PanelButtons(bpy.types.Panel):
         # 而在Mod逆向的时候，通常用这个多次导入逆向出来的模型，所以需要路径记忆功能，所以这里不设置工作空间路径为初始路径了。
         # operator_import_ib_vb.filepath = GlobalConfig.path_workspace_folder()
 
-        layout.operator("ssmt.import_all_from_workspace_v2",icon='IMPORT')
-        layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
 
         if GlobalConfig.gamename == "HSR" :
-            layout.operator("ssmt.generate_mod_hsr_32",text="生成Mod(旧)",icon='EXPORT')
+            layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
+            layout.operator("ssmt.generate_mod_hsr_v3",icon='EXPORT')
+
         elif GlobalConfig.gamename == "AILIMIT":
+            layout.operator("ssmt.import_all_from_workspace_v2",icon='IMPORT')
             layout.operator("ssmt.generate_mod_hsr_32",text="生成Mod(旧)",icon='EXPORT')
         elif GlobalConfig.gamename == "YYSLS" :
+            layout.operator("ssmt.import_all_from_workspace_v2",icon='IMPORT')
             layout.operator("dbmt.generate_mod_yysls",text="生成Mod(旧)",icon='EXPORT')
         elif GlobalConfig.gamename == "IdentityV":
+            layout.operator("ssmt.import_all_from_workspace_v2",icon='IMPORT')
             layout.operator("dbmt.generate_mod_identityv",text="生成Mod(旧)",icon='EXPORT')
         elif GlobalConfig.gamename == "WWMI" or GlobalConfig.gamename == "WuWa":
+            layout.operator("ssmt.import_all_from_workspace_v2",icon='IMPORT')
             layout.operator("herta.export_mod_wwmi",text="生成Mod(旧)",icon='EXPORT')
         else:
             if GlobalConfig.get_game_category() == GameCategory.UnityVS:
+                layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
                 layout.operator("ssmt.generate_mod_unity_vs_v2")
             elif GlobalConfig.get_game_category() == GameCategory.UnityCS:
+                layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
                 layout.operator("ssmt.generate_mod_unity_cs_v2")
             else:
                 layout.label(text= "Generate Mod for " + GlobalConfig.gamename + " Not Supported Yet.")

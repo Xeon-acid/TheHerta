@@ -33,6 +33,26 @@ class BranchModel:
             print("DrawIB:" + obj_data_model.draw_ib + " Component: " + str(obj_data_model.component_count) + " AliasName: " + obj_data_model.obj_alias_name)
         
 
+        self.draw_ib__component_count_list__dict = {}
+
+        for obj_data_model in self.ordered_draw_obj_data_model_list:
+            draw_ib = obj_data_model.draw_ib
+            component_count = obj_data_model.component_count
+
+            component_count_list = []
+            if draw_ib in self.draw_ib__component_count_list__dict:
+                component_count_list = self.draw_ib__component_count_list__dict[draw_ib]
+            
+            if component_count not in component_count_list:
+                component_count_list.append(component_count)
+
+            component_count_list.sort()
+            
+            self.draw_ib__component_count_list__dict[draw_ib] = component_count_list
+        
+        print(self.draw_ib__component_count_list__dict)
+        
+
     def parse_current_collection(self,current_collection:bpy.types.Collection,chain_key_list:list[M_Key]):
         
         children_collection_list:list[bpy.types.Collection] = current_collection.children
