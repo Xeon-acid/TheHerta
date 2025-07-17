@@ -98,7 +98,7 @@ class BranchModel:
                     m_key.initialize_value = int(collection_name_splits[1])
                 
                 # 如果未解析到人工设定的初始值，则从按键列表里默认选一个
-                if m_key.initialize_value == "":
+                if m_key.initialize_vk_str == "":
                     m_key.key_value = ConfigUtils.get_mod_switch_key(M_Counter.global_key_index)
 
                 # 创建的key要加入全局key列表
@@ -156,7 +156,7 @@ class BranchModel:
                         break
                 
                 # 如果未解析到人工设定的初始值，则从按键列表里默认选一个
-                if m_key.initialize_value == "":
+                if m_key.initialize_vk_str == "":
                     m_key.key_value = ConfigUtils.get_mod_switch_key(M_Counter.global_key_index)
 
 
