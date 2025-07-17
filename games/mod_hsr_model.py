@@ -11,6 +11,8 @@ from ..generate_mod.m_ini_builder import M_IniBuilder,M_IniSection,M_SectionType
 from ..properties.properties_generate_mod import Properties_GenerateMod
 from ..generate_mod.m_ini_helper import M_IniHelperV2,M_IniHelperV3
 
+from .m_ini_helper_gui import M_IniHelperGUI
+
 class ModHSRModel:
     def __init__(self,workspace_collection:bpy.types.Collection):
         # (1) 统计全局分支模型
@@ -139,6 +141,9 @@ class ModHSRModel:
                 if category_name == d3d11GameType.CategoryDrawCategoryDict["Position"]:
                     if len(self.branch_model.keyname_mkey_dict.keys()) != 0:
                         texture_override_vb_section.append("$active" + str(M_Counter.generated_mod_number) + " = 1")
+
+                        if Properties_GenerateMod.generate_branch_mod_gui():
+                            texture_override_vb_section.append("$ActiveCharacter = 1")
 
                 texture_override_vb_section.new_line()
             config_ini_builder.append_section(texture_override_vb_section)
@@ -326,6 +331,8 @@ class ModHSRModel:
             M_Counter.generated_mod_number = M_Counter.generated_mod_number + 1
 
         M_IniHelperV3.add_branch_key_sections(ini_builder=config_ini_builder,key_name_mkey_dict=self.branch_model.keyname_mkey_dict)
+
+        M_IniHelperGUI.add_branch_mod_gui_section(ini_builder=config_ini_builder,key_name_mkey_dict=self.branch_model.keyname_mkey_dict)
 
         config_ini_builder.save_to_file(GlobalConfig.path_generate_mod_folder() + GlobalConfig.workspacename + ".ini")
         

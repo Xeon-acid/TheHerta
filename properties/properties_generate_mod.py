@@ -8,6 +8,29 @@ class Properties_GenerateMod(bpy.types.PropertyGroup):
         default=False
     ) # type: ignore
 
+
+    @classmethod
+    def forbid_auto_texture_ini(cls):
+        '''
+        bpy.context.scene.properties_generate_mod.forbid_auto_texture_ini
+        '''
+        return bpy.context.scene.properties_generate_mod.forbid_auto_texture_ini
+    
+    generate_branch_mod_gui: bpy.props.BoolProperty(
+        name="生成分支切换Mod面板(测试版)",
+        description="生成Mod时，生成一个基于当前集合架构的分支Mod面板，可在游戏中按住Ctrl + Alt呼出，仍在测试改进中",
+        default=False
+    ) # type: ignore
+
+
+    @classmethod
+    def generate_branch_mod_gui(cls):
+        '''
+        bpy.context.scene.properties_generate_mod.generate_branch_mod_gui
+        '''
+        return bpy.context.scene.properties_generate_mod.generate_branch_mod_gui
+    
+
     recalculate_tangent: bpy.props.BoolProperty(
         name="向量归一化法线存入TANGENT(全局)",
         description="使用向量相加归一化重计算所有模型的TANGENT值，勾选此项后无法精细控制具体某个模型是否计算，是偷懒选项,在不勾选时默认使用右键菜单中标记的选项。\n" \
@@ -58,12 +81,7 @@ class Properties_GenerateMod(bpy.types.PropertyGroup):
         return bpy.context.scene.properties_generate_mod.only_use_marked_texture
     
 
-    @classmethod
-    def forbid_auto_texture_ini(cls):
-        '''
-        bpy.context.scene.properties_generate_mod.forbid_auto_texture_ini
-        '''
-        return bpy.context.scene.properties_generate_mod.forbid_auto_texture_ini
+
 
     
     @classmethod

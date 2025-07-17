@@ -32,7 +32,7 @@ class M_SectionType:
 class M_IniSection:
     def __init__(self,section_type:M_SectionType) -> None:
         self.SectionType:M_SectionType = section_type
-        self.SectionName = ""
+        self.SectionName = "" # Constants和Present可以通过设置这个，来省去添加一行[名称]
         self.SectionLineList = []
     
     def empty(self)->bool:

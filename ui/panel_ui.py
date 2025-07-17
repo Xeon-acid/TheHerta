@@ -201,6 +201,9 @@ class PanelGenerateModConfig(bpy.types.Panel):
         elif GlobalConfig.get_game_category() == GameCategory.UnrealVS or GlobalConfig.get_game_category() == GameCategory.UnrealCS:
             layout.prop(context.scene.properties_wwmi, "ignore_muted_shape_keys")
             layout.prop(context.scene.properties_wwmi, "apply_all_modifiers")
+        
+        layout.prop(context.scene.properties_generate_mod, "generate_branch_mod_gui",text="生成分支架构Mod面板(测试中)")
+        
     
 
 class PanelButtons(bpy.types.Panel):
