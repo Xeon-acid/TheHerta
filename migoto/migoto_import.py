@@ -117,6 +117,8 @@ def ImprotFromWorkSpaceSSMTV3(self, context):
 
     JsonUtils.SaveToFile(json_dict=draw_ib_gametypename_dict,filepath=save_import_json_path)
     
+    # 创建一个默认显示的集合，用来存放默认显示的东西，在实际使用中几乎每次都需要我们手动创建，所以变为自动化了。
+    default_show_collection = CollectionUtils.create_new_collection(collection_name="DefaultShow",color_tag=CollectionColor.White,link_to_parent_collection_name=workspace_collection.name)
 
     # 开始读取模型数据
     for draw_ib_aliasname,import_folder_path in import_drawib_aliasname_folder_path_dict.items():
@@ -132,12 +134,14 @@ def ImprotFromWorkSpaceSSMTV3(self, context):
             self.report({'ERROR'},"当前output文件夹"+draw_ib_aliasname+"中的内容暂不支持一键导入分支模型")
             continue
 
+
         part_count = 1
         for prefix in import_prefix_list:
             fmt_file_path = os.path.join(import_folder_path, prefix + ".fmt")
             mbf = MigotoBinaryFile(fmt_path=fmt_file_path,mesh_name=draw_ib + "-" + str(part_count) + "-" + alias_name)
             obj_result = MeshImportUtils.create_mesh_obj_from_mbf(mbf=mbf)
-            workspace_collection.objects.link(obj_result)
+
+            default_show_collection.objects.link(obj_result)
             part_count = part_count + 1
 
     # 这里先链接SourceCollection，确保它在上面
@@ -156,7 +160,7 @@ class SSMTImportAllFromCurrentWorkSpaceV3(bpy.types.Operator):
         if GlobalConfig.workspacename == "":
             self.report({"ERROR"},"Please select your WorkSpace in SSMT before import.")
         elif not os.path.exists(GlobalConfig.path_workspace_folder()):
-            self.report({"ERROR"},"Please select a correct WorkSpace in SSMT before import " + GlobalConfig.path_workspace_folder())
+            self.report({"ERROR"},"WorkSpace Folder Didn't exists, Please create a WorkSpace in SSMT before import " + GlobalConfig.path_workspace_folder())
         else:
             TimerUtils.Start("ImportFromWorkSpace")
             ImprotFromWorkSpaceSSMTV3(self,context)
