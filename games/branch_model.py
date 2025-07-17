@@ -67,9 +67,8 @@ class BranchModel:
                 current_add_key_index = len(self.keyname_mkey_dict.keys())
                 m_key.key_name = "$swapkey" + str(M_Counter.global_key_index)
                 # LOG.info("设置KEYname: " + m_key.key_name)
-
+                # 按键开关的value_list是默认的0,1
                 m_key.value_list = [0,1]
-                m_key.key_value = ConfigUtils.get_mod_switch_key(M_Counter.global_key_index)
 
                 # 首先从集合的名称中获取由下划线_进行分割的名称
                 collection_name_splits = unknown_collection.name.split("_")
@@ -77,6 +76,10 @@ class BranchModel:
                     # 如果分割出来大于等于3，则我们解析为自定义按键设置
                     m_key.initialize_vk_str = collection_name_splits[0]
                     m_key.initialize_value = int(collection_name_splits[1])
+                
+                # 如果未解析到人工设定的初始值，则从按键列表里默认选一个
+                if m_key.initialize_value == "":
+                    m_key.key_value = ConfigUtils.get_mod_switch_key(M_Counter.global_key_index)
 
                 # 创建的key要加入全局key列表
                 self.keyname_mkey_dict[m_key.key_name] = m_key
@@ -120,9 +123,7 @@ class BranchModel:
                 m_key.key_name = "$swapkey" + str(M_Counter.global_key_index)
                 # LOG.info("设置KEYname: " + m_key.key_name)
                 m_key.value_list = list(range(len(switch_collection_list)))
-                m_key.key_value = ConfigUtils.get_mod_switch_key(M_Counter.global_key_index)
-
-
+                
                 for switch_collection in switch_collection_list:
                     # 我们在这里尝试解析一下名字，以最后一个解析的为准？还是第一个解析的为准呢？
                     # 这里就以第一个能够解析出来的为准，如果都解析不出来，那就算了
@@ -132,8 +133,12 @@ class BranchModel:
                         # 如果分割出来大于等于3，则我们解析为自定义按键设置
                         m_key.initialize_vk_str = collection_name_splits[0]
                         m_key.initialize_value = int(collection_name_splits[1])
-                        print("已解析到合适的名称")
                         break
+                
+                # 如果未解析到人工设定的初始值，则从按键列表里默认选一个
+                if m_key.initialize_value == "":
+                    m_key.key_value = ConfigUtils.get_mod_switch_key(M_Counter.global_key_index)
+
 
                 # 创建的key要加入全局key列表
                 self.keyname_mkey_dict[m_key.key_name] = m_key
