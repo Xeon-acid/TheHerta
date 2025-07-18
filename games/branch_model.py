@@ -91,7 +91,7 @@ class BranchModel:
                 m_key.value_list = [0,1]
 
                 # 首先从集合的名称中获取由下划线_进行分割的名称
-                collection_name_splits = unknown_collection.name.split("_")
+                collection_name_splits = unknown_collection.name.split("__")
                 if len(collection_name_splits) >= 3:
                     # 如果分割出来大于等于3，则我们解析为自定义按键设置
                     m_key.initialize_vk_str = collection_name_splits[0]
@@ -148,7 +148,7 @@ class BranchModel:
                     # 我们在这里尝试解析一下名字，以最后一个解析的为准？还是第一个解析的为准呢？
                     # 这里就以第一个能够解析出来的为准，如果都解析不出来，那就算了
                     # 首先从集合的名称中获取由下划线_进行分割的名称
-                    collection_name_splits = switch_collection.name.split("_")
+                    collection_name_splits = switch_collection.name.split("__")
                     if len(collection_name_splits) >= 3:
                         # 如果分割出来大于等于3，则我们解析为自定义按键设置
                         m_key.initialize_vk_str = collection_name_splits[0]

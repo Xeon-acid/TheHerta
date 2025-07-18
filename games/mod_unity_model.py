@@ -30,7 +30,6 @@ class ModUnityModel:
         根据obj的命名规则，推导出DrawIB并抽象为DrawIBModel
         如果用户用不到某个DrawIB的话，就可以隐藏掉对应的obj
         隐藏掉的obj就不会被统计生成DrawIBModel，做到只导入模型，不生成Mod的效果。
-        TODO 这里要在DrawIBModel中改变代码并新增每个Component里的obj的ib和category_buf_dict读取
         '''
         for draw_ib in self.branch_model.draw_ib__component_count_list__dict.keys():
             draw_ib_model = DrawIBModel(draw_ib=draw_ib,branch_model=self.branch_model)
