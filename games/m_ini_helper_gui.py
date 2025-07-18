@@ -433,7 +433,7 @@ class M_IniHelperGUI:
         commandlist_section.append("        endif")
         commandlist_section.append("        if $new_y_off < 0")
         commandlist_section.append("            $final_y_off = 0")
-        commandlist_section.append("       else if $new_y_off + $y_size > 1")
+        commandlist_section.append("        else if $new_y_off + $y_size > 1")
         commandlist_section.append("            $final_y_off = 1 - $y_size")
         commandlist_section.append("        else")
         commandlist_section.append("            $final_y_off = $new_y_off")
