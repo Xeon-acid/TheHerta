@@ -563,6 +563,7 @@ class ModUnityModel:
         for vs_hash in vs_hash_set:
             print("VSHash: " + vs_hash)
             vscheck_section.append("[ShaderOverride_" + vs_hash + "]")
+            vscheck_section.append("allow_duplicate_hash = overrule")
             vscheck_section.append("hash = " + vs_hash)
             vscheck_section.append("if $costume_mods")
             vscheck_section.append("  checktextureoverride = ib")
