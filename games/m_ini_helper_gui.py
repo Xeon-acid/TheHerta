@@ -115,7 +115,7 @@ class M_IniHelperGUI:
         constants_section.new_line()
 
         constants_section.append(";设置按钮总数")
-        constants_section.append("global $Button_amount = 4")
+        constants_section.append("global $Button_amount = " + str(len(key_name_mkey_dict.values())))
         constants_section.append(";设置横向最大按钮数")
         constants_section.append("global $Button_horizontal_max = 10")
         constants_section.new_line()
