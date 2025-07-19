@@ -172,15 +172,15 @@ class ModUnityModel:
                         for slot,texture_replace in slot_texture_replace_dict.items():
                             print(texture_replace.resource_name)
                             if texture_replace.style == "Slot":
-                                if texture_replace.resource_name.endswith("DiffuseMap"):
+                                if texture_replace.resource_name.endswith("DiffuseMap") and Properties_GenerateMod.zzz_use_slot_fix():
                                     texture_override_ib_section.append("Resource\\ZZMI\\Diffuse = ref " + texture_replace.resource_name)
-                                elif texture_replace.resource_name.endswith("NormalMap"):
+                                elif texture_replace.resource_name.endswith("NormalMap") and Properties_GenerateMod.zzz_use_slot_fix():
                                     texture_override_ib_section.append("Resource\\ZZMI\\NormalMap = ref " + texture_replace.resource_name)
-                                elif texture_replace.resource_name.endswith("LightMap"):
+                                elif texture_replace.resource_name.endswith("LightMap") and Properties_GenerateMod.zzz_use_slot_fix():
                                     texture_override_ib_section.append("Resource\\ZZMI\\LightMap = ref " + texture_replace.resource_name)
-                                elif texture_replace.resource_name.endswith("MaterialMap"):
+                                elif texture_replace.resource_name.endswith("MaterialMap") and Properties_GenerateMod.zzz_use_slot_fix():
                                     texture_override_ib_section.append("Resource\\ZZMI\\MaterialMap = ref " + texture_replace.resource_name)
-                                elif texture_replace.resource_name.endswith("GlowMap"):
+                                elif texture_replace.resource_name.endswith("GlowMap") and Properties_GenerateMod.zzz_use_slot_fix():
                                     texture_override_ib_section.append("Resource\\ZZMI\\WengineFx = ref " + texture_replace.resource_name)
                                 else:
                                     texture_filter_index_indent = ""

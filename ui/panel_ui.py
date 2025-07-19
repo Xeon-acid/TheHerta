@@ -180,6 +180,8 @@ class PanelGenerateModConfig(bpy.types.Panel):
         # 根据当前游戏类型判断哪些应该显示哪些不显示。
         # 因为UnrealVS显然无法支持这里所有的特性，每个游戏只能支持一部分特性。
 
+        
+
         # 任何游戏都能贴图标记
         if GlobalConfig.gamename == "WWMI" or GlobalConfig.gamename == "WuWa":
             layout.prop(context.scene.properties_generate_mod, "only_use_marked_texture",text="只使用标记过的贴图")
@@ -201,6 +203,10 @@ class PanelGenerateModConfig(bpy.types.Panel):
         elif GlobalConfig.get_game_category() == GameCategory.UnrealVS or GlobalConfig.get_game_category() == GameCategory.UnrealCS:
             layout.prop(context.scene.properties_wwmi, "ignore_muted_shape_keys")
             layout.prop(context.scene.properties_wwmi, "apply_all_modifiers")
+
+        # 绝区零特有的SlotFix技术
+        if GlobalConfig.gamename == "ZZZ":
+            layout.prop(context.scene.properties_generate_mod, "zzz_use_slot_fix")
         
         layout.prop(context.scene.properties_generate_mod, "generate_branch_mod_gui",text="生成分支架构Mod面板(测试中)")
         
