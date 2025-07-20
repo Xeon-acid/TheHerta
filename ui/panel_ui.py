@@ -124,7 +124,7 @@ def draw_migoto_overlay():
     recalculate_color = obj.get("3DMigoto:RecalculateCOLOR", None)
 
     # 设置字体样式（可选）
-    blf.size(font_id, 12)  # 12pt 大小
+    blf.size(font_id, 24)  # 12pt 大小
     blf.color(font_id, 1, 1, 1, 1)  # 白色
 
     # 绘制文本
