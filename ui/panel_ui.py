@@ -241,35 +241,35 @@ class PanelButtons(bpy.types.Panel):
         layout.label(text="SSMT-Package路径: " + GlobalConfig.dbmtlocation)
         # print(MainConfig.dbmtlocation)
 
-
         layout.label(text="当前游戏: " + GlobalConfig.gamename)
         layout.label(text="当前工作空间: " + GlobalConfig.workspacename)
 
+        # 导入 ib vb fmt格式文件
         layout.operator("import_mesh.migoto_raw_buffers_mmt",icon='IMPORT')
 
-        if GlobalConfig.gamename == "HSR" :
-            layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
-            layout.operator("ssmt.generate_mod_hsr_v3",icon='EXPORT')
 
-        elif GlobalConfig.gamename == "AILIMIT":
+        # 目前只有WuWa、WWMI使用旧的集合架构
+        # TODO 后续需要全部迁移到新的集合架构
+        if GlobalConfig.gamename == "WWMI" or GlobalConfig.gamename == "WuWa":
             layout.operator("ssmt.import_all_from_workspace_v2",icon='IMPORT')
-            layout.operator("ssmt.generate_mod_hsr_32",text="生成Mod(旧)",icon='EXPORT')
+
+        layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
+
+        if GlobalConfig.gamename == "HSR" :
+            layout.operator("ssmt.generate_mod_hsr_v3",icon='EXPORT')
+        elif GlobalConfig.gamename == "AILIMIT":
+            layout.operator("ssmt.generate_mod_hsr_v3",icon='EXPORT')
         elif GlobalConfig.gamename == "YYSLS" :
-            layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
             layout.operator("ssmt.generate_mod_yysls_v2")
         elif GlobalConfig.gamename == "IdentityV":
-            layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
             layout.operator("ssmt.generate_mod_identityv_v2")
-
         elif GlobalConfig.gamename == "WWMI" or GlobalConfig.gamename == "WuWa":
-            layout.operator("ssmt.import_all_from_workspace_v2",icon='IMPORT')
             layout.operator("herta.export_mod_wwmi",text="生成Mod(旧)",icon='EXPORT')
+            layout.operator("ssmt.generate_mod_wwmi_v3")
         else:
             if GlobalConfig.get_game_category() == GameCategory.UnityVS:
-                layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
                 layout.operator("ssmt.generate_mod_unity_vs_v2")
             elif GlobalConfig.get_game_category() == GameCategory.UnityCS:
-                layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
                 layout.operator("ssmt.generate_mod_unity_cs_v2")
             else:
                 layout.label(text= "Generate Mod for " + GlobalConfig.gamename + " Not Supported Yet.")
