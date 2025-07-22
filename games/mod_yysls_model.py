@@ -12,7 +12,12 @@ from ..properties.properties_generate_mod import Properties_GenerateMod
 from ..generate_mod.m_ini_helper import M_IniHelperV2,M_IniHelperV3
 from .m_ini_helper_gui import M_IniHelperGUI
 
-class ModYYSLSModel:
+class ModCTXModel:
+    '''
+    支持的游戏：
+    - 燕云十六声 YYSLS
+    - 死或生：沙滩排球 （待确定，由于多个BLENDWEIGHTS仍然无法正确处理）
+    '''
     def __init__(self,workspace_collection:bpy.types.Collection):
         # (1) 统计全局分支模型
         self.branch_model = BranchModel(workspace_collection=workspace_collection)

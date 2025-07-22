@@ -5,16 +5,12 @@ from ..utils.timer_utils import TimerUtils
 from ..utils.collection_utils import CollectionUtils
 from ..generate_mod.drawib_model_wwmi import DrawIBModelWWMI
 from ..generate_mod.ini_model_wwmi import M_WWMIIniModel
-from ..generate_mod.ini_model_yysls import M_CTX_IniModel
-from ..generate_mod.ini_model_identity_v import M_IniModel_IdentityV
-
-from ..generate_mod.drawib_model_universal import DrawIBModelUniversal
 from ..generate_mod.m_counter import M_Counter
 
 from ..games.mod_unity_model import ModUnityModel
 from ..games.mod_hsr_model import ModHSRModel
 from ..games.mod_identityv_model import ModIdentityVModel
-
+from ..games.mod_yysls_model import ModCTXModel
     
 # WWMI
 class GenerateModWWMI(bpy.types.Operator):
@@ -182,7 +178,7 @@ class SSMTGenerateModYYSLSV2(bpy.types.Operator):
             self.report({'ERROR'},result)
             return {'FINISHED'}
 
-        migoto_mod_model = ModIdentityVModel(workspace_collection=workspace_collection)
+        migoto_mod_model = ModCTXModel(workspace_collection=workspace_collection)
         migoto_mod_model.generate_unity_vs_config_ini()
 
         self.report({'INFO'},"Generate Mod Success!")
