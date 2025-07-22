@@ -258,8 +258,9 @@ class PanelButtons(bpy.types.Panel):
             layout.operator("ssmt.import_all_from_workspace_v2",icon='IMPORT')
             layout.operator("dbmt.generate_mod_yysls",text="生成Mod(旧)",icon='EXPORT')
         elif GlobalConfig.gamename == "IdentityV":
-            layout.operator("ssmt.import_all_from_workspace_v2",icon='IMPORT')
-            layout.operator("dbmt.generate_mod_identityv",text="生成Mod(旧)",icon='EXPORT')
+            layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
+            layout.operator("ssmt.generate_mod_identityv_v2")
+
         elif GlobalConfig.gamename == "WWMI" or GlobalConfig.gamename == "WuWa":
             layout.operator("ssmt.import_all_from_workspace_v2",icon='IMPORT')
             layout.operator("herta.export_mod_wwmi",text="生成Mod(旧)",icon='EXPORT')

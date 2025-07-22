@@ -121,16 +121,15 @@ register_classes = (
     Import3DMigotoRaw,
     SSMTImportAllFromCurrentWorkSpace,
     SSMTImportAllFromCurrentWorkSpaceV3,
+
     # 生成Mod功能
     SSMTGenerateModHSRV3,
-    # DBMTExportUnityVSModToWorkSpaceSeperated,
-    # DBMTExportUnityCSModToWorkSpaceSeperated,
     GenerateModWWMI,
     GenerateModYYSLS,
     SSMTGenerateModUnityVSV2,
     SSMTGenerateModUnityCSV2,
-    SSMTGenerateModUnityVS,
     GenerateModIdentityV,
+    SSMTGenerateModIdentityVV2,
 
     # 模型处理面板
     RemoveAllVertexGroupOperator,
@@ -164,9 +163,6 @@ register_classes = (
     PanelModelImportConfig,
     PanelGenerateModConfig,
     PanelButtons,
-    # PanelGenerateModDIY,
-
-    # UpdaterPanel,
     PanelCollectionFunction,
     PanelModelProcess,
 
@@ -175,11 +171,6 @@ register_classes = (
 
     HertaUpdatePreference,
     UpdaterPanel,
-    # SSMT预备代码
-    # PanelSSMTBasicConfig,
-    # PanelSSMTExtractModel,
-    # SSMTExtractModelGI,
-    # SSMTExtractModelZZZ,
 )
 
 
