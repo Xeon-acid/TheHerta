@@ -55,6 +55,11 @@ class ModIdentityVModel:
             texture_override_vb_section.append("[TextureOverride_" + texture_override_vb_name_suffix + "]")
             texture_override_vb_section.append("hash = " + category_hash)
 
+            if category_name == d3d11GameType.CategoryDrawCategoryDict["Position"]:
+                texture_override_vb_section.append("override_byte_stride = " + str(d3d11GameType.CategoryStrideDict["Position"]))
+                texture_override_vb_section.append("override_vertex_count = " + str(draw_ib_model.draw_number))
+                texture_override_vb_section.append("uav_byte_stride = 4")
+
             
             # (1) 先初始化CommandList
             drawtype_indent_prefix = ""
@@ -395,7 +400,7 @@ class ModIdentityVModel:
             self.add_texture_filter_index(ini_builder= config_ini_builder)
 
         for draw_ib, draw_ib_model in self.drawib_drawibmodel_dict.items():
-            self.add_unity_vs_texture_override_vlr_section(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            # self.add_unity_vs_texture_override_vlr_section(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
             self.add_unity_vs_texture_override_vb_sections(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
             self.add_unity_vs_texture_override_ib_sections(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
             self.add_unity_vs_resource_vb_sections(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
