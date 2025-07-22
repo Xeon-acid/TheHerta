@@ -125,10 +125,9 @@ register_classes = (
     # 生成Mod功能
     SSMTGenerateModHSRV3,
     GenerateModWWMI,
-    GenerateModYYSLS,
+    SSMTGenerateModYYSLSV2,
     SSMTGenerateModUnityVSV2,
     SSMTGenerateModUnityCSV2,
-    GenerateModIdentityV,
     SSMTGenerateModIdentityVV2,
 
     # 模型处理面板

@@ -153,7 +153,7 @@ def ImprotFromWorkSpaceSSMTV3(self, context):
 
 class SSMTImportAllFromCurrentWorkSpaceV3(bpy.types.Operator):
     bl_idname = "ssmt.import_all_from_workspace_v3"
-    bl_label = "一键导入当前工作空间内容(内测版勿使用)"
+    bl_label = "一键导入当前工作空间内容(测试版)"
     bl_description = "一键导入当前工作空间文件夹下所有的DrawIB对应的模型为SSMT集合架构"
 
     def execute(self, context):
