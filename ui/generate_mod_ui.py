@@ -5,10 +5,10 @@ from ..utils.timer_utils import TimerUtils
 from ..utils.collection_utils import CollectionUtils
 from ..generate_mod.m_counter import M_Counter
 
-from ..games.mod_unity_model import ModUnityModel
-from ..games.mod_hsr_model import ModHSRModel
-from ..games.mod_identityv_model import ModIdentityVModel
-from ..games.mod_yysls_model import ModCTXModel
+from ..mod_model.mod_unity_model import ModUnityModel
+from ..mod_model.mod_hsr_model import ModHSRModel
+from ..mod_model.mod_identityv_model import ModIdentityVModel
+from ..mod_model.mod_yysls_model import ModCTXModel
 
 from ..generate_mod.drawib_model_wwmi import DrawIBModelWWMI
 from ..generate_mod.ini_model_wwmi import M_WWMIIniModel

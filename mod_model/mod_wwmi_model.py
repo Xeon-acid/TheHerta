@@ -4,13 +4,13 @@ import math
 from ..migoto.migoto_format import M_Key, ObjDataModel, M_DrawIndexed, M_Condition,D3D11GameType,TextureReplace
 from ..config.import_config import GlobalConfig
 from ..generate_mod.m_counter import M_Counter
-from .draw_ib_model_wwmi import DrawIBModelWWMI
+from ..games.draw_ib_model_wwmi import DrawIBModelWWMI
 
-from .branch_model import BranchModel
+from ..games.branch_model import BranchModel
 from ..generate_mod.m_ini_builder import M_IniBuilder,M_IniSection,M_SectionType
 from ..properties.properties_generate_mod import Properties_GenerateMod
 from ..generate_mod.m_ini_helper import M_IniHelperV2,M_IniHelperV3
-from .m_ini_helper_gui import M_IniHelperGUI
+from ..games.m_ini_helper_gui import M_IniHelperGUI
 from ..properties.properties_wwmi import Properties_WWMI
 
 class ModWWMIModel:
@@ -21,10 +21,6 @@ class ModWWMIModel:
         # (2) 抽象每个DrawIB为DrawIBModel
         self.drawib_drawibmodel_dict:dict[str,DrawIBModelWWMI] = {}
         self.parse_draw_ib_draw_ib_model_dict()
-
-        # (3) 这些属性用于ini生成
-        self.vlr_filter_index_indent = ""
-        self.texture_hash_filter_index_dict = {}
 
 
     def parse_draw_ib_draw_ib_model_dict(self):
