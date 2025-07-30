@@ -161,10 +161,17 @@ class ModUnityModel:
 
             print("Test: ZZZ")
             if GlobalConfig.gamename == "ZZZ":
+                '''
+                绝区零的SlotFix必须得按照他的使用顺序来，由波斯猫辛苦测试得出，比如正确的顺序为：
 
-                texture_override_ib_section.append("run = CommandListSkinTexture")
+                1. Resource\ZZMI\Diffuse = ref DiffuseMap (也就是SlotFix代码部分)
+                2. run = CommandList\\ZZMI\\SetTextures
+                3. ps-t4 = ResourceNormalMap (也就是普通的槽位替换部分)
+                4. run = CommandListSkinTexture 
 
-                # Add slot style texture slot replace.
+                不按照这个顺序来，则贴图显示就会有BUG。
+                '''
+                
                 if not Properties_GenerateMod.forbid_auto_texture_ini():
                     slot_texture_replace_dict:dict[str,TextureReplace] = draw_ib_model.PartName_SlotTextureReplaceDict_Dict.get(part_name,None)
                     # It may not have auto texture
@@ -182,6 +189,22 @@ class ModUnityModel:
                                     texture_override_ib_section.append("Resource\\ZZMI\\MaterialMap = ref " + texture_replace.resource_name)
                                 elif texture_replace.resource_name.endswith("GlowMap") and Properties_GenerateMod.zzz_use_slot_fix():
                                     texture_override_ib_section.append("Resource\\ZZMI\\WengineFx = ref " + texture_replace.resource_name)
+                                
+                        texture_override_ib_section.append("run = CommandList\\ZZMI\\SetTextures")
+
+                        for slot,texture_replace in slot_texture_replace_dict.items():
+                            print(texture_replace.resource_name)
+                            if texture_replace.style == "Slot":
+                                if texture_replace.resource_name.endswith("DiffuseMap") and Properties_GenerateMod.zzz_use_slot_fix():
+                                    pass
+                                elif texture_replace.resource_name.endswith("NormalMap") and Properties_GenerateMod.zzz_use_slot_fix():
+                                    pass
+                                elif texture_replace.resource_name.endswith("LightMap") and Properties_GenerateMod.zzz_use_slot_fix():
+                                    pass
+                                elif texture_replace.resource_name.endswith("MaterialMap") and Properties_GenerateMod.zzz_use_slot_fix():
+                                    pass
+                                elif texture_replace.resource_name.endswith("GlowMap") and Properties_GenerateMod.zzz_use_slot_fix():
+                                    pass
                                 else:
                                     texture_filter_index_indent = ""
                                     if Properties_GenerateMod.slot_style_texture_add_filter_index():
@@ -192,8 +215,8 @@ class ModUnityModel:
 
                                     if Properties_GenerateMod.slot_style_texture_add_filter_index():
                                         texture_override_ib_section.append("endif")
-                                
-                        texture_override_ib_section.append("run = CommandList\\ZZMI\\SetTextures")
+
+                texture_override_ib_section.append("run = CommandListSkinTexture")
             else:
                 # Add slot style texture slot replace.
                 if not Properties_GenerateMod.forbid_auto_texture_ini():
