@@ -85,7 +85,15 @@ class GlobalConfig:
     
     @classmethod
     def path_3Dmigoto_folder(cls):
-        return cls.current_game_migoto_folder
+        # 读取Config.json中的内容
+        game_config_json_path = os.path.join(cls.dbmtlocation,"Games\\" + cls.gamename + "\\Config.json")
+        game_config_json_file = open(game_config_json_path)
+        game_config_json = json.load(game_config_json_file)
+        game_config_json_file.close()
+
+        migoto_folder_path = game_config_json.get("3DmigotoPath","")
+
+        return migoto_folder_path
     
     @classmethod
     def path_mods_folder(cls):
