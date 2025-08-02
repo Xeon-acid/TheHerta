@@ -186,8 +186,6 @@ class MeshImportUtils:
         # 优先考虑fmt里的值，其次才考虑全局设置
         if mbf.fmt_file.flip_mirror:
             obj.scale.x = obj.scale.x * -1
-        elif Properties_ImportModel.import_flip_scale_x():
-            obj.scale.x = obj.scale.x * -1
 
         if mbf.fmt_file.flip_winding:
             obj.scale.y = obj.scale.y * -1
