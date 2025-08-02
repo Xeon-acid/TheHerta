@@ -107,12 +107,17 @@ class BufferModel:
                 mesh_vertices.foreach_get('undeformed_co', vertex_coords)
                 
                 positions = vertex_coords.reshape(-1, 3)[loop_vertex_indices]
+                
+                # XXX 翻转X轴，Blender的X轴是左手系，D3D11是右手系
+                # 这一步是为了解决导入的模型是镜像的问题
+                positions[:, 0] *= -1 
+
                 if d3d11_element.Format == 'R16G16B16A16_FLOAT':
                     positions = positions.astype(numpy.float16)
                     new_array = numpy.zeros((positions.shape[0], 4))
                     new_array[:, :3] = positions
                     positions = new_array
-
+                
                 self.element_vertex_ndarray[d3d11_element_name] = positions
                 # TimerUtils.End("Position Get") # 0:00:00.057535 
 

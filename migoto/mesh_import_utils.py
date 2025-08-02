@@ -57,7 +57,11 @@ class MeshImportUtils:
                     if ([x[3] for x in data] != [1.0] * len(data)) and ([x[3] for x in data] != [0] * len(data)):
                         # Nico: Blender暂时不支持4D索引，加了也没用，直接不行就报错，转人工处理。
                         raise Fatal('Positions are 4D')
-                positions = [(x[0], x[1], x[2]) for x in data]
+                    
+                # XXX 翻转X轴，Blender的X轴是左手系，D3D11是右手系
+                # 这一步是为了解决导入的模型是镜像的问题
+
+                positions = [(x[0] * -1, x[1] , x[2] ) for x in data]
                 mesh.vertices.foreach_set('co', unpack_list(positions))
             elif element.SemanticName.startswith("COLOR"):
                 mesh.vertex_colors.new(name=element.ElementName)
@@ -212,9 +216,9 @@ class MeshImportUtils:
 
     @classmethod
     def initialize_mesh(cls,mesh, mbf:MigotoBinaryFile):
-        # 翻转索引顺序以改变面朝向
+        # 翻转索引顺序以改变面朝向，只能改变面朝向，模型依然是镜像的
         # print(mbf.ib_data[0],mbf.ib_data[1],mbf.ib_data[2])
-        if mbf.fmt_file.flip_face_orientation:  # 假设你有一个标志位控制是否翻转
+        if not mbf.fmt_file.flip_face_orientation:  # 假设你有一个标志位控制是否翻转
             flipped_indices = []
             for i in range(0, len(mbf.ib_data), 3):
                 triangle = mbf.ib_data[i:i+3]
