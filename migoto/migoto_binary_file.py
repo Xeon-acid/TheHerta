@@ -50,8 +50,6 @@ class FMTFile:
         self.rotate_angle_x:float = 0
         self.rotate_angle_y:float = 0
         self.rotate_angle_z:float = 0
-        self.flip_winding:bool = False
-        self.flip_mirror:bool = False
         self.flip_face_orientation:bool = False
 
         self.elements:list[D3D11Element] = []
@@ -87,11 +85,7 @@ class FMTFile:
             elif key == "rotate_angle_z":
                 self.rotate_angle_z = float(value)
             
-            elif key == "flip_winding":
-                self.flip_winding = value.lower() == "true"
-                
-            elif key == "flip_mirror":
-                self.flip_mirror = value.lower() == "true"
+
             
             elif key == "flip_face_orientation":
                 self.flip_face_orientation = value.lower() == "true"
