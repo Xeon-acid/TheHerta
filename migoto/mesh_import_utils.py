@@ -210,13 +210,22 @@ class MeshImportUtils:
     def initialize_mesh(cls,mesh, mbf:MigotoBinaryFile):
         # 翻转索引顺序以改变面朝向，只能改变面朝向，模型依然是镜像的
         # print(mbf.ib_data[0],mbf.ib_data[1],mbf.ib_data[2])
-        if not mbf.fmt_file.flip_face_orientation:  # 假设你有一个标志位控制是否翻转
-            flipped_indices = []
-            for i in range(0, len(mbf.ib_data), 3):
-                triangle = mbf.ib_data[i:i+3]
-                flipped_triangle = triangle[::-1]
-                flipped_indices.extend(flipped_triangle)
-            mbf.ib_data = flipped_indices
+        if Properties_ImportModel.use_mirror_workflow():
+            if not mbf.fmt_file.flip_face_orientation:  # 假设你有一个标志位控制是否翻转
+                flipped_indices = []
+                for i in range(0, len(mbf.ib_data), 3):
+                    triangle = mbf.ib_data[i:i+3]
+                    flipped_triangle = triangle[::-1]
+                    flipped_indices.extend(flipped_triangle)
+                mbf.ib_data = flipped_indices
+        else:
+            if mbf.fmt_file.flip_face_orientation:  # 假设你有一个标志位控制是否翻转
+                flipped_indices = []
+                for i in range(0, len(mbf.ib_data), 3):
+                    triangle = mbf.ib_data[i:i+3]
+                    flipped_triangle = triangle[::-1]
+                    flipped_indices.extend(flipped_triangle)
+                mbf.ib_data = flipped_indices
         # print(mbf.ib_data[0],mbf.ib_data[1],mbf.ib_data[2])
 
         # 导入IB文件设置为mesh的三角形索引
