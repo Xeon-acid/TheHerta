@@ -189,8 +189,7 @@ class MeshImportUtils:
 
         if mbf.fmt_file.flip_winding:
             obj.scale.y = obj.scale.y * -1
-        elif Properties_ImportModel.import_flip_scale_y():
-            obj.scale.y = obj.scale.y * -1
+
 
     @classmethod
     def set_import_scale(cls,obj,mbf:MigotoBinaryFile):

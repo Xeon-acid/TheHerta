@@ -160,7 +160,6 @@ class PanelModelImportConfig(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         layout.prop(context.scene.properties_import_model,"model_scale",text="模型导入大小比例")
-        layout.prop(context.scene.properties_import_model,"import_flip_scale_y",text="设置Scale的Y分量为-1来改变模型朝向")
     
         if GlobalConfig.gamename == "WWMI" or GlobalConfig.gamename == "WuWa":
             layout.prop(context.scene.properties_wwmi,"import_merged_vgmap",text="使用融合统一顶点组")
