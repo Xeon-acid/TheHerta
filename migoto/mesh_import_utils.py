@@ -60,8 +60,11 @@ class MeshImportUtils:
                     
                 # XXX 翻转X轴，Blender的X轴是左手系，D3D11是右手系
                 # 这一步是为了解决导入的模型是镜像的问题
+                if Properties_ImportModel.use_mirror_workflow():
+                    positions = [(x[0] * -1, x[1] , x[2] ) for x in data]
+                else:
+                    positions = [(x[0], x[1] , x[2] ) for x in data]
 
-                positions = [(x[0] * -1, x[1] , x[2] ) for x in data]
                 mesh.vertices.foreach_set('co', unpack_list(positions))
             elif element.SemanticName.startswith("COLOR"):
                 mesh.vertex_colors.new(name=element.ElementName)

@@ -15,3 +15,4 @@ class Properties_ExtractModel(bpy.types.PropertyGroup):
         return bpy.context.scene.properties_extract_model.only_match_gpu
     
     
+    

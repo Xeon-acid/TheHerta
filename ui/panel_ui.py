@@ -160,6 +160,8 @@ class PanelModelImportConfig(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         layout.prop(context.scene.properties_import_model,"model_scale",text="模型导入大小比例")
+        
+        
     
         if GlobalConfig.gamename == "WWMI" or GlobalConfig.gamename == "WuWa":
             layout.prop(context.scene.properties_wwmi,"import_merged_vgmap",text="使用融合统一顶点组")
@@ -242,6 +244,8 @@ class PanelButtons(bpy.types.Panel):
         layout.label(text="当前游戏: " + GlobalConfig.gamename)
         layout.label(text="当前工作空间: " + GlobalConfig.workspacename)
 
+        layout.prop(context.scene.properties_import_model,"use_mirror_workflow",text="使用非镜像工作流")
+        
         # 导入 ib vb fmt格式文件
         layout.operator("import_mesh.migoto_raw_buffers_mmt",icon='IMPORT')
 

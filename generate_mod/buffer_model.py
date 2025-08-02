@@ -9,6 +9,7 @@ from ..utils.migoto_utils import MigotoUtils, Fatal
 from ..config.main_config import GlobalConfig
 
 from ..config.main_config import GlobalConfig, GameCategory
+from ..properties.properties_import_model import Properties_ImportModel
 
 class BufferModel:
     '''
@@ -110,7 +111,8 @@ class BufferModel:
                 
                 # XXX 翻转X轴，Blender的X轴是左手系，D3D11是右手系
                 # 这一步是为了解决导入的模型是镜像的问题
-                positions[:, 0] *= -1 
+                if Properties_ImportModel.use_mirror_workflow():
+                    positions[:, 0] *= -1 
 
                 if d3d11_element.Format == 'R16G16B16A16_FLOAT':
                     positions = positions.astype(numpy.float16)
