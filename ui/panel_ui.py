@@ -161,9 +161,7 @@ class PanelModelImportConfig(bpy.types.Panel):
         layout = self.layout
         layout.prop(context.scene.properties_import_model,"model_scale",text="模型导入大小比例")
         
-        
-    
-        if GlobalConfig.gamename == "WWMI" or GlobalConfig.gamename == "WuWa":
+        if GlobalConfig.logic_name == LogicName.WutheringWaves:
             layout.prop(context.scene.properties_wwmi,"import_merged_vgmap",text="使用融合统一顶点组")
 
 
@@ -183,29 +181,29 @@ class PanelGenerateModConfig(bpy.types.Panel):
         
 
         # 任何游戏都能贴图标记
-        if GlobalConfig.gamename == "WWMI" or GlobalConfig.gamename == "WuWa":
+        if GlobalConfig.logic_name == LogicName.WutheringWaves:
             layout.prop(context.scene.properties_generate_mod, "only_use_marked_texture",text="只使用标记过的贴图")
         layout.prop(context.scene.properties_generate_mod, "forbid_auto_texture_ini",text="禁止自动贴图流程")
-        
-        if GlobalConfig.gamename == "HSR":
+
+        if GlobalConfig.logic_name == LogicName.HonkaiStarRail:
             layout.prop(context.scene.properties_generate_mod, "recalculate_tangent",text="向量归一化法线存入TANGENT(全局)")
         
-        if GlobalConfig.get_game_category() == GameCategory.UnityVS or GlobalConfig.get_game_category() == GameCategory.UnityCS:
+        if GlobalConfig.logic_name == LogicName.UnityVS or GlobalConfig.logic_name == LogicName.UnityCS:
             
             layout.prop(context.scene.properties_generate_mod, "recalculate_tangent",text="向量归一化法线存入TANGENT(全局)")
             
             # 只有崩坏三2.0可能会用到重计算COLOR值
-            if GlobalConfig.gamename == "HI3":
+            if GlobalConfig.logic_name == LogicName.UnityVS:
                 layout.prop(context.scene.properties_generate_mod, "recalculate_color",text="算术平均归一化法线存入COLOR(全局)")
             layout.prop(context.scene.properties_generate_mod, "position_override_filter_draw_type",text="Position替换添加DRAW_TYPE=1判断")
             layout.prop(context.scene.properties_generate_mod, "vertex_limit_raise_add_filter_index",text="VertexLimitRaise添加filter_index过滤器")
             layout.prop(context.scene.properties_generate_mod, "slot_style_texture_add_filter_index",text="槽位风格贴图添加filter_index过滤器")
-        elif GlobalConfig.get_game_category() == GameCategory.UnrealVS or GlobalConfig.get_game_category() == GameCategory.UnrealCS:
+        elif GlobalConfig.logic_name == LogicName.WutheringWaves:
             layout.prop(context.scene.properties_wwmi, "ignore_muted_shape_keys")
             layout.prop(context.scene.properties_wwmi, "apply_all_modifiers")
 
         # 绝区零特有的SlotFix技术
-        if GlobalConfig.gamename == "ZZZ":
+        if GlobalConfig.logic_name == LogicName.ZenlessZoneZero:
             layout.prop(context.scene.properties_generate_mod, "zzz_use_slot_fix")
         
         layout.prop(context.scene.properties_generate_mod, "generate_branch_mod_gui",text="生成分支架构Mod面板(测试中)")
@@ -252,26 +250,26 @@ class PanelButtons(bpy.types.Panel):
 
         # 目前只有WuWa、WWMI使用旧的集合架构
         # TODO 后续需要全部迁移到新的集合架构
-        if GlobalConfig.gamename == "WWMI" or GlobalConfig.gamename == "WuWa":
+        if GlobalConfig.logic_name == LogicName.WutheringWaves:
             layout.operator("ssmt.import_all_from_workspace_v2",icon='IMPORT')
 
         layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
 
-        if GlobalConfig.gamename == "HSR" :
+        if GlobalConfig.logic_name == LogicName.HonkaiStarRail:
             layout.operator("ssmt.generate_mod_hsr_v3",icon='EXPORT')
-        elif GlobalConfig.gamename == "AILIMIT":
+        elif GlobalConfig.logic_name == LogicName.AILIMIT:
             layout.operator("ssmt.generate_mod_hsr_v3",icon='EXPORT')
-        elif GlobalConfig.gamename == "YYSLS" :
+        elif GlobalConfig.logic_name == LogicName.YYSLS:
             layout.operator("ssmt.generate_mod_yysls_v2")
-        elif GlobalConfig.gamename == "IdentityV":
+        elif GlobalConfig.logic_name == LogicName.IdentityV:
             layout.operator("ssmt.generate_mod_identityv_v2")
-        elif GlobalConfig.gamename == "WWMI" or GlobalConfig.gamename == "WuWa":
+        elif GlobalConfig.logic_name == LogicName.WutheringWaves:
             layout.operator("herta.export_mod_wwmi",text="生成Mod(旧)",icon='EXPORT')
             layout.operator("ssmt.generate_mod_wwmi_v3")
         else:
-            if GlobalConfig.get_game_category() == GameCategory.UnityVS:
+            if GlobalConfig.logic_name == LogicName.UnityVS:
                 layout.operator("ssmt.generate_mod_unity_vs_v2")
-            elif GlobalConfig.get_game_category() == GameCategory.UnityCS:
+            elif GlobalConfig.logic_name == LogicName.UnityCS:
                 layout.operator("ssmt.generate_mod_unity_cs_v2")
             else:
                 layout.label(text= "Generate Mod for " + GlobalConfig.gamename + " Not Supported Yet.")

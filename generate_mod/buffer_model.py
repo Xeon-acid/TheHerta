@@ -8,7 +8,7 @@ from .mesh_format_converter import MeshFormatConverter
 from ..utils.migoto_utils import MigotoUtils, Fatal
 from ..config.main_config import GlobalConfig
 
-from ..config.main_config import GlobalConfig, GameCategory
+from ..config.main_config import GlobalConfig, LogicName
 from ..properties.properties_import_model import Properties_ImportModel
 
 class BufferModel:
@@ -145,7 +145,7 @@ class BufferModel:
                     result[2::4] = normals[2::3]
                     
 
-                    if GlobalConfig.get_game_category() == GameCategory.UnrealVS or GlobalConfig.get_game_category() == GameCategory.UnrealCS:
+                    if GlobalConfig.logic_name == LogicName.WutheringWaves:
                         bitangent_signs = numpy.empty(mesh_loops_length, dtype=numpy.float32)
                         mesh_loops.foreach_get("bitangent_sign", bitangent_signs)
                         result[3::4] = bitangent_signs * -1
@@ -164,7 +164,7 @@ class BufferModel:
                     
 
                     # 燕云十六声的最后一位w固定为0
-                    if GlobalConfig.gamename == "YYSLS":
+                    if GlobalConfig.logic_name == LogicName.YYSLS:
                         result = numpy.zeros(mesh_loops_length * 4, dtype=numpy.float32)
                         
                     normals = numpy.empty(mesh_loops_length * 3, dtype=numpy.float32)
@@ -173,9 +173,6 @@ class BufferModel:
                     result[1::4] = normals[1::3]
                     result[2::4] = normals[2::3]
                     result = result.reshape(-1, 4)
-                    
-                    # if GlobalConfig.gamename == "YYSLS":
-                    #     result *= -1
 
                     # 归一化 (此处感谢 球球 的代码开发)
                     def DeConvert(nor):
@@ -208,7 +205,7 @@ class BufferModel:
                 result[1::4] = tangents[1::3]  # y 分量
                 result[2::4] = tangents[2::3]  # z 分量
 
-                if GlobalConfig.gamename == "YYSLS":
+                if GlobalConfig.logic_name == LogicName.YYSLS:
                     # 燕云十六声的TANGENT.w固定为1
                     tangent_w = numpy.ones(mesh_loops_length, dtype=numpy.float32)
                     # TODO 这里仍然不知道是什么，可能是平滑法线？
@@ -216,14 +213,14 @@ class BufferModel:
                     # result[1::4] *= -1
                     # result[2::4] *= -1
                     result[3::4] = tangent_w
-                elif GlobalConfig.get_game_category() == GameCategory.UnityCS or GlobalConfig.get_game_category() == GameCategory.UnityVS:
+                elif GlobalConfig.logic_name == LogicName.UnityVS  or GlobalConfig.logic_name == LogicName.UnityCS:
                     bitangent_signs = numpy.empty(mesh_loops_length, dtype=numpy.float32)
                     mesh_loops.foreach_get("bitangent_sign", bitangent_signs)
                     # XXX 将副切线符号乘以 -1
                     # 这里翻转（翻转指的就是 *= -1）是因为如果要确保Unity游戏中渲染正确，必须翻转TANGENT的W分量
                     bitangent_signs *= -1
                     result[3::4] = bitangent_signs  # w 分量 (副切线符号)
-                elif GlobalConfig.get_game_category() == GameCategory.UnrealVS or GlobalConfig.get_game_category() == GameCategory.UnrealCS:
+                elif GlobalConfig.logic_name == LogicName.WutheringWaves:
                     # Unreal引擎中这里要填写固定的1
                     tangent_w = numpy.ones(mesh_loops_length, dtype=numpy.float32)
                     result[3::4] = tangent_w
@@ -537,7 +534,7 @@ class BufferModel:
         
 
         obj_model.ib = flattened_ib
-        if GlobalConfig.gamename == "YYSLS":
+        if GlobalConfig.logic_name == LogicName.YYSLS:
             print("导出WWMI Mod时，翻转面朝向")
             flipped_indices = []
             print(flattened_ib[0],flattened_ib[1],flattened_ib[2])

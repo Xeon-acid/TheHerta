@@ -5,12 +5,19 @@ import json
 
 from ..properties.properties_dbmt_path import Properties_DBMT_Path
 
-class GameCategory:
+
+class LogicName:
     UnityVS = "UnityVS"
     UnityCS = "UnityCS"
-    UnrealCS = "UnrealCS"
-    UnrealVS = "UnrealVS"
-    Unknown = "Unknown"
+    UnityCPU = "UnityCPU"
+    HonkaiStarRail = "HonkaiStarRail"
+    ZenlessZoneZero = "ZenlessZoneZero"
+    WutheringWaves = "WutheringWaves"
+    IdentityV = "IdentityV"
+    YYSLS = "YYSLS"
+    AILIMIT = "AILIMIT"
+    HOK = "HOK"
+
 
 # 全局配置类，使用字段默认为全局可访问的唯一静态变量的特性，来实现全局变量
 # 可减少从Main.json中读取的IO消耗
@@ -20,22 +27,7 @@ class GlobalConfig:
     workspacename = ""
     dbmtlocation = ""
     current_game_migoto_folder = ""
-
-    @classmethod
-    def get_game_category(cls) -> str:
-        if cls.gamename in ["GI","HI3","ZZZ","BloodySpell","GF2","IdentityV"]:
-            return GameCategory.UnityVS
-        
-        elif cls.gamename in ["Game001","AILIMIT"]:
-            return GameCategory.UnityCS
-        
-        elif cls.gamename in ["Game002","WWMI","WuWa"]:
-            return GameCategory.UnrealVS
-        
-        elif cls.gamename in ["Game003"]:
-            return GameCategory.UnrealCS
-        else:
-            return GameCategory.Unknown
+    logic_name = ""
         
     @classmethod
     def save_dbmt_path(cls):
@@ -71,9 +63,17 @@ class GlobalConfig:
             cls.workspacename = main_setting_json.get("CurrentWorkSpace","")
             cls.gamename = main_setting_json.get("CurrentGameName","")
             cls.dbmtlocation = main_setting_json.get("DBMTWorkFolder","") + "\\"
-            cls.current_game_migoto_folder = main_setting_json.get("CurrentGameMigotoFolder","") + "\\"
         else:
             print("Can't find: " + main_json_path)
+        
+        game_config_json_path = os.path.join(cls.dbmtlocation,"Games\\" + cls.gamename + "\\Config.json")
+        if os.path.exists(game_config_json_path):
+            game_config_json_file = open(game_config_json_path)
+            game_config_json = json.load(game_config_json_file)
+            game_config_json_file.close()
+
+            cls.current_game_migoto_folder = game_config_json.get("3DmigotoPath","")
+            cls.logic_name = game_config_json.get("LogicName","")
 
     @classmethod
     def base_path(cls):
@@ -83,21 +83,10 @@ class GlobalConfig:
     def path_configs_folder(cls):
         return os.path.join(GlobalConfig.base_path(),"Configs\\")
     
-    @classmethod
-    def path_3Dmigoto_folder(cls):
-        # 读取Config.json中的内容
-        game_config_json_path = os.path.join(cls.dbmtlocation,"Games\\" + cls.gamename + "\\Config.json")
-        game_config_json_file = open(game_config_json_path)
-        game_config_json = json.load(game_config_json_file)
-        game_config_json_file.close()
-
-        migoto_folder_path = game_config_json.get("3DmigotoPath","")
-
-        return migoto_folder_path
     
     @classmethod
     def path_mods_folder(cls):
-        return os.path.join(GlobalConfig.path_3Dmigoto_folder(),"Mods\\") 
+        return os.path.join(cls.current_game_migoto_folder,"Mods\\") 
 
     @classmethod
     def path_total_workspace_folder(cls):
@@ -151,28 +140,6 @@ class GlobalConfig:
         else:
             return os.path.join(GlobalConfig.path_appdata_local(), "DBMT-Config.json")
         
-    # 提取模型需要读取当前的游戏的3Dmigoto下的最新的FrameAnalysis文件夹
-    @classmethod
-    def path_latest_frame_analysis_folder(cls):
-        migoto_subs_folders = os.listdir(cls.current_game_migoto_folder)
-
-        frame_analysis_folder_list = []
-
-        for subs_folder_name in migoto_subs_folders:
-            if subs_folder_name.startswith("FrameAnalysis"):
-                # print(subs_folder_name)
-                frame_analysis_folder_list.append(subs_folder_name)
-        
-        # 排序，确保能获取到最新的FrameAnalysis文件夹
-        frame_analysis_folder_list.sort()
-
-        latest_frame_analysis_folder_path = ""
-        if len(frame_analysis_folder_list) > 0:
-            latest_frame_analysis_folder_path = os.path.join(cls.current_game_migoto_folder, frame_analysis_folder_list[-1])
-
-        return latest_frame_analysis_folder_path
-    
-
     @classmethod
     def path_gametype_config_folder(cls):
         gametype_config_folder = os.path.join(cls.path_configs_folder(),"GameTypeConfigs\\")
@@ -183,9 +150,5 @@ class GlobalConfig:
         current_gametype_folder = os.path.join(cls.path_gametype_config_folder(),cls.gamename + "\\")
         return current_gametype_folder
     
-    @classmethod
-    def path_latest_frameanalysis_log_file(cls):
-        latest_frame_analysis_folder_path = cls.path_latest_frame_analysis_folder()
-        latest_framenanalysis_log_file_path = os.path.join(latest_frame_analysis_folder_path, "log.txt")
-        return latest_framenanalysis_log_file_path
+
     

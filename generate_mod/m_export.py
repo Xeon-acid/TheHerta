@@ -3,7 +3,7 @@ import bpy
 from ..utils.obj_utils import ObjUtils
 
 from ..migoto.migoto_format import D3D11GameType,ObjModel
-from ..config.main_config import GlobalConfig
+from ..config.main_config import GlobalConfig, LogicName
 from .buffer_model import BufferModel
 from ..utils.timer_utils import TimerUtils
 
@@ -34,10 +34,10 @@ def get_buffer_ib_vb_fast(d3d11GameType:D3D11GameType):
     obj_model = ObjModel()
 
     # 因为只有存在TANGENT时，顶点数才会增加，所以如果是GF2并且存在TANGENT才使用共享TANGENT防止增加顶点数
-    if GlobalConfig.gamename == "GF2" and "TANGENT" in buffer_model.d3d11GameType.OrderedFullElementList:
+    if GlobalConfig.logic_name == LogicName.UnityCPU and "TANGENT" in buffer_model.d3d11GameType.OrderedFullElementList:
         obj_model = buffer_model.calc_index_vertex_buffer_girlsfrontline2(obj, mesh)
 
-    elif GlobalConfig.gamename == "WWMI" or GlobalConfig.gamename == "WuWa":
+    elif GlobalConfig.logic_name == LogicName.WutheringWaves:
         obj_model = buffer_model.calc_index_vertex_buffer_wwmi(obj, mesh)
     else:
         # 计算IndexBuffer和CategoryBufferDict

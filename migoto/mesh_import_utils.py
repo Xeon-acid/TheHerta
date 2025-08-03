@@ -14,7 +14,7 @@ from ..utils.obj_utils import ExtractedObjectHelper
 from ..properties.properties_import_model import Properties_ImportModel
 from ..properties.properties_wwmi import Properties_WWMI
 
-from ..config.main_config import GlobalConfig
+from ..config.main_config import GlobalConfig,LogicName
 
 from bpy_extras.io_utils import unpack_list, axis_conversion
 
@@ -95,7 +95,7 @@ class MeshImportUtils:
                 这种归一化后到[0,1]的法线，可以减少Shader的计算消耗。
                 # (此处感谢 球球 的代码开发)
                 '''
-                if GlobalConfig.gamename == "YYSLS":
+                if GlobalConfig.logic_name == LogicName.YYSLS:
                     print("燕云十六声法线处理")
                     normals = [(x[0] * 2 - 1, x[1] * 2 - 1, x[2] * 2 - 1) for x in data]
                 else:
@@ -125,7 +125,7 @@ class MeshImportUtils:
 
         #  metadata.json, if contains then we can import merged vgmap.
         component = None
-        if Properties_WWMI.import_merged_vgmap() and (GlobalConfig.gamename == "WWMI" or GlobalConfig.gamename == "WuWa"):
+        if Properties_WWMI.import_merged_vgmap() and GlobalConfig.logic_name == LogicName.WutheringWaves:
             print("尝试读取Metadata.json")
             metadatajsonpath = os.path.join(os.path.dirname(mbf.fmt_path),'Metadata.json')
             if os.path.exists(metadatajsonpath):

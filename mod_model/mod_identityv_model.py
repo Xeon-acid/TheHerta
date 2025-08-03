@@ -2,7 +2,7 @@ import bpy
 import math
 
 from ..migoto.migoto_format import M_Key, ObjDataModel, M_DrawIndexed, M_Condition,D3D11GameType,TextureReplace
-from ..config.import_config import GlobalConfig
+from ..config.main_config import GlobalConfig,LogicName
 from ..generate_mod.m_counter import M_Counter
 from ..games.draw_ib_model import DrawIBModel
 
@@ -146,7 +146,7 @@ class ModIdentityVModel:
                 continue
 
             # if ZZZ ,use run = CommandListSkinTexture solve slot check problems.
-            if GlobalConfig.gamename == "ZZZ" :
+            if GlobalConfig.logic_name == LogicName.ZenlessZoneZero:
                 texture_override_ib_section.append(self.vlr_filter_index_indent + "run = CommandListSkinTexture")
 
             texture_override_ib_section.append("Resource_IB_Bak_" + str(count_i) + " = ref ib")
@@ -312,7 +312,7 @@ class ModIdentityVModel:
                 category_slot = d3d11GameType.CategoryExtractSlotDict[category_name]
                 texture_override_vb_namesuffix = "VB_" + draw_ib + "_" + draw_ib_model.draw_ib_alias + "_" + category_name
 
-                if GlobalConfig.gamename == "HSR":
+                if GlobalConfig.logic_name == LogicName.HonkaiStarRail:
                     if category_name == "Position":
                         texture_override_vb_section.append("[TextureOverride_" + texture_override_vb_namesuffix + "_VertexLimitRaise]")
                         texture_override_vb_section.append("override_byte_stride = " + str(d3d11GameType.CategoryStrideDict["Position"]))

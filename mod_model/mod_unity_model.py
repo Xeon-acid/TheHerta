@@ -2,7 +2,7 @@ import bpy
 import math
 
 from ..migoto.migoto_format import M_Key, ObjDataModel, M_DrawIndexed, M_Condition,D3D11GameType,TextureReplace
-from ..config.import_config import GlobalConfig
+from ..config.main_config import GlobalConfig, LogicName
 from ..generate_mod.m_counter import M_Counter
 from ..games.draw_ib_model import DrawIBModel
 
@@ -139,10 +139,6 @@ class ModUnityModel:
                 texture_override_ib_section.new_line()
                 continue
 
-            # if ZZZ ,use run = CommandListSkinTexture solve slot check problems.
-            # 这行是旧版本的，没啥用了，咱们得用新的方式
-            # if GlobalConfig.gamename == "ZZZ" :
-            #     texture_override_ib_section.append(self.vlr_filter_index_indent + "run = CommandListSkinTexture")
 
             # 如果不使用GPU-Skinning即为Object类型，此时需要在ibs上面替换对应槽位，在下面替换会导致阴影不正确，必须在上面替换
             if not d3d11GameType.GPU_PreSkinning:
@@ -160,7 +156,7 @@ class ModUnityModel:
 
 
             print("Test: ZZZ")
-            if GlobalConfig.gamename == "ZZZ":
+            if GlobalConfig.logic_name == LogicName.ZenlessZoneZero:
                 '''
                 绝区零的SlotFix必须得按照他的使用顺序来，由波斯猫辛苦测试得出，比如正确的顺序为：
 
@@ -351,7 +347,7 @@ class ModUnityModel:
                 category_slot = d3d11GameType.CategoryExtractSlotDict[category_name]
                 texture_override_vb_namesuffix = "VB_" + draw_ib + "_" + draw_ib_model.draw_ib_alias + "_" + category_name
 
-                if GlobalConfig.gamename == "HSR":
+                if GlobalConfig.logic_name == LogicName.HonkaiStarRail:
                     if category_name == "Position":
                         texture_override_vb_section.append("[TextureOverride_" + texture_override_vb_namesuffix + "_VertexLimitRaise]")
                         texture_override_vb_section.append("override_byte_stride = " + str(d3d11GameType.CategoryStrideDict["Position"]))
@@ -611,7 +607,7 @@ class ModUnityModel:
             # 按键开关与按键切换声明部分
 
 
-            if GlobalConfig.gamename != "HSR":
+            if GlobalConfig.logic_name != LogicName.HonkaiStarRail:
                 self.add_unity_vs_texture_override_vlr_section(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model) 
             self.add_unity_cs_texture_override_vb_sections(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model) 
             self.add_unity_cs_texture_override_ib_sections(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model) 
