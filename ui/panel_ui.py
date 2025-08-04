@@ -261,7 +261,7 @@ class PanelButtons(bpy.types.Panel):
             elif GlobalConfig.logic_name == LogicName.UnityCS:
                 layout.operator("ssmt.generate_mod_unity_cs_v2")
             elif GlobalConfig.logic_name == LogicName.ZenlessZoneZero:
-                layout.operator("ssmt.generate_mod_unity_cs_v2")
+                layout.operator("ssmt.generate_mod_unity_vs_v2")
             else:
                 layout.label(text= "Generate Mod for " + GlobalConfig.gamename + " Not Supported Yet.")
     

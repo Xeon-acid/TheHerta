@@ -534,7 +534,18 @@ class BufferModel:
         
 
         obj_model.ib = flattened_ib
-        if GlobalConfig.logic_name == LogicName.YYSLS:
+
+        flip_face_direction = False
+
+        if Properties_ImportModel.use_mirror_workflow():
+            flip_face_direction = True
+            if GlobalConfig.logic_name == LogicName.YYSLS:
+                flip_face_direction = False
+        else:
+            if GlobalConfig.logic_name == LogicName.YYSLS:
+                flip_face_direction = True
+
+        if flip_face_direction:
             print("导出WWMI Mod时，翻转面朝向")
             flipped_indices = []
             print(flattened_ib[0],flattened_ib[1],flattened_ib[2])
@@ -544,6 +555,8 @@ class BufferModel:
                 flipped_indices.extend(flipped_triangle)
             print(flipped_indices[0],flipped_indices[1],flipped_indices[2])
             obj_model.ib = flipped_indices
+
+
 
         obj_model.category_buffer_dict = category_buffer_dict
         obj_model.index_vertex_id_dict = None
