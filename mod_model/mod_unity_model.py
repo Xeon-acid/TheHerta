@@ -42,8 +42,6 @@ class ModUnityModel:
         draw_ib = draw_ib_model.draw_ib
 
         # 只有GPU-PreSkinning需要生成TextureOverrideVB部分，CPU类型不需要
-        if not d3d11GameType.GPU_PreSkinning:
-            return
 
         texture_override_vb_section = M_IniSection(M_SectionType.TextureOverrideVB)
         texture_override_vb_section.append("; " + draw_ib + " ----------------------------")
@@ -78,7 +76,8 @@ class ModUnityModel:
                     texture_override_vb_section.append(filterindex_indent_prefix + drawtype_indent_prefix + category_original_slot + " = Resource" + draw_ib + original_category_name)
 
             # draw一般都是在Blend槽位上进行的，所以我们这里要判断确定是Blend要替换的hash才能进行draw。
-            if category_name == d3d11GameType.CategoryDrawCategoryDict["Blend"]:
+            draw_category_name = d3d11GameType.CategoryDrawCategoryDict.get("Blend",None)
+            if draw_category_name is not None and category_name == d3d11GameType.CategoryDrawCategoryDict["Blend"]:
                 texture_override_vb_section.append(drawtype_indent_prefix + "handling = skip")
                 texture_override_vb_section.append(drawtype_indent_prefix + "draw = " + str(draw_ib_model.draw_number) + ", 0")
 
@@ -139,17 +138,6 @@ class ModUnityModel:
                 texture_override_ib_section.new_line()
                 continue
 
-
-            # 如果不使用GPU-Skinning即为Object类型，此时需要在ibs上面替换对应槽位，在下面替换会导致阴影不正确，必须在上面替换
-            if not d3d11GameType.GPU_PreSkinning:
-                for category_name in d3d11GameType.OrderedCategoryNameList:
-                    category_hash = draw_ib_model.import_config.category_hash_dict[category_name]
-                    category_slot = d3d11GameType.CategoryExtractSlotDict[category_name]
-
-                    for original_category_name, draw_category_name in d3d11GameType.CategoryDrawCategoryDict.items():
-                        if original_category_name == draw_category_name:
-                            category_original_slot = d3d11GameType.CategoryExtractSlotDict[original_category_name]
-                            texture_override_ib_section.append(self.vlr_filter_index_indent + category_original_slot + " = Resource" + draw_ib + original_category_name)
 
             # Add ib replace
             texture_override_ib_section.append(self.vlr_filter_index_indent + "ib = " + ib_resource_name)
