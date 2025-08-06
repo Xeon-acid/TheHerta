@@ -2,6 +2,19 @@ import bpy
 
 
 class Properties_GenerateMod(bpy.types.PropertyGroup):
+    open_mod_folder_after_generate_mod: bpy.props.BoolProperty(
+        name="生成后打开Mod文件夹",
+        description="勾选后，在生成Mod完成后自动打开Mod文件夹",
+        default=True
+    ) # type: ignore
+    
+    @classmethod
+    def open_mod_folder_after_generate_mod(cls):
+        '''
+        bpy.context.scene.properties_generate_mod.open_mod_folder_after_generate_mod
+        '''
+        return bpy.context.scene.properties_generate_mod.open_mod_folder_after_generate_mod
+
     zzz_use_slot_fix: bpy.props.BoolProperty(
         name="槽位风格贴图使用SlotFix技术",
         description="仅适用于槽位风格贴图，勾选后，特定名称标记的贴图将使用SlotFix风格，能一定程度上解决槽位风格贴图跨槽位的问题，跨Pixel槽位指的是在前一个DrawCall中是ps-t3但是下一个DrawCall变为ps-t5这种情况，但由于负责维护的人也在偷懒所以并不可靠",

@@ -191,7 +191,8 @@ class PanelGenerateModConfig(bpy.types.Panel):
         layout.prop(context.scene.properties_generate_mod, "vertex_limit_raise_add_filter_index",text="VertexLimitRaise添加filter_index过滤器")
         layout.prop(context.scene.properties_generate_mod, "slot_style_texture_add_filter_index",text="槽位风格贴图添加filter_index过滤器")
         layout.prop(context.scene.properties_generate_mod, "generate_branch_mod_gui",text="生成分支架构Mod面板(测试中)")
-
+        # open_mod_folder_after_generate_mod
+        layout.prop(context.scene.properties_generate_mod, "open_mod_folder_after_generate_mod",text="生成Mod后打开Mod所在文件夹")
         # 绝区零特有的SlotFix技术
         if GlobalConfig.logic_name == LogicName.ZenlessZoneZero:
             layout.prop(context.scene.properties_generate_mod, "zzz_use_slot_fix")

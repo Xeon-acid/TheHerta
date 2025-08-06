@@ -2,7 +2,7 @@
 import subprocess
 
 from ..config.main_config import *
-
+from ..properties.properties_generate_mod import Properties_GenerateMod
 
 class CommandUtils:
 
@@ -15,8 +15,9 @@ class CommandUtils:
         #而且使用subprocess.run('explorer',path)的方式打开文件夹会导致每次都多打开一个新的文件夹，几百个在一起就会把电脑卡死。
         所以使用os.startfile()是最好的
         '''
-        generated_mod_folder_path = GlobalConfig.path_generate_mod_folder()
-        os.startfile(generated_mod_folder_path)
+        if Properties_GenerateMod.open_mod_folder_after_generate_mod():
+            generated_mod_folder_path = GlobalConfig.path_generate_mod_folder()
+            os.startfile(generated_mod_folder_path)
 
 
 
