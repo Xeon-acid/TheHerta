@@ -27,7 +27,7 @@ bl_info = {
     "name": "TheHerta",
     "description": "TheHerta",
     "blender": (3, 6, 0),
-    "version": (1, 9, 1),
+    "version": (1, 9, 2),
     "location": "View3D",
     "category": "Generic"
 }
@@ -129,7 +129,7 @@ register_classes = (
     SSMTGenerateModYYSLSV2,
     SSMTGenerateModUnityVSV2,
     SSMTGenerateModUnityCSV2,
-    # SSMTGenerateModIdentityVV2,
+    SSMTGenerateModCTXMC,
 
     # 模型处理面板
     RemoveAllVertexGroupOperator,

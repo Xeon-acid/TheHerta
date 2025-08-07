@@ -84,7 +84,7 @@ class DrawIBModel:
         self.total_index_count = 0 # 每个DrawIB都有总的IndexCount数，也就是所有的Component中的所有顶点索引数量
         self.__obj_name_drawindexed_dict:dict[str,M_DrawIndexed] = {} 
 
-        if GlobalConfig.logic_name == LogicName.IdentityV:
+        if GlobalConfig.logic_name == LogicName.CTXMC:
             self.__read_component_ib_buf_dict_merged()
         else:
             self.__read_component_ib_buf_dict_seperated_single()

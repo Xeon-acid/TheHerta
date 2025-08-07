@@ -13,7 +13,7 @@ class LogicName:
     HonkaiStarRail = "HonkaiStarRail"
     ZenlessZoneZero = "ZenlessZoneZero"
     WutheringWaves = "WutheringWaves"
-    # IdentityV = "IdentityV"
+    CTXMC = "CTXMC"
     YYSLS = "YYSLS"
     AILIMIT = "AILIMIT"
     HOK = "HOK"
