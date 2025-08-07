@@ -84,11 +84,13 @@ class DrawIBModelWWMI:
         self.total_index_count = 0 # 每个DrawIB都有总的IndexCount数，也就是所有的Component中的所有顶点索引数量
         self.__obj_name_drawindexed_dict:dict[str,M_DrawIndexed] = {} 
 
-        if GlobalConfig.logic_name == LogicName.IdentityV:
-            self.__read_component_ib_buf_dict_merged()
-        else:
-            self.__read_component_ib_buf_dict_seperated_single()
-            
+        # if GlobalConfig.logic_name == LogicName.IdentityV:
+        #     self.__read_component_ib_buf_dict_merged()
+        # else:
+        #     self.__read_component_ib_buf_dict_seperated_single()
+
+        self.__read_component_ib_buf_dict_seperated_single()
+
         self.parse_categoryname_bytelist_dict_3()
 
         # (5) 导出Buffer文件，Export Index Buffer files, Category Buffer files. (And Export ShapeKey Buffer Files.(WWMI))
@@ -150,7 +152,7 @@ class DrawIBModelWWMI:
         是游戏原本的做法，但是不分开的话，一个IndexBuffer文件会遇到135W顶点索引数的上限。
         
         由于在WWMI中只能使用一个IB文件，而在GI、HSR、HI3、ZZZ等Unity游戏中天生就能使用多个IB文件
-        目前IdentityV会用到，WWMI会用到但是是MergedObj不在这个逻辑里
+        目前WWMI会用到但是是MergedObj不在这个逻辑里
         '''
 
         obj_name_drawindexedobj_cache_dict:dict[str,M_DrawIndexed] = {}

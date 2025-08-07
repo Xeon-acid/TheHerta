@@ -150,7 +150,7 @@ class DrawIBModel:
         是游戏原本的做法，但是不分开的话，一个IndexBuffer文件会遇到135W顶点索引数的上限。
         
         由于在WWMI中只能使用一个IB文件，而在GI、HSR、HI3、ZZZ等Unity游戏中天生就能使用多个IB文件
-        目前IdentityV会用到，WWMI会用到但是是MergedObj不在这个逻辑里
+        WWMI会用到但是是MergedObj不在这个逻辑里
         '''
 
         obj_name_drawindexedobj_cache_dict:dict[str,M_DrawIndexed] = {}

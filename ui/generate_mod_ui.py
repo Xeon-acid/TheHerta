@@ -135,31 +135,31 @@ class SSMTGenerateModHSRV3(bpy.types.Operator):
         return {'FINISHED'}
 
 
-class SSMTGenerateModIdentityVV2(bpy.types.Operator):
-    bl_idname = "ssmt.generate_mod_identityv_v2"
-    bl_label = "生成Mod(测试版)"
-    bl_description = "一键导出当前工作空间集合中的Mod，隐藏显示的模型不会被导出，隐藏的DrawIB为名称的集合不会被导出。使用前确保取消隐藏所有要导出的模型以及集合"
+# class SSMTGenerateModIdentityVV2(bpy.types.Operator):
+#     bl_idname = "ssmt.generate_mod_identityv_v2"
+#     bl_label = "生成Mod(测试版)"
+#     bl_description = "一键导出当前工作空间集合中的Mod，隐藏显示的模型不会被导出，隐藏的DrawIB为名称的集合不会被导出。使用前确保取消隐藏所有要导出的模型以及集合"
 
-    def execute(self, context):
-        TimerUtils.Start("GenerateMod Mod V3")
+#     def execute(self, context):
+#         TimerUtils.Start("GenerateMod Mod V3")
 
-        M_Counter.initialize()
+#         M_Counter.initialize()
 
-        # 先校验当前选中的工作空间是不是一个有效的工作空间集合
-        workspace_collection = bpy.context.collection
-        result = CollectionUtils.is_valid_ssmt_workspace_collection_v2(workspace_collection)
-        if result != "":
-            self.report({'ERROR'},result)
-            return {'FINISHED'}
+#         # 先校验当前选中的工作空间是不是一个有效的工作空间集合
+#         workspace_collection = bpy.context.collection
+#         result = CollectionUtils.is_valid_ssmt_workspace_collection_v2(workspace_collection)
+#         if result != "":
+#             self.report({'ERROR'},result)
+#             return {'FINISHED'}
 
-        migoto_mod_model = ModIdentityVModel(workspace_collection=workspace_collection)
-        migoto_mod_model.generate_unity_vs_config_ini()
+#         migoto_mod_model = ModIdentityVModel(workspace_collection=workspace_collection)
+#         migoto_mod_model.generate_unity_vs_config_ini()
 
-        self.report({'INFO'},"Generate Mod Success!")
-        CommandUtils.OpenGeneratedModFolder()
+#         self.report({'INFO'},"Generate Mod Success!")
+#         CommandUtils.OpenGeneratedModFolder()
 
-        TimerUtils.End("GenerateMod Mod V3")
-        return {'FINISHED'}
+#         TimerUtils.End("GenerateMod Mod V3")
+#         return {'FINISHED'}
 
 
 class SSMTGenerateModYYSLSV2(bpy.types.Operator):

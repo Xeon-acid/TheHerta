@@ -129,7 +129,7 @@ register_classes = (
     SSMTGenerateModYYSLSV2,
     SSMTGenerateModUnityVSV2,
     SSMTGenerateModUnityCSV2,
-    SSMTGenerateModIdentityVV2,
+    # SSMTGenerateModIdentityVV2,
 
     # 模型处理面板
     RemoveAllVertexGroupOperator,
