@@ -10,6 +10,8 @@ class LogicName:
     UnityVS = "UnityVS"
     UnityCS = "UnityCS"
     UnityCPU = "UnityCPU"
+    GenshinImpact = "GenshinImpact"
+    HonkaiImpact3 = "HonkaiImpact3"
     HonkaiStarRail = "HonkaiStarRail"
     ZenlessZoneZero = "ZenlessZoneZero"
     WutheringWaves = "WutheringWaves"

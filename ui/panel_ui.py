@@ -185,18 +185,26 @@ class PanelGenerateModConfig(bpy.types.Panel):
             layout.prop(context.scene.properties_wwmi, "apply_all_modifiers")
 
         layout.prop(context.scene.properties_generate_mod, "forbid_auto_texture_ini",text="禁止自动贴图流程")
-        layout.prop(context.scene.properties_generate_mod, "recalculate_tangent",text="向量归一化法线存入TANGENT(全局)")
-        layout.prop(context.scene.properties_generate_mod, "recalculate_color",text="算术平均归一化法线存入COLOR(全局)")
+
+        if GlobalConfig.logic_name != LogicName.UnityCPU:
+            layout.prop(context.scene.properties_generate_mod, "recalculate_tangent",text="向量归一化法线存入TANGENT(全局)")
+
+        if GlobalConfig.logic_name == LogicName.HonkaiImpact3:
+            layout.prop(context.scene.properties_generate_mod, "recalculate_color",text="算术平均归一化法线存入COLOR(全局)")
+
         layout.prop(context.scene.properties_generate_mod, "position_override_filter_draw_type",text="Position替换添加DRAW_TYPE=1判断")
         layout.prop(context.scene.properties_generate_mod, "vertex_limit_raise_add_filter_index",text="VertexLimitRaise添加filter_index过滤器")
         layout.prop(context.scene.properties_generate_mod, "slot_style_texture_add_filter_index",text="槽位风格贴图添加filter_index过滤器")
-        layout.prop(context.scene.properties_generate_mod, "generate_branch_mod_gui",text="生成分支架构Mod面板(测试中)")
-        # open_mod_folder_after_generate_mod
-        layout.prop(context.scene.properties_generate_mod, "open_mod_folder_after_generate_mod",text="生成Mod后打开Mod所在文件夹")
+
         # 绝区零特有的SlotFix技术
         if GlobalConfig.logic_name == LogicName.ZenlessZoneZero:
             layout.prop(context.scene.properties_generate_mod, "zzz_use_slot_fix")
         
+        # 所有的游戏都要能支持生成分支架构面板Mod
+        layout.prop(context.scene.properties_generate_mod, "generate_branch_mod_gui",text="生成分支架构Mod面板(测试中)")
+
+        # 默认习惯肯定是要显示这个的，但是由于不经常点击关闭，所以放在最后面
+        layout.prop(context.scene.properties_generate_mod, "open_mod_folder_after_generate_mod",text="生成Mod后打开Mod所在文件夹")
         
     
 
