@@ -265,6 +265,10 @@ class PanelButtons(bpy.types.Panel):
         elif GlobalConfig.logic_name == LogicName.WutheringWaves:
             layout.operator("herta.export_mod_wwmi",text="生成Mod(旧)",icon='EXPORT')
             layout.operator("ssmt.generate_mod_wwmi_v3")
+        elif GlobalConfig.logic_name == LogicName.GenshinImpact:
+            layout.operator("ssmt.generate_mod_unity_vs_v2")
+        elif GlobalConfig.logic_name == LogicName.HonkaiImpact3:
+            layout.operator("ssmt.generate_mod_unity_vs_v2")
         else:
             if GlobalConfig.logic_name == LogicName.UnityVS:
                 layout.operator("ssmt.generate_mod_unity_vs_v2")
