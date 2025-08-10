@@ -257,7 +257,8 @@ class PanelButtons(bpy.types.Panel):
         if GlobalConfig.logic_name == LogicName.HonkaiStarRail:
             layout.operator("ssmt.generate_mod_hsr_v3",icon='EXPORT')
         elif GlobalConfig.logic_name == LogicName.AILIMIT:
-            layout.operator("ssmt.generate_mod_hsr_v3",icon='EXPORT')
+            layout.operator("ssmt.generate_mod_hsr_v3",icon='EXPORT',text="生成SRMI格式Mod")
+            layout.operator("ssmt.generate_mod_unity_cs_v2",text="生成SSMT格式Mod")
         elif GlobalConfig.logic_name == LogicName.YYSLS:
             layout.operator("ssmt.generate_mod_yysls_v2")
         elif GlobalConfig.logic_name == LogicName.CTXMC:
