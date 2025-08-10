@@ -238,6 +238,7 @@ class PanelButtons(bpy.types.Panel):
         # print(MainConfig.dbmtlocation)
 
         layout.label(text="当前游戏: " + GlobalConfig.gamename)
+        layout.label(text="当前逻辑: " + GlobalConfig.logic_name)
         layout.label(text="当前工作空间: " + GlobalConfig.workspacename)
 
         layout.prop(context.scene.properties_import_model,"use_mirror_workflow",text="使用非镜像工作流")
@@ -273,4 +274,4 @@ class PanelButtons(bpy.types.Panel):
                 layout.operator("ssmt.generate_mod_unity_vs_v2")
             else:
                 layout.label(text= "Generate Mod for " + GlobalConfig.gamename + " Not Supported Yet.")
-    
+
