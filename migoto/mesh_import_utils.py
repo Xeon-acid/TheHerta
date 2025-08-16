@@ -138,7 +138,11 @@ class MeshImportUtils:
         print(len(blend_indices))
         print(len(blend_weights))
 
+        print("导入顶点组")
         MeshImportUtils.import_vertex_groups(mesh, obj, blend_indices, blend_weights, component)
+        print("导入顶点组完毕")
+
+
         MeshImportUtils.import_shapekeys(mesh, obj, shapekeys)
 
         # Validate closes the loops so they don't disappear after edit mode and probably other important things:
@@ -285,6 +289,22 @@ class MeshImportUtils:
         '''
         component: 如果是一键导入WWMI的模型则不为None，其它情况默认为None
         '''
+        # print(blend_indices[0][0])
+        # print(blend_indices[0][1])
+        '''
+        这里的处理是很必要的，因为如果BLENDINDICES的格式是R16G16B16A16_UINT，那么长度为8
+        此时游戏中可能会出现值为FF FF 的无效索引表示，虽然在HLSL中表示无效索引，但是导入进来之后，按照R16G16B16A16_UINT来解析就是65535
+        这会导致后面创建顶点组数量时，直接卡死，所以我们要替换为-1才能够正常导入。
+        此问题在第五人格公研服Neox3引擎中发现并测试。
+        所以在这里要转换为numpy数组处理，方便把所有65535替换为-1
+        '''
+        for semantic_index, bone_indices_list in blend_indices.items():
+            # 转为 NumPy 数组处理
+            arr = numpy.array(bone_indices_list)
+            arr = numpy.where(arr == 65535, -1, arr)
+            blend_indices[semantic_index] = arr  # 或 .tolist() 如果后面要用 list
+
+
         assert (len(blend_indices) == len(blend_weights))
         if blend_indices:
             # We will need to make sure we re-export the same blend indices later -
@@ -300,8 +320,7 @@ class MeshImportUtils:
                 obj.vertex_groups.new(name=str(i))
             for vertex in mesh.vertices:
                 for semantic_index in sorted(blend_indices.keys()):
-                    for i, w in zip(blend_indices[semantic_index][vertex.index],
-                                    blend_weights[semantic_index][vertex.index]):
+                    for i, w in zip(blend_indices[semantic_index][vertex.index], blend_weights[semantic_index][vertex.index]):
                         if w == 0.0:
                             continue
                         if component is None:
