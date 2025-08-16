@@ -263,6 +263,8 @@ class PanelButtons(bpy.types.Panel):
             layout.operator("ssmt.generate_mod_yysls_v2")
         elif GlobalConfig.logic_name == LogicName.CTXMC:
             layout.operator("ssmt.generate_mod_ctx_mc")
+        elif GlobalConfig.logic_name == LogicName.NierR:
+            layout.operator("ssmt.generate_mod_ctx_mc")
         elif GlobalConfig.logic_name == LogicName.WutheringWaves:
             layout.operator("herta.export_mod_wwmi",text="生成Mod(旧)",icon='EXPORT')
             layout.operator("ssmt.generate_mod_wwmi_v3")

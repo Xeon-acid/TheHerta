@@ -16,6 +16,8 @@ class LogicName:
     ZenlessZoneZero = "ZenlessZoneZero"
     WutheringWaves = "WutheringWaves"
     CTXMC = "CTXMC"
+    IdentityV2 = "IdentityV2"
+    NierR = "NierR"
     YYSLS = "YYSLS"
     AILIMIT = "AILIMIT"
     HOK = "HOK"
