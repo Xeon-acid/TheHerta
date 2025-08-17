@@ -16,7 +16,7 @@ from ..mod_ini_generate.WWMI import ModModelWWMI
 
 class SSMTGenerateModUnityCSV2(bpy.types.Operator):
     bl_idname = "ssmt.generate_mod_unity_cs_v2"
-    bl_label = "生成Mod(测试版)"
+    bl_label = "生成Mod"
     bl_description = "一键导出当前工作空间集合中的Mod，隐藏显示的模型不会被导出，隐藏的DrawIB为名称的集合不会被导出。使用前确保取消隐藏所有要导出的模型以及集合"
 
     def execute(self, context):
@@ -43,7 +43,7 @@ class SSMTGenerateModUnityCSV2(bpy.types.Operator):
 
 class SSMTGenerateModUnityVSV2(bpy.types.Operator):
     bl_idname = "ssmt.generate_mod_unity_vs_v2"
-    bl_label = "生成Mod(测试版)"
+    bl_label = "生成Mod"
     bl_description = "一键导出当前工作空间集合中的Mod，隐藏显示的模型不会被导出，隐藏的DrawIB为名称的集合不会被导出。使用前确保取消隐藏所有要导出的模型以及集合"
 
     def execute(self, context):
@@ -69,7 +69,7 @@ class SSMTGenerateModUnityVSV2(bpy.types.Operator):
 
 class SSMTGenerateModHSRV3(bpy.types.Operator):
     bl_idname = "ssmt.generate_mod_hsr_v3"
-    bl_label = "生成Mod(测试版)"
+    bl_label = "生成Mod"
     bl_description = "一键导出当前工作空间集合中的Mod，隐藏显示的模型不会被导出，隐藏的DrawIB为名称的集合不会被导出。使用前确保取消隐藏所有要导出的模型以及集合"
 
     def execute(self, context):
@@ -123,7 +123,7 @@ class SSMTGenerateModCTXMC(bpy.types.Operator):
 
 class SSMTGenerateModYYSLSV2(bpy.types.Operator):
     bl_idname = "ssmt.generate_mod_yysls_v2"
-    bl_label = "生成Mod(测试版)"
+    bl_label = "生成Mod"
     bl_description = "一键导出当前工作空间集合中的Mod，隐藏显示的模型不会被导出，隐藏的DrawIB为名称的集合不会被导出。使用前确保取消隐藏所有要导出的模型以及集合"
 
     def execute(self, context):
@@ -150,7 +150,7 @@ class SSMTGenerateModYYSLSV2(bpy.types.Operator):
 
 class SSMTGenerateModWWMIV3(bpy.types.Operator):
     bl_idname = "ssmt.generate_mod_wwmi_v3"
-    bl_label = "生成Mod(测试版)"
+    bl_label = "生成Mod"
     bl_description = "一键导出当前工作空间集合中的Mod，隐藏显示的模型不会被导出，隐藏的DrawIB为名称的集合不会被导出。使用前确保取消隐藏所有要导出的模型以及集合"
 
     def execute(self, context):
