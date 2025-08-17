@@ -5,7 +5,11 @@ import json
 
 from ..properties.properties_dbmt_path import Properties_DBMT_Path
 
-
+'''
+执行逻辑名称
+理论上多个执行名称可以公用一套生成Mod逻辑
+但最好是每个执行逻辑名称单独一套生成Mod逻辑
+'''
 class LogicName:
     UnityVS = "UnityVS"
     UnityCS = "UnityCS"

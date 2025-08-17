@@ -12,7 +12,7 @@ from ..properties.properties_generate_mod import Properties_GenerateMod
 from ..generate_mod.m_ini_helper import M_IniHelperV2,M_IniHelperV3
 from ..games.m_ini_helper_gui import M_IniHelperGUI
 
-class ModCTXModel:
+class ModModelYYSLS:
     '''
     支持的游戏：
     - 燕云十六声 YYSLS

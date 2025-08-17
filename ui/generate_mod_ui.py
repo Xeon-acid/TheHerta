@@ -5,10 +5,10 @@ from ..utils.timer_utils import TimerUtils
 from ..utils.collection_utils import CollectionUtils
 from ..generate_mod.m_counter import M_Counter
 
-from ..mod_model.mod_unity_model import ModUnityModel
-from ..mod_model.mod_hsr_model import ModHSRModel
-from ..mod_model.mod_ctx_mc_model import ModCTXMCModel
-from ..mod_model.mod_yysls_model import ModCTXModel
+from ..mod_model.Unity import ModModelUnity
+from ..mod_model.HonkaiStarRail import ModModelHonkaiStarRail
+from ..mod_model.IdentityV import ModModelIdentityV
+from ..mod_model.YYSLS import ModModelYYSLS
 
 from ..generate_mod.drawib_model_wwmi import DrawIBModelWWMI
 from ..generate_mod.ini_model_wwmi import M_WWMIIniModel
@@ -72,7 +72,7 @@ class SSMTGenerateModUnityCSV2(bpy.types.Operator):
             self.report({'ERROR'},result)
             return {'FINISHED'}
 
-        migoto_mod_model = ModUnityModel(workspace_collection=workspace_collection)
+        migoto_mod_model = ModModelUnity(workspace_collection=workspace_collection)
         migoto_mod_model.generate_unity_cs_config_ini()
 
         self.report({'INFO'},"Generate Mod Success!")
@@ -99,7 +99,7 @@ class SSMTGenerateModUnityVSV2(bpy.types.Operator):
             self.report({'ERROR'},result)
             return {'FINISHED'}
 
-        migoto_mod_model = ModUnityModel(workspace_collection=workspace_collection)
+        migoto_mod_model = ModModelUnity(workspace_collection=workspace_collection)
         migoto_mod_model.generate_unity_vs_config_ini()
 
         self.report({'INFO'},"Generate Mod Success!")
@@ -125,7 +125,7 @@ class SSMTGenerateModHSRV3(bpy.types.Operator):
             self.report({'ERROR'},result)
             return {'FINISHED'}
 
-        migoto_mod_model = ModHSRModel(workspace_collection=workspace_collection)
+        migoto_mod_model = ModModelHonkaiStarRail(workspace_collection=workspace_collection)
         migoto_mod_model.generate_unity_cs_config_ini()
 
         self.report({'INFO'},"Generate Mod Success!")
@@ -152,7 +152,7 @@ class SSMTGenerateModCTXMC(bpy.types.Operator):
             self.report({'ERROR'},result)
             return {'FINISHED'}
 
-        migoto_mod_model = ModCTXMCModel(workspace_collection=workspace_collection)
+        migoto_mod_model = ModModelIdentityV(workspace_collection=workspace_collection)
         migoto_mod_model.generate_unity_vs_config_ini()
 
         self.report({'INFO'},"Generate Mod Success!")
@@ -179,7 +179,7 @@ class SSMTGenerateModYYSLSV2(bpy.types.Operator):
             self.report({'ERROR'},result)
             return {'FINISHED'}
 
-        migoto_mod_model = ModCTXModel(workspace_collection=workspace_collection)
+        migoto_mod_model = ModModelYYSLS(workspace_collection=workspace_collection)
         migoto_mod_model.generate_unity_vs_config_ini()
 
         self.report({'INFO'},"Generate Mod Success!")
@@ -206,7 +206,7 @@ class SSMTGenerateModWWMIV3(bpy.types.Operator):
             self.report({'ERROR'},result)
             return {'FINISHED'}
 
-        migoto_mod_model = ModCTXModel(workspace_collection=workspace_collection)
+        migoto_mod_model = ModModelYYSLS(workspace_collection=workspace_collection)
         migoto_mod_model.generate_unity_vs_config_ini()
 
         self.report({'INFO'},"Generate Mod Success!")

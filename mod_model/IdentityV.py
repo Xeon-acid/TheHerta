@@ -13,7 +13,7 @@ from ..generate_mod.m_ini_helper import M_IniHelperV2,M_IniHelperV3
 from ..games.m_ini_helper_gui import M_IniHelperGUI
 
 
-class ModCTXMCModel:
+class ModModelIdentityV:
     def __init__(self,workspace_collection:bpy.types.Collection):
         # (1) 统计全局分支模型
         self.branch_model = BranchModel(workspace_collection=workspace_collection)
