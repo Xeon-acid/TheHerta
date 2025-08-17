@@ -247,10 +247,8 @@ class PanelButtons(bpy.types.Panel):
         layout.operator("import_mesh.migoto_raw_buffers_mmt",icon='IMPORT')
 
 
-        # 目前只有WuWa、WWMI使用旧的集合架构
-        # TODO 后续需要全部迁移到新的集合架构
-        if GlobalConfig.logic_name == LogicName.WutheringWaves:
-            layout.operator("ssmt.import_all_from_workspace_v2",icon='IMPORT')
+        layout.operator("ssmt.import_all_from_workspace_v2",icon='IMPORT')
+
         
         layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
 
@@ -269,7 +267,6 @@ class PanelButtons(bpy.types.Panel):
             layout.operator("ssmt.generate_mod_ctx_mc")
         elif GlobalConfig.logic_name == LogicName.WutheringWaves:
             layout.operator("herta.export_mod_wwmi",text="生成Mod(旧)",icon='EXPORT')
-            layout.operator("ssmt.generate_mod_wwmi_v3")
         elif GlobalConfig.logic_name == LogicName.GenshinImpact:
             layout.operator("ssmt.generate_mod_unity_vs_v2")
         elif GlobalConfig.logic_name == LogicName.HonkaiImpact3:
@@ -283,4 +280,11 @@ class PanelButtons(bpy.types.Panel):
                 layout.operator("ssmt.generate_mod_unity_vs_v2")
             else:
                 layout.label(text= "Generate Mod for " + GlobalConfig.gamename + " Not Supported Yet.")
+
+        # 目前只有WuWa、WWMI使用旧的集合架构
+        # TODO 后续需要全部迁移到新的集合架构
+        if GlobalConfig.logic_name == LogicName.WutheringWaves:
+            layout.separator()
+            layout.operator("ssmt.generate_mod_wwmi_v3")
+
 

@@ -5,10 +5,11 @@ from ..utils.timer_utils import TimerUtils
 from ..utils.collection_utils import CollectionUtils
 from ..generate_mod.m_counter import M_Counter
 
-from ..mod_model.Unity import ModModelUnity
-from ..mod_model.HonkaiStarRail import ModModelHonkaiStarRail
-from ..mod_model.IdentityV import ModModelIdentityV
-from ..mod_model.YYSLS import ModModelYYSLS
+from ..mod_ini_generate.Unity import ModModelUnity
+from ..mod_ini_generate.HonkaiStarRail import ModModelHonkaiStarRail
+from ..mod_ini_generate.IdentityV import ModModelIdentityV
+from ..mod_ini_generate.YYSLS import ModModelYYSLS
+from ..mod_ini_generate.WWMI import ModModelWWMI
 
 from ..generate_mod.drawib_model_wwmi import DrawIBModelWWMI
 from ..generate_mod.ini_model_wwmi import M_WWMIIniModel
@@ -206,8 +207,8 @@ class SSMTGenerateModWWMIV3(bpy.types.Operator):
             self.report({'ERROR'},result)
             return {'FINISHED'}
 
-        migoto_mod_model = ModModelYYSLS(workspace_collection=workspace_collection)
-        migoto_mod_model.generate_unity_vs_config_ini()
+        migoto_mod_model = ModModelWWMI(workspace_collection=workspace_collection)
+        migoto_mod_model.generate_unreal_vs_config_ini()
 
         self.report({'INFO'},"Generate Mod Success!")
         CommandUtils.OpenGeneratedModFolder()
