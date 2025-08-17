@@ -1,29 +1,13 @@
-from ..utils.config_utils import *
-from .migoto_format import *
-from ..utils.collection_utils import *
-from ..config.main_config import *
-from ..properties.properties_wwmi import Properties_WWMI
-from ..properties.properties_import_model import Properties_ImportModel
-from ..utils.obj_utils import ExtractedObjectHelper
-from ..utils.json_utils import JsonUtils
-from ..utils.texture_utils import TextureUtils
-
-
 import os.path
 import bpy
-import math
 
-from bpy_extras.io_utils import unpack_list, ImportHelper, axis_conversion
-from bpy.props import BoolProperty, StringProperty, CollectionProperty
+from .migoto_format import *
+from ..utils.collection_utils import *
+from ..utils.json_utils import JsonUtils
+from ..utils.config_utils import *
 
 from .mesh_import_utils import MeshImportUtils
-from .migoto_binary_file import MigotoBinaryFile, FMTFile
-
-
-
-    
-
-
+from .migoto_binary_file import MigotoBinaryFile
 
 
 def ImprotFromWorkSpaceSSMTV3(self, context):

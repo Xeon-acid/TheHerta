@@ -4,13 +4,13 @@ import math
 from ..migoto.migoto_format import M_Key, ObjDataModel, M_DrawIndexed, M_Condition,D3D11GameType,TextureReplace
 from ..config.import_config import GlobalConfig
 from ..generate_mod.m_counter import M_Counter
-from ..games.draw_ib_model_wwmi import DrawIBModelWWMI
+from ..generate_mod.draw_ib_model_wwmi import DrawIBModelWWMI
 
-from ..games.branch_model import BranchModel
+from ..generate_mod.branch_model import BranchModel
 from ..generate_mod.m_ini_builder import M_IniBuilder,M_IniSection,M_SectionType
 from ..properties.properties_generate_mod import Properties_GenerateMod
 from ..generate_mod.m_ini_helper import M_IniHelperV2,M_IniHelperV3
-from ..games.m_ini_helper_gui import M_IniHelperGUI
+from ..generate_mod.m_ini_helper_gui import M_IniHelperGUI
 from ..properties.properties_wwmi import Properties_WWMI
 
 class ModModelWWMI:
