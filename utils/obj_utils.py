@@ -645,6 +645,9 @@ class ObjUtils:
 
     @classmethod
     def copy_object(cls,context, obj, name=None, collection=None):
+        '''
+        collection指的是复制后链接到哪个collection里
+        '''
         with OpenObject(context, obj, mode='OBJECT') as obj:
             new_obj = obj.copy()
             new_obj.data = obj.data.copy()

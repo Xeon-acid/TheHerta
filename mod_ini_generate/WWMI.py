@@ -33,8 +33,7 @@ class ModModelWWMI:
             draw_ib_model = DrawIBModelWWMI(draw_ib=draw_ib,branch_model=self.branch_model)
             self.drawib_drawibmodel_dict[draw_ib] = draw_ib_model
 
-    @classmethod
-    def add_constants_section(cls,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
+    def add_constants_section(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
         constants_section = M_IniSection(M_SectionType.Constants)
         constants_section.append("[Constants]")
         constants_section.append("global $required_wwmi_version = 0.70")
@@ -63,8 +62,7 @@ class ModModelWWMI:
 
         ini_builder.append_section(constants_section)
     
-    @classmethod
-    def add_present_section(cls,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
+    def add_present_section(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
         present_section = M_IniSection(M_SectionType.Present)
         present_section.append("[Present]")
 
@@ -86,8 +84,7 @@ class ModModelWWMI:
 
         ini_builder.append_section(present_section)
 
-    @classmethod
-    def add_commandlist_section(cls,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
+    def add_commandlist_section(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
         commandlist_section = M_IniSection(M_SectionType.CommandList)
 
         # CommandListRegisterMod
@@ -206,8 +203,7 @@ class ModModelWWMI:
 
         ini_builder.append_section(commandlist_section)
 
-    @classmethod
-    def add_resource_mod_info_section_default(cls,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
+    def add_resource_mod_info_section_default(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
         '''
         这里第一个版本我们暂时不提供可以指定Mod信息的功能，所以全部都用的是默认的值
         TODO 这个可以放入M_IniHelper中
@@ -241,8 +237,7 @@ class ModModelWWMI:
         ini_builder.append_section(resource_mod_info_section)
 
 
-    @classmethod
-    def add_texture_override_mark_bone_data_cb(cls,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
+    def add_texture_override_mark_bone_data_cb(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
         '''
         给VS-CB4的Hash值做一个filter_index标记
         '''
@@ -257,8 +252,7 @@ class ModModelWWMI:
         ini_builder.append_section(texture_override_mark_bonedatacb_section)
 
 
-    @classmethod
-    def add_texture_override_component(cls,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
+    def add_texture_override_component(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
         texture_override_component = M_IniSection(M_SectionType.TextureOverrideIB)
         component_count = 0
         for merged_object_component in draw_ib_model.merged_object.components:
@@ -324,8 +318,7 @@ class ModModelWWMI:
 
         ini_builder.append_section(texture_override_component)
     
-    @classmethod
-    def add_texture_override_shapekeys(cls,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
+    def add_texture_override_shapekeys(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
         texture_override_shapekeys_section = M_IniSection(M_SectionType.TextureOverrideShapeKeys)
 
         shapekey_offsets_hash = draw_ib_model.extracted_object.shapekeys.offsets_hash
@@ -384,8 +377,7 @@ class ModModelWWMI:
 
         ini_builder.append_section(texture_override_shapekeys_section)
 
-    @classmethod
-    def add_resource_shapekeys(cls,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
+    def add_resource_shapekeys(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
         resource_shapekeys_section = M_IniSection(M_SectionType.ResourceShapeKeysOverride)
 
         # TODO 这些array后面的值可能是动态计算得到的
@@ -401,8 +393,7 @@ class ModModelWWMI:
 
         ini_builder.append_section(resource_shapekeys_section)
 
-    @classmethod
-    def add_resource_merged_skeleton(cls,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
+    def add_resource_merged_skeleton(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
         resource_skeleton_section = M_IniSection(M_SectionType.ResourceSkeletonOverride)
 
         # TODO 这些array后面的值可能是动态计算得到的
@@ -425,8 +416,7 @@ class ModModelWWMI:
 
         ini_builder.append_section(resource_skeleton_section)
 
-    @classmethod
-    def add_resource_buffer(cls,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
+    def add_resource_buffer(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
         resource_buffer_section = M_IniSection(M_SectionType.ResourceBuffer)
 
         # IndexBuffer
@@ -483,8 +473,7 @@ class ModModelWWMI:
         ini_builder.append_section(resource_buffer_section)
 
 
-    @classmethod
-    def generate_unreal_vs_config_ini(cls):
+    def generate_unreal_vs_config_ini(self):
         '''
         Supported Games:
         - Wuthering Waves
@@ -492,36 +481,38 @@ class ModModelWWMI:
         '''
         config_ini_builder = M_IniBuilder()
 
-        M_IniHelperV2.generate_hash_style_texture_ini(ini_builder=config_ini_builder,drawib_drawibmodel_dict=cls.drawib_drawibmodel_dict)
+        M_IniHelperV2.generate_hash_style_texture_ini(ini_builder=config_ini_builder,drawib_drawibmodel_dict=self.drawib_drawibmodel_dict)
 
         # Add namespace 
-        for draw_ib, draw_ib_model in cls.drawib_drawibmodel_dict.items():
-            M_IniHelperV2.add_switchkey_constants_section(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
-            M_IniHelperV2.add_switchkey_present_section(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
-            M_IniHelperV2.add_switchkey_sections(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model) 
+        for draw_ib, draw_ib_model in self.drawib_drawibmodel_dict.items():
 
-            cls.add_constants_section(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
-            cls.add_present_section(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
-            cls.add_commandlist_section(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            self.add_constants_section(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            self.add_present_section(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            self.add_commandlist_section(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
 
-            cls.add_texture_override_mark_bone_data_cb(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
-            cls.add_texture_override_component(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
-            cls.add_texture_override_shapekeys(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            self.add_texture_override_mark_bone_data_cb(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            self.add_texture_override_component(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            self.add_texture_override_shapekeys(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
 
-            cls.add_resource_mod_info_section_default(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
-            cls.add_resource_shapekeys(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            self.add_resource_mod_info_section_default(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            self.add_resource_shapekeys(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
 
             if Properties_WWMI.import_merged_vgmap():
-                cls.add_resource_merged_skeleton(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+                self.add_resource_merged_skeleton(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
 
-            cls.add_resource_buffer(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            self.add_resource_buffer(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
             
             # 移动槽位贴图
             M_IniHelperV2.move_slot_style_textures(draw_ib_model=draw_ib_model)
 
             M_Counter.generated_mod_number = M_Counter.generated_mod_number + 1
 
-            config_ini_builder.save_to_file(GlobalConfig.path_generate_mod_folder() + GlobalConfig.workspacename + "_" + draw_ib + ".ini")
-            config_ini_builder.clear()
+        M_IniHelperV3.add_branch_key_sections(ini_builder=config_ini_builder,key_name_mkey_dict=self.branch_model.keyname_mkey_dict)
+
+        M_IniHelperGUI.add_branch_mod_gui_section(ini_builder=config_ini_builder,key_name_mkey_dict=self.branch_model.keyname_mkey_dict)
+
+        config_ini_builder.save_to_file(GlobalConfig.path_generate_mod_folder() + GlobalConfig.workspacename + ".ini")
+
+
 
         

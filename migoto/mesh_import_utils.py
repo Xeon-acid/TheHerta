@@ -131,8 +131,8 @@ class MeshImportUtils:
             if os.path.exists(metadatajsonpath):
                 print("鸣潮读取Metadata.json")
                 extracted_object = ExtractedObjectHelper.read_metadata(metadatajsonpath)
-                if " " in mbf.mesh_name:
-                    partname_count = int(mbf.mesh_name.split(" ")[1])
+                if "-" in mbf.mesh_name:
+                    partname_count = int(mbf.mesh_name.split("-")[1]) - 1
                     print("import partname count: " + str(partname_count))
                     component = extracted_object.components[partname_count]
         print(len(blend_indices))

@@ -199,6 +199,7 @@ class BranchModel:
 
 
     def get_buffered_obj_data_model_list_by_draw_ib_and_game_type(self,draw_ib:str,d3d11_game_type:D3D11GameType):
+        print("BranchModel.get_buffered_obj_data_model_list_by_draw_ib_and_game_type()")
         '''
         (1) 读取obj的category_buffer
         (2) 读取obj的ib
