@@ -5,8 +5,8 @@ from .m_ini_builder import *
 from ..utils.json_utils import JsonUtils
 from ..config.main_config import GlobalConfig,LogicName
 from ..properties.properties_generate_mod import Properties_GenerateMod
-from .drawib_model_universal import DrawIBModelUniversal
 from .m_counter import M_Counter
+from ..games.draw_ib_model import DrawIBModel
 from ..migoto.migoto_format import ObjModel, M_Key
 
 class M_IniHelperV2:
@@ -39,7 +39,7 @@ class M_IniHelperV2:
         return drawindexed_str_list
 
     @classmethod
-    def generate_hash_style_texture_ini(cls,ini_builder:M_IniBuilder,drawib_drawibmodel_dict:dict[str,DrawIBModelUniversal]):
+    def generate_hash_style_texture_ini(cls,ini_builder:M_IniBuilder,drawib_drawibmodel_dict:dict[str,DrawIBModel]):
         '''
         Generate Hash style TextureReplace.ini
         '''
@@ -151,7 +151,7 @@ class M_IniHelperV2:
         #     texture_ini_builder.save_to_file(MainConfig.path_generate_mod_folder() + MainConfig.workspacename + "_Texture.ini")
 
     @classmethod
-    def move_slot_style_textures(cls,draw_ib_model:DrawIBModelUniversal):
+    def move_slot_style_textures(cls,draw_ib_model:DrawIBModel):
         '''
         Move all textures from extracted game type folder to generate mod Texture folder.
         Only works in default slot style texture.
@@ -170,7 +170,7 @@ class M_IniHelperV2:
                     shutil.copy2(source_path,target_path)
 
     @classmethod
-    def add_switchkey_constants_section(cls,ini_builder,draw_ib_model:DrawIBModelUniversal):
+    def add_switchkey_constants_section(cls,ini_builder,draw_ib_model:DrawIBModel):
         '''
         声明SwitchKey的Constants变量
         '''
@@ -185,7 +185,7 @@ class M_IniHelperV2:
             ini_builder.append_section(constants_section)
 
     @classmethod
-    def add_switchkey_present_section(cls,ini_builder,draw_ib_model:DrawIBModelUniversal):
+    def add_switchkey_present_section(cls,ini_builder,draw_ib_model:DrawIBModel):
         '''
         声明$active激活变量
         '''
@@ -196,7 +196,7 @@ class M_IniHelperV2:
             ini_builder.append_section(present_section)
     
     @classmethod
-    def add_switchkey_sections(cls,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelUniversal):
+    def add_switchkey_sections(cls,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModel):
         '''
         声明按键切换和按键开关的变量 Key Section
         '''

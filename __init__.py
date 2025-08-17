@@ -119,12 +119,10 @@ register_classes = (
 
     # 导入3Dmigoto模型功能
     Import3DMigotoRaw,
-    SSMTImportAllFromCurrentWorkSpace,
     SSMTImportAllFromCurrentWorkSpaceV3,
 
     # 生成Mod功能
     SSMTGenerateModHSRV3,
-    GenerateModWWMI,
     SSMTGenerateModWWMIV3,
     SSMTGenerateModYYSLSV2,
     SSMTGenerateModUnityVSV2,

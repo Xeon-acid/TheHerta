@@ -11,48 +11,6 @@ from ..mod_ini_generate.IdentityV import ModModelIdentityV
 from ..mod_ini_generate.YYSLS import ModModelYYSLS
 from ..mod_ini_generate.WWMI import ModModelWWMI
 
-from ..generate_mod.drawib_model_wwmi import DrawIBModelWWMI
-from ..generate_mod.ini_model_wwmi import M_WWMIIniModel
-    
-# WWMI
-class GenerateModWWMI(bpy.types.Operator):
-    bl_idname = "herta.export_mod_wwmi"
-    bl_label = "生成WWMI格式Mod"
-    bl_description = "一键导出当前工作空间集合中的Mod，隐藏显示的模型不会被导出，隐藏的DrawIB为名称的集合不会被导出。"
-
-    def execute(self, context):
-        TimerUtils.Start("GenerateMod WWMI")
-
-        M_WWMIIniModel.initialzie()
-        M_Counter.initialize()
-
-        workspace_collection = bpy.context.collection
-
-        result = CollectionUtils.is_valid_ssmt_workspace_collection(workspace_collection)
-        if result != "":
-            self.report({'ERROR'},result)
-            return {'FINISHED'}
-        
-        for draw_ib_collection in workspace_collection.children:
-            # Skip hide collection.
-            if not CollectionUtils.is_collection_visible(draw_ib_collection.name):
-                continue
-
-            # get drawib
-            draw_ib_alias_name = CollectionUtils.get_clean_collection_name(draw_ib_collection.name)
-            draw_ib = draw_ib_alias_name.split("_")[0]
-            draw_ib_model = DrawIBModelWWMI(draw_ib_collection)
-            M_WWMIIniModel.drawib_drawibmodel_dict[draw_ib] = draw_ib_model
-
-        # ModModel填充完毕后，开始输出Mod
-        M_WWMIIniModel.generate_unreal_vs_config_ini()
-
-        self.report({'INFO'},"Generate Mod Success!")
-
-        CommandUtils.OpenGeneratedModFolder()
-
-        TimerUtils.End("GenerateMod WWMI")
-        return {'FINISHED'}
 
 
 
