@@ -137,13 +137,14 @@ class ModModelIdentityV:
 
             texture_override_ib_section.append(self.vlr_filter_index_indent + "handling = skip")
 
+            # 第五不需要这样，因为第五需要完整的IB还原维持模型稳定
             # If ib buf is emprt, continue to avoid add ib resource replace.
-            ib_buf = draw_ib_model.componentname_ibbuf_dict.get("Component " + part_name,None)
-            if ib_buf is None or len(ib_buf) == 0:
-                # 不导出对应部位时，要写ib = null，否则在部分场景会发生卡顿，原因未知但是这就是解决方案。
-                texture_override_ib_section.append("ib = null")
-                texture_override_ib_section.new_line()
-                continue
+            # ib_buf = draw_ib_model.componentname_ibbuf_dict.get("Component " + part_name,None)
+            # if ib_buf is None or len(ib_buf) == 0:
+            #     # 不导出对应部位时，要写ib = null，否则在部分场景会发生卡顿，原因未知但是这就是解决方案。
+            #     texture_override_ib_section.append("ib = null")
+            #     texture_override_ib_section.new_line()
+            #     continue
 
             # if ZZZ ,use run = CommandListSkinTexture solve slot check problems.
             if GlobalConfig.logic_name == LogicName.ZenlessZoneZero:
