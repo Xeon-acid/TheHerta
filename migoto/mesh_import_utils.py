@@ -254,8 +254,13 @@ class MeshImportUtils:
             dim = data_np.shape[1]
             
             # 确定需要处理的坐标分量组合
-            # DOAV中，TEXCOORD的Format是R16G16B16A16_FLOAT，导入进来就会被切成这样的TEXCOORD.xy,TEXCOORD.zw
-            # 然后导出时应该也需要特殊的处理。
+            '''
+            XXX DOAV TEXCOORD是4D的问题。
+            DOAV中，TEXCOORD的Format是R16G16B16A16_FLOAT，导入进来就会被切成这样的TEXCOORD.xy,TEXCOORD.zw
+            然后导出时应该也需要特殊的处理。
+            但是我们并不这么做，因为R16G16B16A16_FLOAT可以拆成两个UV，分别为R16G16_FLOAT
+            所以在设计数据类型的时候，所有R16G16B16A16_FLOAT这种4D类型的TEXCOORD都应该拆成两个R16G16_FLOAT类型的UV进行处理。
+            '''
             if dim == 4:
                 components_list = ('xy', 'zw')
             elif dim == 2:
