@@ -254,6 +254,8 @@ class MeshImportUtils:
             dim = data_np.shape[1]
             
             # 确定需要处理的坐标分量组合
+            # DOAV中，TEXCOORD的Format是R16G16B16A16_FLOAT，导入进来就会被切成这样的TEXCOORD.xy,TEXCOORD.zw
+            # 然后导出时应该也需要特殊的处理。
             if dim == 4:
                 components_list = ('xy', 'zw')
             elif dim == 2:
@@ -297,6 +299,7 @@ class MeshImportUtils:
         这会导致后面创建顶点组数量时，直接卡死，所以我们要替换为-1才能够正常导入。
         此问题在第五人格公研服Neox3引擎中发现并测试。
         所以在这里要转换为numpy数组处理，方便把所有65535替换为-1
+        虽然导出时变为 00 00和原本的FF FF不一样，但是游戏中显示Mod是正常的，所以可以确定这么处理是没问题的
         '''
         for semantic_index, bone_indices_list in blend_indices.items():
             # 转为 NumPy 数组处理

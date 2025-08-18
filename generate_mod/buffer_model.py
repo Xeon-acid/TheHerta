@@ -94,7 +94,7 @@ class BufferModel:
 
         normalize_weights = "Blend" in self.d3d11GameType.OrderedCategoryNameList
 
-        blendweights_dict, blendindices_dict = mesh_data.get_blendweights_blendindices_v1(normalize_weights = normalize_weights)
+        blendweights_dict, blendindices_dict = mesh_data.get_blendweights_blendindices_v3(normalize_weights = normalize_weights)
 
 
         # 对每一种Element都获取对应的数据
@@ -313,7 +313,7 @@ class BufferModel:
                         
             elif d3d11_element_name.startswith('BLENDINDICES'):
                 blendindices = blendindices_dict.get(d3d11_element.SemanticIndex,None)
-                
+                # print("blendindices: " + str(blendindices[0]))
                 # if blendindices is None:
                 #     blendindices = blendindices_dict.get(0,None)
 
@@ -332,6 +332,7 @@ class BufferModel:
                 elif d3d11_element.Format == 'R8G8B8A8_UNORM':
                     self.element_vertex_ndarray[d3d11_element_name] = MeshFormatConverter.convert_4x_float32_to_r8g8b8a8_unorm(blendindices)
                 elif d3d11_element.Format == 'R8G8B8A8_UINT':
+                    # print("uint8")
                     blendindices.astype(numpy.uint8)
                     self.element_vertex_ndarray[d3d11_element_name] = blendindices
                 
@@ -348,6 +349,9 @@ class BufferModel:
                 elif d3d11_element.Format == 'R8G8B8A8_UNORM':
                     # print("BLENDWEIGHT R8G8B8A8_UNORM")
                     self.element_vertex_ndarray[d3d11_element_name] = MeshFormatConverter.convert_4x_float32_to_r8g8b8a8_unorm_blendweights(blendweights)
+                elif d3d11_element.Format == 'R16G16B16A16_FLOAT':
+                    self.element_vertex_ndarray[d3d11_element_name] = blendweights.astype(numpy.float16)
+                    
 
     def calc_index_vertex_buffer_girlsfrontline2(self,obj,mesh:bpy.types.Mesh)->ObjModel:
         '''

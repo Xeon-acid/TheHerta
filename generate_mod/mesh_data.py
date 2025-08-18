@@ -10,13 +10,16 @@ class MeshData:
     def __init__(self,mesh:bpy.types.Mesh) -> None:
         self.mesh = mesh
 
+    '''
+    # TODO 下面这里是获取BLENDWEIGHTS和BLENDINDICES的代码，但是只支持前四个BLENDWEIGHTS和BLENDINDICES
+    # 我们需要扩展让它支持任意多个，并且每四个为一组
+    # 比如BLENDWEIGHTS R8G8B8A8_UNORM  BLENDWEIGHTS1 R8G8B8A8_UNORM  
+    # 也会有对应的BLENDINDICES和BLENDINDICES1，数据类型为R8G8B8A8_UINT等等
+    # 数据类型是后面决定的，但是我们这里要提前准备好BLENDWEIGHTS和BLENDINDICES的内容，反正肯定不是4个
+    # 创建一个包含所有循环顶点索引的NumPy数组
+    '''
     def get_blendweights_blendindices_v1(self,normalize_weights:bool = False):
-        # TODO 下面这里是获取BLENDWEIGHTS和BLENDINDICES的代码，但是只支持前四个BLENDWEIGHTS和BLENDINDICES
-        # 我们需要扩展让它支持任意多个，并且每四个为一组
-        # 比如BLENDWEIGHTS R8G8B8A8_UNORM  BLENDWEIGHTS1 R8G8B8A8_UNORM  
-        # 也会有对应的BLENDINDICES和BLENDINDICES1，数据类型为R8G8B8A8_UINT等等
-        # 数据类型是后面决定的，但是我们这里要提前准备好BLENDWEIGHTS和BLENDINDICES的内容，反正肯定不是4个
-        # 创建一个包含所有循环顶点索引的NumPy数组
+
         mesh_loops = self.mesh.loops
         mesh_loops_length = len(mesh_loops)
         mesh_vertices = self.mesh.vertices
@@ -65,17 +68,16 @@ class MeshData:
         blendindices_dict[0] = blendindices
         return blendweights_dict, blendindices_dict
     
-    
-    # TODO V2暂时不能启用，因为无法解决Normalize All的问题。
-    def get_blendweights_blendindices_v2(self):
-        '''
-        升级版，支持多个SemanticIndex的BLENDWEIGHTS和BLENDINDICES
-        '''
-        
+
+    def get_blendweights_blendindices_v3(self, normalize_weights: bool = False):
+        # print("get_blendweights_blendindices_v3")
+        # print(normalize_weights)
+
         mesh_loops = self.mesh.loops
         mesh_loops_length = len(mesh_loops)
         mesh_vertices = self.mesh.vertices
         
+        # 获取循环顶点的顶点索引
         loop_vertex_indices = numpy.empty(mesh_loops_length, dtype=int)
         mesh_loops.foreach_get("vertex_index", loop_vertex_indices)
         
@@ -88,63 +90,68 @@ class MeshData:
         
         # 将最大组数对齐到4的倍数（每个语义索引包含4个权重）
         max_groups_per_vertex = ((max_groups_per_vertex + 3) // 4) * 4
-        num_semantics = max_groups_per_vertex // 4  # 需要的语义索引数量
-        
-        # 为每个顶点存储所有组和权重（填充0）
-        all_groups = numpy.zeros((len(mesh_vertices), max_groups_per_vertex), dtype=int)
-        
-        all_weights = numpy.zeros((len(mesh_vertices), max_groups_per_vertex), dtype=numpy.float32)
-        
-        # 填充权重和组数据
-        for v_index, v in enumerate(mesh_vertices):
-            groups = sorted(v.groups, key=lambda x: x.weight, reverse=True)
-            
-            # 提取权重并规格化
-            weights = numpy.array([g.weight for g in groups], dtype=numpy.float32)
+        num_sets = max_groups_per_vertex // 4  # 需要的语义索引数量
 
-            # 这个归一化，我测试了，细分之后不管是否归一化都对最终效果没有影响
-            # 所以这个代码实际上没啥用，但是仍然保留以防万一。
-            if len(weights) > 0:
-                total_weight = numpy.sum(weights)
-                if total_weight > 0:
-                    weights = weights / total_weight
-            
-            # 填充到数组中
-            num_groups = min(len(groups), max_groups_per_vertex)
-            all_groups[v_index, :num_groups] = [g.group for g in groups][:num_groups]
-            all_weights[v_index, :num_groups] = weights[:num_groups]
+        print("num_sets: " + str(num_sets))
         
-        # 创建存储多个BLENDWEIGHTS/BLENDINDICES的字典
+        # 如果最大组数小于4，至少需要1组
+        if num_sets == 0 and max_groups_per_vertex > 0:
+            num_sets = 1
+        
+        groups_per_set = 4
+        total_groups = num_sets * groups_per_set
+
+        # 提取并排序顶点组（取前 total_groups 个）
+        sorted_groups = [
+            sorted(v.groups, key=lambda x: x.weight, reverse=True)[:total_groups]
+            for v in mesh_vertices
+        ]
+
+        # 初始化存储数组
+        all_groups = numpy.zeros((len(mesh_vertices), total_groups), dtype=int)
+        all_weights = numpy.zeros((len(mesh_vertices), total_groups), dtype=numpy.float32)
+
+        # 填充权重和索引数据
+        for v_idx, groups in enumerate(sorted_groups):
+            count = min(len(groups), total_groups)
+            all_groups[v_idx, :count] = [g.group for g in groups][:count]
+            all_weights[v_idx, :count] = [g.weight for g in groups][:count]
+
+        # 关键步骤：整体归一化所有权重
+        if normalize_weights:
+            weight_sums = numpy.sum(all_weights, axis=1)
+            # 避免除以零（权重和为0的顶点保持原值）
+            non_zero_mask = weight_sums > 0
+            all_weights[non_zero_mask] /= weight_sums[non_zero_mask, None]
+
+        # 将数据重塑为 [顶点数, 组数, 4]
+        all_weights_reshaped = all_weights.reshape(len(mesh_vertices), num_sets, groups_per_set)
+        all_groups_reshaped = all_groups.reshape(len(mesh_vertices), num_sets, groups_per_set)
+
+        # 初始化输出字典
         blendweights_dict = {}
         blendindices_dict = {}
-        
-        # 为每个语义索引创建数据
-        for semantic_index in range(num_semantics):
-            start_idx = semantic_index * 4
-            end_idx = start_idx + 4
-            
-            # 初始化loop级别的数组
-            loop_blendweights = numpy.zeros((mesh_loops_length, 4), dtype=numpy.float32)
-            # loop_blendweights = numpy.full((mesh_loops_length, 4), -1, dtype=int)
 
 
-            loop_blendindices = numpy.zeros((mesh_loops_length, 4), dtype=numpy.uint32)
+        # 为每组数据创建独立数组
+        for set_idx in range(num_sets):
+            # 初始化当前组的存储
+            blendweights = numpy.zeros((mesh_loops_length, groups_per_set), dtype=numpy.float32)
+            blendindices = numpy.zeros((mesh_loops_length, groups_per_set), dtype=numpy.uint32)
             
-            # 映射顶点数据到loop
-            valid_mask = (loop_vertex_indices >= 0) & (loop_vertex_indices < len(mesh_vertices))
+            # 创建有效索引掩码
+            valid_mask = (0 <= loop_vertex_indices) & (loop_vertex_indices < len(mesh_vertices))
             valid_indices = loop_vertex_indices[valid_mask]
             
-            if len(valid_indices) > 0:
-                # 获取当前语义索引对应的4个权重/组
-                weights_slice = all_weights[valid_indices, start_idx:end_idx]
-                groups_slice = all_groups[valid_indices, start_idx:end_idx]
-                
-                # 填充到loop数组
-                loop_blendweights[valid_mask] = weights_slice
-                loop_blendindices[valid_mask] = groups_slice
+            # 映射数据到循环顶点
+            blendweights[valid_mask] = all_weights_reshaped[valid_indices, set_idx, :]
+            blendindices[valid_mask] = all_groups_reshaped[valid_indices, set_idx, :]
             
-            # 存储到字典
-            blendweights_dict[semantic_index] = loop_blendweights
-            blendindices_dict[semantic_index] = loop_blendindices
-        
+            # 存储到字典（使用SemanticIndex作为键）
+            blendweights_dict[set_idx] = blendweights
+            blendindices_dict[set_idx] = blendindices
+
+        # print("blendweights_dict: " + str(blendweights_dict[2][0]))
+        # print("blendindices_dict: " + str(blendindices_dict[2][0]))
+
         return blendweights_dict, blendindices_dict
