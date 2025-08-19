@@ -119,6 +119,11 @@ class BufferModel:
                     new_array = numpy.zeros((positions.shape[0], 4))
                     new_array[:, :3] = positions
                     positions = new_array
+                if d3d11_element.Format == 'R32G32B32A32_FLOAT':
+                    positions = positions.astype(numpy.float32)
+                    new_array = numpy.zeros((positions.shape[0], 4))
+                    new_array[:, :3] = positions
+                    positions = new_array
                 
                 self.element_vertex_ndarray[d3d11_element_name] = positions
                 # TimerUtils.End("Position Get") # 0:00:00.057535 
@@ -135,7 +140,17 @@ class BufferModel:
 
                     result = result.astype(numpy.float16)
                     self.element_vertex_ndarray[d3d11_element_name] = result
+                elif d3d11_element.Format == 'R32G32B32A32_FLOAT':
+                    result = numpy.ones(mesh_loops_length * 4, dtype=numpy.float32)
+                    normals = numpy.empty(mesh_loops_length * 3, dtype=numpy.float32)
+                    mesh_loops.foreach_get('normal', normals)
+                    result[0::4] = normals[0::3]
+                    result[1::4] = normals[1::3]
+                    result[2::4] = normals[2::3]
+                    result = result.reshape(-1, 4)
 
+                    result = result.astype(numpy.float32)
+                    self.element_vertex_ndarray[d3d11_element_name] = result
                 elif d3d11_element.Format == 'R8G8B8A8_SNORM':
                     result = numpy.ones(mesh_loops_length * 4, dtype=numpy.float32)
                     normals = numpy.empty(mesh_loops_length * 3, dtype=numpy.float32)

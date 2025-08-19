@@ -54,8 +54,10 @@ class MeshImportUtils:
 
             if element.SemanticName == "POSITION":
                 if len(data[0]) == 4:
-                    if ([x[3] for x in data] != [1.0] * len(data)) and ([x[3] for x in data] != [0] * len(data)):
-                        # Nico: Blender暂时不支持4D索引，加了也没用，直接不行就报错，转人工处理。
+                    # Nico: 这里改为只要所有的第四位都是0或1就可以近似看为3D的 POSITION
+                    # 这种处理是偷懒，第四位直接不管了，呵呵呵
+                    if not all(x[3] in (0, 1) for x in data):
+                    # if ([x[3] for x in data] != [1.0] * len(data)) and ([x[3] for x in data] != [0] * len(data)):
                         raise Fatal('Positions are 4D')
                     
                 # XXX 翻转X轴，Blender的X轴是左手系，D3D11是右手系
