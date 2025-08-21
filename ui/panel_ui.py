@@ -5,6 +5,7 @@ import os
 
 from bpy.types import SpaceView3D
 
+
 from ..utils.migoto_utils import *
 from ..config.main_config import * 
 from .generate_mod_ui import *
@@ -249,34 +250,6 @@ class PanelButtons(bpy.types.Panel):
         # 一键导入当前工作空间
         layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
 
-        if GlobalConfig.logic_name == LogicName.HonkaiStarRail:
-            layout.operator("ssmt.generate_mod_hsr_v3",icon='EXPORT')
-        elif GlobalConfig.logic_name == LogicName.AILIMIT:
-            layout.operator("ssmt.generate_mod_hsr_v3",icon='EXPORT',text="生成SRMI格式Mod")
-            layout.operator("ssmt.generate_mod_unity_cs_v2",text="生成SSMT格式Mod")
-        elif GlobalConfig.logic_name == LogicName.YYSLS:
-            layout.operator("ssmt.generate_mod_yysls_v2")
-        elif GlobalConfig.logic_name == LogicName.CTXMC:
-            layout.operator("ssmt.generate_mod_ctx_mc")
-        elif GlobalConfig.logic_name == LogicName.IdentityV2:
-            layout.operator("ssmt.generate_mod_ctx_mc")
-        elif GlobalConfig.logic_name == LogicName.NierR:
-            layout.operator("ssmt.generate_mod_ctx_mc")
-        elif GlobalConfig.logic_name == LogicName.WutheringWaves:
-            layout.operator("ssmt.generate_mod_wwmi_v3")
-        elif GlobalConfig.logic_name == LogicName.GenshinImpact:
-            layout.operator("ssmt.generate_mod_unity_vs_v2")
-        elif GlobalConfig.logic_name == LogicName.HonkaiImpact3:
-            layout.operator("ssmt.generate_mod_unity_vs_v2")
-        else:
-            if GlobalConfig.logic_name == LogicName.UnityVS:
-                layout.operator("ssmt.generate_mod_unity_vs_v2")
-            elif GlobalConfig.logic_name == LogicName.UnityCS:
-                layout.operator("ssmt.generate_mod_unity_cs_v2")
-            elif GlobalConfig.logic_name == LogicName.ZenlessZoneZero:
-                layout.operator("ssmt.generate_mod_unity_vs_v2")
-            else:
-                layout.label(text= "Generate Mod for " + GlobalConfig.gamename + " Not Supported Yet.")
-
-
-
+        # 生成Mod按钮
+        layout.operator("ssmt.generate_mod",icon='EXPORT')
+    

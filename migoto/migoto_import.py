@@ -9,6 +9,9 @@ from ..utils.config_utils import *
 from .mesh_import_utils import MeshImportUtils
 from .migoto_binary_file import MigotoBinaryFile
 
+from ..utils.translate_utils import TR
+
+
 
 def ImprotFromWorkSpaceSSMTV3(self, context):
     '''
@@ -69,7 +72,7 @@ def ImprotFromWorkSpaceSSMTV3(self, context):
 
 class SSMTImportAllFromCurrentWorkSpaceV3(bpy.types.Operator):
     bl_idname = "ssmt.import_all_from_workspace_v3"
-    bl_label = "一键导入当前工作空间内容"
+    bl_label = TR.translate("一键导入当前工作空间内容")
     bl_description = "一键导入当前工作空间文件夹下所有的DrawIB对应的模型为SSMT集合架构"
 
     def execute(self, context):

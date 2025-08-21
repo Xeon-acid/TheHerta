@@ -27,7 +27,7 @@ bl_info = {
     "name": "TheHerta",
     "description": "TheHerta",
     "blender": (3, 6, 0),
-    "version": (2, 0, 0),
+    "version": (2, 0, 1),
     "location": "View3D",
     "category": "Generic"
 }
@@ -120,14 +120,8 @@ register_classes = (
     # 导入3Dmigoto模型功能
     Import3DMigotoRaw,
     SSMTImportAllFromCurrentWorkSpaceV3,
-
     # 生成Mod功能
-    SSMTGenerateModHSRV3,
-    SSMTGenerateModWWMIV3,
-    SSMTGenerateModYYSLSV2,
-    SSMTGenerateModUnityVSV2,
-    SSMTGenerateModUnityCSV2,
-    SSMTGenerateModCTXMC,
+    SSMTGenerateMod,
 
     # 模型处理面板
     RemoveAllVertexGroupOperator,
