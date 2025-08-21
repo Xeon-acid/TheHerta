@@ -8,9 +8,13 @@ class TR:
     
     # 翻译字典 - key为中文，value为英文翻译（只保留3个作为演示）
     _translations = {
+
+        # SSMT基础面板
         "一键导入当前工作空间内容": "Import All From WorkSpace",
         "生成Mod": "Generate Mod", 
-        "视图": "View"
+        "导入.fmt .ib .vb格式模型": "Import .fmt .ib .vb Model",
+
+
     }
 
     @classmethod
