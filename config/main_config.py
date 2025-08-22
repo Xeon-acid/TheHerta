@@ -25,6 +25,7 @@ class LogicName:
     YYSLS = "YYSLS"
     AILIMIT = "AILIMIT"
     HOK = "HOK"
+    SnowBreak = "SnowBreak"
 
 
 # 全局配置类，使用字段默认为全局可访问的唯一静态变量的特性，来实现全局变量

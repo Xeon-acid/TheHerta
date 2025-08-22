@@ -37,7 +37,7 @@ def get_buffer_ib_vb_fast(d3d11GameType:D3D11GameType):
     if GlobalConfig.logic_name == LogicName.UnityCPU and "TANGENT" in buffer_model.d3d11GameType.OrderedFullElementList:
         obj_model = buffer_model.calc_index_vertex_buffer_girlsfrontline2(obj, mesh)
 
-    elif GlobalConfig.logic_name == LogicName.WutheringWaves:
+    elif GlobalConfig.logic_name == LogicName.WutheringWaves or GlobalConfig.logic_name == LogicName.SnowBreak:
         obj_model = buffer_model.calc_index_vertex_buffer_wwmi(obj, mesh)
     else:
         # 计算IndexBuffer和CategoryBufferDict

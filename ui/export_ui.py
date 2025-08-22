@@ -14,7 +14,7 @@ from ..mod_ini_generate.HonkaiStarRail import ModModelHonkaiStarRail
 from ..mod_ini_generate.IdentityV import ModModelIdentityV
 from ..mod_ini_generate.YYSLS import ModModelYYSLS
 from ..mod_ini_generate.WWMI import ModModelWWMI
-
+from ..mod_ini_generate.SnowBreak import ModModelSnowBreak
 
 class PanelGenerateModConfig(bpy.types.Panel):
     bl_label = "生成Mod配置"
@@ -103,7 +103,9 @@ class SSMTGenerateMod(bpy.types.Operator):
         elif GlobalConfig.logic_name == LogicName.UnityCPU:
             migoto_mod_model = ModModelUnity(workspace_collection=workspace_collection)
             migoto_mod_model.generate_unity_vs_config_ini()
-
+        elif GlobalConfig.logic_name == LogicName.SnowBreak:
+            migoto_mod_model = ModModelSnowBreak(workspace_collection=workspace_collection)
+            migoto_mod_model.generate_ini()
         else:
             self.report({'ERROR'},"当前逻辑暂不支持生成Mod")
             return {'FINISHED'}
