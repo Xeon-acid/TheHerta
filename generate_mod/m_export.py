@@ -11,7 +11,7 @@ def get_buffer_ib_vb_fast(d3d11GameType:D3D11GameType):
     '''
     使用Numpy直接从当前选中的obj的mesh中转换数据到目标格式Buffer
     '''
-    TimerUtils.Start("get_buffer_ib_vb_fast")
+    # TimerUtils.Start("get_buffer_ib_vb_fast")
     buffer_model = BufferModel(d3d11GameType=d3d11GameType)
 
     obj = ObjUtils.get_bpy_context_object()
@@ -27,7 +27,7 @@ def get_buffer_ib_vb_fast(d3d11GameType:D3D11GameType):
     # Calculates tangents and makes loop normals valid (still with our custom normal data from import time):
     # 前提是有UVMap，前面的步骤应该保证了模型至少有一个TEXCOORD.xy
     mesh.calc_tangents()
-
+ 
     # 读取并解析数据
     buffer_model.parse_elementname_ravel_ndarray_dict(mesh)
 
@@ -37,13 +37,15 @@ def get_buffer_ib_vb_fast(d3d11GameType:D3D11GameType):
     if GlobalConfig.logic_name == LogicName.UnityCPU and "TANGENT" in buffer_model.d3d11GameType.OrderedFullElementList:
         obj_model = buffer_model.calc_index_vertex_buffer_girlsfrontline2(obj, mesh)
 
-    elif GlobalConfig.logic_name == LogicName.WutheringWaves or GlobalConfig.logic_name == LogicName.SnowBreak:
+    elif GlobalConfig.logic_name == LogicName.WutheringWaves:
+        obj_model = buffer_model.calc_index_vertex_buffer_wwmi(obj, mesh)
+    elif GlobalConfig.logic_name == LogicName.SnowBreak:
         obj_model = buffer_model.calc_index_vertex_buffer_wwmi(obj, mesh)
     else:
         # 计算IndexBuffer和CategoryBufferDict
         obj_model = buffer_model.calc_index_vertex_buffer_universal(obj, mesh)
     
-    TimerUtils.End("get_buffer_ib_vb_fast")
+    # TimerUtils.End("get_buffer_ib_vb_fast")
     
     return obj_model.ib, obj_model.category_buffer_dict, obj_model.index_vertex_id_dict
 

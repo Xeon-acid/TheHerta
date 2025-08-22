@@ -108,6 +108,7 @@ class BufferModel:
                 mesh_vertices.foreach_get('undeformed_co', vertex_coords)
                 
                 positions = vertex_coords.reshape(-1, 3)[loop_vertex_indices]
+                # print("Position Length: " + str(len(positions)))
                 
                 # XXX 翻转X轴，Blender的X轴是左手系，D3D11是右手系
                 # 这一步是为了解决导入的模型是镜像的问题
@@ -328,10 +329,16 @@ class BufferModel:
                         
             elif d3d11_element_name.startswith('BLENDINDICES'):
                 blendindices = blendindices_dict.get(d3d11_element.SemanticIndex,None)
-                # print("blendindices: " + str(blendindices[0]))
-                # if blendindices is None:
-                #     blendindices = blendindices_dict.get(0,None)
-
+                # print("blendindices: " + str(len(blendindices_dict)))
+                # 如果当前索引对应的 blendindices 为 None，则使用索引0的数据并全部置0
+                if blendindices is None:
+                    blendindices_0 = blendindices_dict.get(0, None)
+                    if blendindices_0 is not None:
+                        # 创建一个与 blendindices_0 形状相同的全0数组，保持相同的数据类型
+                        blendindices = numpy.zeros_like(blendindices_0)
+                    else:
+                        raise Fatal("Cannot find any valid BLENDINDICES data in this model, Please check if your model's Vertex Group is correct.")
+                # print(len(blendindices))
                 if d3d11_element.Format == "R32G32B32A32_SINT":
                     self.element_vertex_ndarray[d3d11_element_name] = blendindices
                 elif d3d11_element.Format == "R16G16B16A16_UINT":
@@ -353,7 +360,15 @@ class BufferModel:
                 
             elif d3d11_element_name.startswith('BLENDWEIGHT'):
                 blendweights = blendweights_dict.get(d3d11_element.SemanticIndex, None)
-
+                if blendweights is None:
+                    # print("遇到了为None的情况！")
+                    blendweights_0 = blendweights_dict.get(0, None)
+                    if blendweights_0 is not None:
+                        # 创建一个与 blendweights_0 形状相同的全0数组，保持相同的数据类型
+                        blendweights = numpy.zeros_like(blendweights_0)
+                    else:
+                        raise Fatal("Cannot find any valid BLENDWEIGHT data in this model, Please check if your model's Vertex Group is correct.")
+                # print(len(blendweights))
                 if d3d11_element.Format == "R32G32B32A32_FLOAT":
                     self.element_vertex_ndarray[d3d11_element_name] = blendweights
                 elif d3d11_element.Format == "R32G32_FLOAT":
@@ -383,6 +398,7 @@ class BufferModel:
         这里我们使用每个顶点第一次出现的TANGENT值。
         效率比下面的低50%，不过能使用这个选项的场景只有导入直接导出原模型，所以总运行时间基本都在0.4秒以内，用户感觉不到差距的，没问题。
         '''
+        print("calc ivb gf2")
         # 创建一个空列表用于存储最终的结果
         ib = []
         indexed_vertices = collections.OrderedDict()
@@ -448,6 +464,7 @@ class BufferModel:
         # (1) 统计模型的索引和唯一顶点
 
         # 创建一个空列表用于存储最终的结果
+        # print("calc ivb wwmi")
         index_vertex_id_dict = {}
         ib = []
         indexed_vertices = collections.OrderedDict()
@@ -490,14 +507,14 @@ class BufferModel:
         obj_model = ObjModel()
         # obj_model.ib = flattened_ib
 
-        print("导出WWMI Mod时，翻转面朝向")
+        print("导出时翻转面朝向")
         flipped_indices = []
-        print(flattened_ib[0],flattened_ib[1],flattened_ib[2])
+        # print(flattened_ib[0],flattened_ib[1],flattened_ib[2])
         for i in range(0, len(flattened_ib), 3):
             triangle = flattened_ib[i:i+3]
             flipped_triangle = triangle[::-1]
             flipped_indices.extend(flipped_triangle)
-        print(flipped_indices[0],flipped_indices[1],flipped_indices[2])
+        # print(flipped_indices[0],flipped_indices[1],flipped_indices[2])
 
         obj_model.ib = flipped_indices
 
@@ -518,6 +535,7 @@ class BufferModel:
         '''
         不保持相同顶点时，仍然使用经典而又快速的方法
         '''
+        # print("calc ivb universal")
         indexed_vertices = collections.OrderedDict()
         ib = [[indexed_vertices.setdefault(self.element_vertex_ndarray[blender_lvertex.index].tobytes(), len(indexed_vertices))
                 for blender_lvertex in mesh.loops[poly.loop_start:poly.loop_start + poly.loop_total]
@@ -532,8 +550,8 @@ class BufferModel:
         # 重计算COLOR步骤
         indexed_vertices = MeshFormatConverter.average_normal_color(obj=obj, indexed_vertices=indexed_vertices, d3d11GameType=self.d3d11GameType,dtype=self.dtype)
 
-        print("indexed_vertices:")
-        print(str(len(indexed_vertices)))
+        # print("indexed_vertices:")
+        # print(str(len(indexed_vertices)))
 
         # (2) 转换为CategoryBufferDict
         # TimerUtils.Start("Calc CategoryBuffer")
@@ -565,14 +583,15 @@ class BufferModel:
                 flip_face_direction = True
 
         if flip_face_direction:
-            print("导出WWMI Mod时，翻转面朝向")
+            print("导出时翻转面朝向")
+
             flipped_indices = []
-            print(flattened_ib[0],flattened_ib[1],flattened_ib[2])
+            # print(flattened_ib[0],flattened_ib[1],flattened_ib[2])
             for i in range(0, len(flattened_ib), 3):
                 triangle = flattened_ib[i:i+3]
                 flipped_triangle = triangle[::-1]
                 flipped_indices.extend(flipped_triangle)
-            print(flipped_indices[0],flipped_indices[1],flipped_indices[2])
+            # print(flipped_indices[0],flipped_indices[1],flipped_indices[2])
             obj_model.ib = flipped_indices
 
 

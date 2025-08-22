@@ -92,7 +92,7 @@ class MeshData:
         max_groups_per_vertex = ((max_groups_per_vertex + 3) // 4) * 4
         num_sets = max_groups_per_vertex // 4  # 需要的语义索引数量
 
-        print("num_sets: " + str(num_sets))
+        # print("num_sets: " + str(num_sets))
         
         # 如果最大组数小于4，至少需要1组
         if num_sets == 0 and max_groups_per_vertex > 0:

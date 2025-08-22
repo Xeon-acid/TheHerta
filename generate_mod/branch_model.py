@@ -28,9 +28,9 @@ class BranchModel:
         # (1)统计当前工作空间集合下，每个obj的生效条件
         self.parse_current_collection(current_collection=workspace_collection,chain_key_list=[])
 
-        print("当前BranchModel的obj总数量: " + str(len(self.ordered_draw_obj_data_model_list)))
-        for obj_data_model in self.ordered_draw_obj_data_model_list:
-            print("DrawIB:" + obj_data_model.draw_ib + " Component: " + str(obj_data_model.component_count) + " AliasName: " + obj_data_model.obj_alias_name)
+        # print("当前BranchModel的obj总数量: " + str(len(self.ordered_draw_obj_data_model_list)))
+        # for obj_data_model in self.ordered_draw_obj_data_model_list:
+            # print("DrawIB:" + obj_data_model.draw_ib + " Component: " + str(obj_data_model.component_count) + " AliasName: " + obj_data_model.obj_alias_name)
         
 
         self.draw_ib__component_count_list__dict = {}
@@ -50,7 +50,7 @@ class BranchModel:
             
             self.draw_ib__component_count_list__dict[draw_ib] = component_count_list
         
-        print(self.draw_ib__component_count_list__dict)
+        # print(self.draw_ib__component_count_list__dict)
         
 
     def parse_current_collection(self,current_collection:bpy.types.Collection,chain_key_list:list[M_Key]):
@@ -199,7 +199,7 @@ class BranchModel:
 
 
     def get_buffered_obj_data_model_list_by_draw_ib_and_game_type(self,draw_ib:str,d3d11_game_type:D3D11GameType):
-        print("BranchModel.get_buffered_obj_data_model_list_by_draw_ib_and_game_type()")
+        # print("BranchModel.get_buffered_obj_data_model_list_by_draw_ib_and_game_type()")
         '''
         (1) 读取obj的category_buffer
         (2) 读取obj的ib
@@ -235,8 +235,11 @@ class BranchModel:
                     all_vgs_locked = ObjUtils.is_all_vertex_groups_locked(obj)
                     if not all_vgs_locked:
                         ObjUtils.normalize_all(obj)
-
+                # print("DrawIB BranchModel")
                 ib, category_buffer_dict, index_vertex_id_dict = get_buffer_ib_vb_fast(d3d11_game_type)
+
+                # print(len(category_buffer_dict["Blend"]))
+                # print(len(index_vertex_id_dict))
                 
                 __obj_name_ib_dict[obj.name] = ib
                 __obj_name_category_buffer_list_dict[obj.name] = category_buffer_dict

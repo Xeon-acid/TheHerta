@@ -197,8 +197,9 @@ class MeshFormatConverter:
 
     @classmethod
     def convert_4x_float32_to_r8g8b8a8_unorm_blendweights(cls, input_array):
-        TimerUtils.Start("convert_4x_float32_to_r8g8b8a8_unorm_blendweights")
-        
+        # 确保输入数组是浮点类型
+        # input_array_float = input_array.astype(numpy.float32)
+    
         # 创建结果数组
         result = numpy.zeros_like(input_array, dtype=numpy.uint8)
         
@@ -209,7 +210,6 @@ class MeshFormatConverter:
         # 只处理非NaN行
         valid_input = input_array[valid_mask]
         if valid_input.size == 0:
-            TimerUtils.End("convert_4x_float32_to_r8g8b8a8_unorm_blendweights")
             return result
         
         # 计算每行总和
@@ -283,7 +283,6 @@ class MeshFormatConverter:
         # 将结果存回
         result[valid_mask] = output.astype(numpy.uint8)
         
-        TimerUtils.End("convert_4x_float32_to_r8g8b8a8_unorm_blendweights")
         return result
     
     @classmethod

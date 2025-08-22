@@ -12,7 +12,7 @@ from ..migoto.migoto_format import ObjModel, M_Key
 class M_IniHelperV2:
     @classmethod
     def get_drawindexed_str_list(cls,ordered_draw_obj_model_list) -> list[str]:
-        print("M_IniHelperV2.get_drawindexed_str_list()")
+        # print("M_IniHelperV2.get_drawindexed_str_list()")
         # 在输出之前，我们需要根据condition对obj_model进行分组
         condition_str_obj_model_list_dict:dict[str,list[ObjModel]] = {}
         for obj_model in ordered_draw_obj_model_list:

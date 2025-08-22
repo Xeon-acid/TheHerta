@@ -123,6 +123,7 @@ class DrawIBModelWWMI:
         bpy.context.view_layer.objects.active = merged_obj
         
         # 计算得到MergedObj的IndexBuffer和CategoryBuffer
+        print("DrawIBWWMI")
         ib, category_buffer_dict,index_vertex_id_dict = get_buffer_ib_vb_fast(self.d3d11GameType)
 
         # 写出到文件
