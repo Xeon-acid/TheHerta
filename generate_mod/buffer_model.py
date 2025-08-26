@@ -229,18 +229,18 @@ class BufferModel:
                     # result[1::4] *= -1
                     # result[2::4] *= -1
                     result[3::4] = tangent_w
-                elif GlobalConfig.logic_name == LogicName.UnityVS  or GlobalConfig.logic_name == LogicName.UnityCS:
+                elif GlobalConfig.logic_name == LogicName.WutheringWaves:
+                    # Unreal引擎中这里要填写固定的1
+                    tangent_w = numpy.ones(mesh_loops_length, dtype=numpy.float32)
+                    result[3::4] = tangent_w
+                else:
+                    # 默认就设置BITANGENT的W翻转，大部分Unity游戏都要用到
                     bitangent_signs = numpy.empty(mesh_loops_length, dtype=numpy.float32)
                     mesh_loops.foreach_get("bitangent_sign", bitangent_signs)
                     # XXX 将副切线符号乘以 -1
                     # 这里翻转（翻转指的就是 *= -1）是因为如果要确保Unity游戏中渲染正确，必须翻转TANGENT的W分量
                     bitangent_signs *= -1
                     result[3::4] = bitangent_signs  # w 分量 (副切线符号)
-                elif GlobalConfig.logic_name == LogicName.WutheringWaves:
-                    # Unreal引擎中这里要填写固定的1
-                    tangent_w = numpy.ones(mesh_loops_length, dtype=numpy.float32)
-                    result[3::4] = tangent_w
-                
                 # 重塑 output_tangents 成 (mesh_loops_length, 4) 形状的二维数组
                 result = result.reshape(-1, 4)
 
