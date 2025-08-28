@@ -568,10 +568,14 @@ class ExtractSubmeshOperator(bpy.types.Operator):
 
         # 复制UV数据
         if original_mesh.uv_layers:
-            uv_data = original_mesh.uv_layers.active.data
-            new_uv = new_mesh.uv_layers.new(name="UVMap")
-            for i in range(count):
-                new_uv.data[i].uv = uv_data[start+i].uv
+            # 复制UV数据
+            for uv_layer in original_mesh.uv_layers:
+                uv_data = uv_layer.data
+                new_uv = new_mesh.uv_layers.new(name=uv_layer.name)
+                for i in range(count):
+                    new_uv.data[i].uv = uv_data[start+i].uv
+        
+
 
         # 创建集合
         collection_name = f"Mesh_{start}_{end_index}"
@@ -585,6 +589,23 @@ class ExtractSubmeshOperator(bpy.types.Operator):
         new_obj = bpy.data.objects.new(new_mesh.name, new_mesh)
         new_obj.matrix_world = obj.matrix_world  # 保持变换矩阵
         
+        # 复制顶点组（权重数据）
+        if obj.vertex_groups:
+            # 创建新对象的顶点组
+            for vg in obj.vertex_groups:
+                new_obj.vertex_groups.new(name=vg.name)
+            
+            # 获取原始网格的顶点组数据
+            for i, orig_vert_idx in enumerate(unique_verts):
+                # 对于每个顶点，复制其所有权重数据
+                for vg in obj.vertex_groups:
+                    try:
+                        weight = vg.weight(orig_vert_idx)
+                        if weight > 0:
+                            new_obj.vertex_groups[vg.name].add([i], weight, 'REPLACE')
+                    except:
+                        # 如果顶点不在顶点组中，跳过
+                        pass
         # 添加到集合
         for coll in new_obj.users_collection:
             coll.objects.unlink(new_obj)
