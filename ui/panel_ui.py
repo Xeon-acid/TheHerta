@@ -4,12 +4,16 @@ import os
 
 from ..config.main_config import GlobalConfig
 from ..properties.properties_dbmt_path import Properties_DBMT_Path
-    
+from ..properties.properties_global import Properties_Global
+
 # 3Dmigoto属性绘制
 def draw_migoto_overlay():
     """在 3D 视图左下角绘制自定义信息"""
     context = bpy.context  # 直接使用 bpy.context 获取完整上下文
     if len(context.selected_objects) == 0:
+        return
+    
+    if not Properties_Global.show_obj_attributes():
         return
 
     obj = context.selected_objects[0]
@@ -90,6 +94,8 @@ class PanelButtons(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
+
+        layout.prop(context.scene.properties_global,"show_obj_attributes")
 
         # use_sepecified_dbmt
         layout.prop(context.scene.dbmt_path, "use_specified_dbmt",text="使用指定位置的SSMT-Package")
