@@ -94,6 +94,7 @@ class BufferModel:
 
         normalize_weights = "Blend" in self.d3d11GameType.OrderedCategoryNameList
 
+
         blendweights_dict, blendindices_dict = mesh_data.get_blendweights_blendindices_v3(normalize_weights = normalize_weights)
 
 
@@ -142,6 +143,7 @@ class BufferModel:
                     result = result.astype(numpy.float16)
                     self.element_vertex_ndarray[d3d11_element_name] = result
                 elif d3d11_element.Format == 'R32G32B32A32_FLOAT':
+                    
                     result = numpy.ones(mesh_loops_length * 4, dtype=numpy.float32)
                     normals = numpy.empty(mesh_loops_length * 3, dtype=numpy.float32)
                     mesh_loops.foreach_get('normal', normals)
@@ -234,6 +236,7 @@ class BufferModel:
                     tangent_w = numpy.ones(mesh_loops_length, dtype=numpy.float32)
                     result[3::4] = tangent_w
                 else:
+                    print("其它游戏翻转TANGENT的W分量")
                     # 默认就设置BITANGENT的W翻转，大部分Unity游戏都要用到
                     bitangent_signs = numpy.empty(mesh_loops_length, dtype=numpy.float32)
                     mesh_loops.foreach_get("bitangent_sign", bitangent_signs)

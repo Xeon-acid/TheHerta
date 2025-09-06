@@ -70,8 +70,8 @@ class MeshData:
     
 
     def get_blendweights_blendindices_v3(self, normalize_weights: bool = False):
-        # print("get_blendweights_blendindices_v3")
-        # print(normalize_weights)
+        print("get_blendweights_blendindices_v3")
+        print(normalize_weights)
 
         mesh_loops = self.mesh.loops
         mesh_loops_length = len(mesh_loops)
@@ -119,10 +119,13 @@ class MeshData:
 
         # 关键步骤：整体归一化所有权重
         if normalize_weights:
+            # 计算每个顶点的权重总和
             weight_sums = numpy.sum(all_weights, axis=1)
-            # 避免除以零（权重和为0的顶点保持原值）
-            non_zero_mask = weight_sums > 0
-            all_weights[non_zero_mask] /= weight_sums[non_zero_mask, None]
+            # 避免除以零（将总和为0的顶点设置为1，这样权重保持为0）
+            weight_sums[weight_sums == 0] = 1
+            # 归一化权重
+            all_weights = all_weights / weight_sums[:, numpy.newaxis]
+
 
         # 将数据重塑为 [顶点数, 组数, 4]
         all_weights_reshaped = all_weights.reshape(len(mesh_vertices), num_sets, groups_per_set)
@@ -146,12 +149,23 @@ class MeshData:
             # 映射数据到循环顶点
             blendweights[valid_mask] = all_weights_reshaped[valid_indices, set_idx, :]
             blendindices[valid_mask] = all_groups_reshaped[valid_indices, set_idx, :]
+
+            
+            # 3. 关键：再把每行 4 个权重重新归一化到 1（和 v1 最后一行等价）
+            if normalize_weights:
+                row_sum = numpy.sum(blendweights, axis=1, keepdims=True)
+                # 避免 0 除
+                numpy.putmask(row_sum, row_sum == 0, 1.0)
+                blendweights = blendweights / row_sum
+
             
             # 存储到字典（使用SemanticIndex作为键）
             blendweights_dict[set_idx] = blendweights
             blendindices_dict[set_idx] = blendindices
 
+        # blendweights = blendweights / numpy.sum(blendweights, axis=1)[:, None]
         # print("blendweights_dict: " + str(blendweights_dict[2][0]))
         # print("blendindices_dict: " + str(blendindices_dict[2][0]))
 
         return blendweights_dict, blendindices_dict
+    
