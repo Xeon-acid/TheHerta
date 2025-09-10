@@ -200,7 +200,9 @@ class ModModelUnity:
                                     if Properties_GenerateMod.slot_style_texture_add_filter_index():
                                         texture_override_ib_section.append("endif")
 
-                texture_override_ib_section.append("run = CommandListSkinTexture")
+                slot_texture_replace_dict:dict[str,TextureReplace] = draw_ib_model.PartName_SlotTextureReplaceDict_Dict.get(part_name,None)
+                if slot_texture_replace_dict is not None:
+                    texture_override_ib_section.append("run = CommandListSkinTexture")
             else:
                 # Add slot style texture slot replace.
                 if not Properties_GenerateMod.forbid_auto_texture_ini():
