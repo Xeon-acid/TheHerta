@@ -171,7 +171,7 @@ class ModModelUnity:
                                     texture_override_ib_section.append("Resource\\ZZMI\\LightMap = ref " + texture_replace.resource_name)
                                 elif texture_replace.resource_name.endswith("MaterialMap") and Properties_GenerateMod.zzz_use_slot_fix():
                                     texture_override_ib_section.append("Resource\\ZZMI\\MaterialMap = ref " + texture_replace.resource_name)
-                                elif texture_replace.resource_name.endswith("GlowMap") and Properties_GenerateMod.zzz_use_slot_fix():
+                                elif texture_replace.resource_name.endswith("StockingMap") and Properties_GenerateMod.zzz_use_slot_fix():
                                     texture_override_ib_section.append("Resource\\ZZMI\\WengineFx = ref " + texture_replace.resource_name)
                                 
                         texture_override_ib_section.append("run = CommandList\\ZZMI\\SetTextures")
@@ -187,7 +187,7 @@ class ModModelUnity:
                                     pass
                                 elif texture_replace.resource_name.endswith("MaterialMap") and Properties_GenerateMod.zzz_use_slot_fix():
                                     pass
-                                elif texture_replace.resource_name.endswith("GlowMap") and Properties_GenerateMod.zzz_use_slot_fix():
+                                elif texture_replace.resource_name.endswith("StockingMap") and Properties_GenerateMod.zzz_use_slot_fix():
                                     pass
                                 else:
                                     texture_filter_index_indent = ""
