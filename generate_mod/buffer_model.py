@@ -94,9 +94,7 @@ class BufferModel:
 
         normalize_weights = "Blend" in self.d3d11GameType.OrderedCategoryNameList
 
-
         blendweights_dict, blendindices_dict = mesh_data.get_blendweights_blendindices_v3(normalize_weights = normalize_weights)
-
 
         # 对每一种Element都获取对应的数据
         for d3d11_element_name in self.d3d11GameType.OrderedFullElementList:

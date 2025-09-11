@@ -83,8 +83,7 @@ class ModModelWWMI:
         present_section.new_line()
 
         ini_builder.append_section(present_section)
-
-    def add_commandlist_section(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
+    def add_commandlist_register_mod_section(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
         commandlist_section = M_IniSection(M_SectionType.CommandList)
 
         # CommandListRegisterMod
@@ -103,28 +102,10 @@ class ModModelWWMI:
         commandlist_section.append("endif")
         commandlist_section.new_line()
 
-        if Properties_WWMI.import_merged_vgmap():
-        # CommandListUpdateMergedSkeleton
-            commandlist_section.append("[CommandListUpdateMergedSkeleton]")
-            commandlist_section.append("if $state_id")
-            commandlist_section.append("  $state_id = 0")
-            commandlist_section.append("else")
-            commandlist_section.append("  $state_id = 1")
-            commandlist_section.append("endif")
-            commandlist_section.append("ResourceMergedSkeleton = copy ResourceMergedSkeletonRW")
-            commandlist_section.append("ResourceExtraMergedSkeleton = copy ResourceExtraMergedSkeletonRW")
-            commandlist_section.new_line()
+        ini_builder.append_section(commandlist_section)
 
-            # CommandListMergeSkeleton
-            commandlist_section.append("[CommandListMergeSkeleton]")
-            commandlist_section.append("$\\WWMIv1\\custom_mesh_scale = 1.0")
-            commandlist_section.append("cs-cb8 = ref vs-cb4")
-            commandlist_section.append("cs-u6 = ResourceMergedSkeletonRW")
-            commandlist_section.append("run = CustomShader\\WWMIv1\\SkeletonMerger")
-            commandlist_section.append("cs-cb8 = ref vs-cb3")
-            commandlist_section.append("cs-u6 = ResourceExtraMergedSkeletonRW")
-            commandlist_section.append("run = CustomShader\\WWMIv1\\SkeletonMerger")
-            commandlist_section.new_line()
+    def add_commandlist_trigger_shared_cleanup_section(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
+        commandlist_section = M_IniSection(M_SectionType.CommandList)
 
         # CommandListTriggerResourceOverrides
         commandlist_section.append("[CommandListTriggerResourceOverrides]")
@@ -174,6 +155,38 @@ class ModModelWWMI:
         commandlist_section.append("[CommandListCleanupSharedResources]")
         commandlist_section.append("vb0 = ref ResourceBypassVB0")
         commandlist_section.new_line()
+
+        ini_builder.append_section(commandlist_section)
+
+
+    def add_commandlist_section(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
+        commandlist_section = M_IniSection(M_SectionType.CommandList)
+
+        if Properties_WWMI.import_merged_vgmap():
+        # CommandListUpdateMergedSkeleton
+            commandlist_section.append("[CommandListUpdateMergedSkeleton]")
+            commandlist_section.append("if $state_id")
+            commandlist_section.append("  $state_id = 0")
+            commandlist_section.append("else")
+            commandlist_section.append("  $state_id = 1")
+            commandlist_section.append("endif")
+            commandlist_section.append("ResourceMergedSkeleton = copy ResourceMergedSkeletonRW")
+            commandlist_section.append("ResourceExtraMergedSkeleton = copy ResourceExtraMergedSkeletonRW")
+            commandlist_section.new_line()
+
+            # CommandListMergeSkeleton
+            commandlist_section.append("[CommandListMergeSkeleton]")
+            commandlist_section.append("$\\WWMIv1\\custom_mesh_scale = 1.0")
+            commandlist_section.append("cs-cb8 = ref vs-cb4")
+            commandlist_section.append("cs-u6 = ResourceMergedSkeletonRW")
+            commandlist_section.append("run = CustomShader\\WWMIv1\\SkeletonMerger")
+            commandlist_section.append("cs-cb8 = ref vs-cb3")
+            commandlist_section.append("cs-u6 = ResourceExtraMergedSkeletonRW")
+            commandlist_section.append("run = CustomShader\\WWMIv1\\SkeletonMerger")
+            commandlist_section.new_line()
+
+
+
 
         # TODO ShapeKey的CommandList只有在ShapeKey存在时才加入，物体Mod不加入
         # CommandListSetupShapeKeys
@@ -481,20 +494,21 @@ class ModModelWWMI:
         '''
         config_ini_builder = M_IniBuilder()
 
-        M_IniHelperV2.generate_hash_style_texture_ini(ini_builder=config_ini_builder,drawib_drawibmodel_dict=self.drawib_drawibmodel_dict)
 
         # Add namespace 
         for draw_ib, draw_ib_model in self.drawib_drawibmodel_dict.items():
 
             self.add_constants_section(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
             self.add_present_section(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
-            self.add_commandlist_section(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
-
-            self.add_texture_override_mark_bone_data_cb(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            self.add_commandlist_register_mod_section(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            self.add_resource_mod_info_section_default(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            self.add_commandlist_trigger_shared_cleanup_section(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
             self.add_texture_override_component(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+
+            self.add_commandlist_section(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            self.add_texture_override_mark_bone_data_cb(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
             self.add_texture_override_shapekeys(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
 
-            self.add_resource_mod_info_section_default(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
             self.add_resource_shapekeys(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
 
             if Properties_WWMI.import_merged_vgmap():
@@ -511,7 +525,10 @@ class ModModelWWMI:
 
         M_IniHelperGUI.add_branch_mod_gui_section(ini_builder=config_ini_builder,key_name_mkey_dict=self.branch_model.keyname_mkey_dict)
 
-        config_ini_builder.save_to_file(GlobalConfig.path_generate_mod_folder() + GlobalConfig.workspacename + ".ini")
+        M_IniHelperV2.generate_hash_style_texture_ini(ini_builder=config_ini_builder,drawib_drawibmodel_dict=self.drawib_drawibmodel_dict)
+
+        # 保存ini文件，但是按照代码中顺序排列
+        config_ini_builder.save_to_file_not_reorder(GlobalConfig.path_generate_mod_folder() + GlobalConfig.workspacename + ".ini")
 
 
 

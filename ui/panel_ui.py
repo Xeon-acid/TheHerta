@@ -2,7 +2,7 @@ import bpy
 import blf
 import os
 
-from ..config.main_config import GlobalConfig
+from ..config.main_config import GlobalConfig, LogicName
 from ..properties.properties_dbmt_path import Properties_DBMT_Path
 from ..properties.properties_global import Properties_Global
 
@@ -128,5 +128,8 @@ class PanelButtons(bpy.types.Panel):
         layout.operator("ssmt.import_all_from_workspace_v3",icon='IMPORT')
 
         # 生成Mod按钮
-        layout.operator("ssmt.generate_mod",icon='EXPORT')
+        if GlobalConfig.logic_name == LogicName.WutheringWaves:
+            layout.label(text="不支持鸣潮Mod生成，请使用WWMITools",icon='INFO')
+        else:
+            layout.operator("ssmt.generate_mod",icon='EXPORT')
     

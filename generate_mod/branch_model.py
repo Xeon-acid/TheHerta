@@ -231,10 +231,13 @@ class BranchModel:
 
                 # XXX 我们在导出具体数据之前，先对模型整体的权重进行normalize_all预处理，才能让后续的具体每一个权重的normalize_all更好的工作
                 # 使用这个的前提是当前obj中没有锁定的顶点组，所以这里要先进行判断。
+
+                # XXX 这里不论开关都不对鸣潮Mod造成影响
                 if "Blend" in d3d11_game_type.OrderedCategoryNameList:
                     all_vgs_locked = ObjUtils.is_all_vertex_groups_locked(obj)
                     if not all_vgs_locked:
                         ObjUtils.normalize_all(obj)
+
                 # print("DrawIB BranchModel")
                 ib, category_buffer_dict, index_vertex_id_dict = get_buffer_ib_vb_fast(d3d11_game_type)
 

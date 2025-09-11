@@ -30,7 +30,6 @@ class ComponentModel:
         self.component_name:str = ""
         self.final_ordered_draw_obj_model_list:list[ObjDataModel]= []
 
-
 class DrawIBModelWWMI:
     '''
     这个代表了一个DrawIB的Mod导出模型
@@ -38,7 +37,6 @@ class DrawIBModelWWMI:
     每个游戏的DrawIBModel都是不同的，但是一部分是可以复用的
     (例如WWMI就有自己的一套DrawIBModel)
     '''
-
 
     # 通过default_factory让每个类的实例的变量分割开来，不再共享类的静态变量
     def __init__(self,draw_ib:str,branch_model:BranchModel):
@@ -229,6 +227,7 @@ class DrawIBModelWWMI:
                     float_array.tofile(file)
 
     def build_merged_object(self,extracted_object:ExtractedObject):
+        print("build_merged_object::")
         '''
         extracted_object 用于读取配置
         
@@ -246,9 +245,7 @@ class DrawIBModelWWMI:
             )
         
         # 2.import_objects_from_collection
-        # TODO 从这里开始进行修改
         # 这里是获取所有的obj，需要用咱们的方法来进行集合架构的遍历获取所有的obj
-
         # Nico: 添加缓存机制，一个obj只处理一次
         processed_obj_name_list:list[str] = []
         for component_model in self.component_model_list:
@@ -257,19 +254,23 @@ class DrawIBModelWWMI:
                 
                 # Nico: 如果已经处理过这个obj，则跳过
                 if obj_name in processed_obj_name_list:
+                    print(f"Skipping already processed object: {obj_name}")
                     continue
+
                 processed_obj_name_list.append(obj_name)
 
                 obj = bpy.data.objects.get(obj_name)
                 # 跳过不满足component开头的对象
 
-                # print("ComponentName: " + component_name)
+                print("obj_name: " + obj_name)
                 component_count = str(component_model.component_name)[10:]
-                # print("ComponentCount: " + component_count)
+                print("ComponentCount: " + component_count)
 
                 component_id = int(component_count) - 1 # 这里减去1是因为我们的Compoennt是从1开始的
+                print("component_id: " + str(component_id))
 
                 workspace_collection = bpy.context.collection
+
                 # 这里我们设置collection为None，不链接到任何集合中，防止干扰
                 temp_obj = ObjUtils.copy_object(bpy.context, obj, name=f'TEMP_{obj.name}', collection=workspace_collection)
 
@@ -281,35 +282,46 @@ class DrawIBModelWWMI:
                 except Exception as e:
                     print(f"Error appending object to component: {e}")
 
+        print("准备临时对象::")
         # 3.准备临时对象
         index_offset = 0
-
+        # 这里的component_id是从0开始的，务必注意
         for component_id, component in enumerate(components):
 
             component.objects.sort(key=lambda x: x.name)
 
             for temp_object in component.objects:
                 temp_obj = temp_object.object
+                print("Processing temp_obj: " + temp_obj.name)
+
                 # Remove muted shape keys
                 if Properties_WWMI.ignore_muted_shape_keys() and temp_obj.data.shape_keys:
+                    print("Removing muted shape keys for object: " + temp_obj.name)
                     muted_shape_keys = []
                     for shapekey_id in range(len(temp_obj.data.shape_keys.key_blocks)):
                         shape_key = temp_obj.data.shape_keys.key_blocks[shapekey_id]
                         if shape_key.mute:
                             muted_shape_keys.append(shape_key)
                     for shape_key in muted_shape_keys:
+                        print("Removing shape key: " + shape_key.name)
                         temp_obj.shape_key_remove(shape_key)
+
                 # Apply all modifiers to temporary object
                 if Properties_WWMI.apply_all_modifiers():
+                    print("Applying all modifiers for object: " + temp_obj.name)
                     with OpenObject(bpy.context, temp_obj) as obj:
                         selected_modifiers = [modifier.name for modifier in get_modifiers(obj)]
                         ShapeKeyUtils.apply_modifiers_for_object_with_shape_keys(bpy.context, selected_modifiers, None)
+
                 # Triangulate temporary object, this step is crucial as export supports only triangles
                 triangulate_object(bpy.context, temp_obj)
+
                 # Handle Vertex Groups
                 vertex_groups = get_vertex_groups(temp_obj)
+
                 # Remove ignored or unexpected vertex groups
                 if Properties_WWMI.import_merged_vgmap():
+                    print("Remove ignored or unexpected vertex groups for object: " + temp_obj.name)
                     # Exclude VGs with 'ignore' tag or with higher id VG count from Metadata.ini for current component
                     total_vg_count = sum([component.vg_count for component in extracted_object.components])
                     ignore_list = [vg for vg in vertex_groups if 'ignore' in vg.name.lower() or vg.index >= total_vg_count]
@@ -319,9 +331,11 @@ class DrawIBModelWWMI:
                     total_vg_count = len(extracted_component.vg_map)
                     ignore_list = [vg for vg in vertex_groups if 'ignore' in vg.name.lower() or vg.index >= total_vg_count]
                 remove_vertex_groups(temp_obj, ignore_list)
+
                 # Rename VGs to their indicies to merge ones of different components together
                 for vg in get_vertex_groups(temp_obj):
                     vg.name = str(vg.index)
+
                 # Calculate vertex count of temporary object
                 temp_object.vertex_count = len(temp_obj.data.vertices)
                 # Calculate index count of temporary object, IB stores 3 indices per triangle
@@ -372,4 +386,5 @@ class DrawIBModelWWMI:
         if index_count != merged_object.index_count:
             raise ValueError('index_count mismatch between merged object and its components')
         
+        LOG.newline()
         return merged_object
