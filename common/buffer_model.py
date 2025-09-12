@@ -2,7 +2,7 @@ import bpy
 import numpy
 import collections
 
-from ..common.migoto_format import D3D11GameType,ObjModel
+from ..common.migoto_format import D3D11GameType,ObjDataModel
 
 from ..utils.format_utils import FormatUtils, Fatal
 from ..utils.timer_utils import TimerUtils
@@ -96,7 +96,7 @@ class BufferModel:
 
         # normalize_weights = False
 
-        blendweights_dict, blendindices_dict = VertexGroupUtils.get_blendweights_blendindices_v3(normalize_weights = normalize_weights)
+        blendweights_dict, blendindices_dict = VertexGroupUtils.get_blendweights_blendindices_v3(mesh=mesh,normalize_weights = normalize_weights)
 
         # 对每一种Element都获取对应的数据
         for d3d11_element_name in self.d3d11GameType.OrderedFullElementList:
@@ -386,7 +386,7 @@ class BufferModel:
                     self.element_vertex_ndarray[d3d11_element_name] = blendweights.astype(numpy.float16)
                     
 
-    def calc_index_vertex_buffer_girlsfrontline2(self,obj,mesh:bpy.types.Mesh)->ObjModel:
+    def calc_index_vertex_buffer_girlsfrontline2(self,obj,mesh:bpy.types.Mesh)->ObjDataModel:
         '''
         计算IndexBuffer和CategoryBufferDict并返回
 
@@ -449,13 +449,13 @@ class BufferModel:
             category_buffer_dict[categoryname] = data_matrix[:,stride_offset:stride_offset + category_stride].flatten()
             stride_offset += category_stride
 
-        obj_model = ObjModel()
+        obj_model = ObjDataModel()
         obj_model.ib = flattened_ib
         obj_model.category_buffer_dict = category_buffer_dict
         obj_model.index_vertex_id_dict = None
         return obj_model
 
-    def calc_index_vertex_buffer_wwmi(self,obj,mesh:bpy.types.Mesh)->ObjModel:
+    def calc_index_vertex_buffer_wwmi(self,obj,mesh:bpy.types.Mesh)->ObjDataModel:
         '''
         计算IndexBuffer和CategoryBufferDict并返回
 
@@ -507,7 +507,7 @@ class BufferModel:
             category_buffer_dict[categoryname] = data_matrix[:,stride_offset:stride_offset + category_stride].flatten()
             stride_offset += category_stride
 
-        obj_model = ObjModel()
+        obj_model = ObjDataModel(mesh.name)
         # obj_model.ib = flattened_ib
 
         print("导出时翻转面朝向")
@@ -525,7 +525,7 @@ class BufferModel:
         obj_model.index_vertex_id_dict = index_vertex_id_dict
         return obj_model
 
-    def calc_index_vertex_buffer_universal(self,obj,mesh:bpy.types.Mesh)->ObjModel:
+    def calc_index_vertex_buffer_universal(self,obj,mesh:bpy.types.Mesh)->ObjDataModel:
         '''
         计算IndexBuffer和CategoryBufferDict并返回
 
@@ -569,7 +569,7 @@ class BufferModel:
             category_buffer_dict[categoryname] = data_matrix[:,stride_offset:stride_offset + category_stride].flatten()
             stride_offset += category_stride
 
-        obj_model = ObjModel()
+        obj_model = ObjDataModel()
 
         
 
@@ -740,3 +740,4 @@ class BufferModel:
 
         TimerUtils.End("Recalculate COLOR")
         return vb
+

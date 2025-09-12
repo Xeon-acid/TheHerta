@@ -309,15 +309,6 @@ class M_Condition:
         
         self.condition_str = condition_str
 
-    
-class ObjModel:
-    def __init__(self):
-        self.ib = []
-        self.category_buffer_dict = {}
-        self.index_vertex_id_dict = {} # 仅用于WWMI的索引顶点ID字典，key是顶点索引，value是顶点ID，默认可以为None
-        self.obj_name = ""
-        self.condition:M_Condition = M_Condition()
-        self.drawindexed_obj:M_DrawIndexed = M_DrawIndexed()
 
 class ObjDataModel:
     def __init__(self,obj_name:str):

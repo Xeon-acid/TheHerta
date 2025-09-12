@@ -16,7 +16,7 @@ from ..utils.format_utils import Fatal
 from ..utils.obj_utils import *
 
 from ..utils.obj_utils import ExtractedObject, ExtractedObjectHelper
-from ..common.migoto_format import M_DrawIndexed, TextureReplace,ObjModel
+from ..common.migoto_format import M_DrawIndexed, TextureReplace,ObjDataModel
 from ..config.import_config import ImportConfig
 
 from .branch_model import BranchModel

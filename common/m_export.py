@@ -2,7 +2,7 @@ import bpy
 
 from ..utils.obj_utils import ObjUtils
 
-from ..common.migoto_format import D3D11GameType,ObjModel
+from ..common.migoto_format import D3D11GameType,ObjDataModel
 from ..config.main_config import GlobalConfig, LogicName
 from .buffer_model import BufferModel
 from ..utils.timer_utils import TimerUtils
@@ -10,6 +10,13 @@ from ..utils.timer_utils import TimerUtils
 def get_buffer_ib_vb_fast(d3d11GameType:D3D11GameType):
     '''
     使用Numpy直接从当前选中的obj的mesh中转换数据到目标格式Buffer
+
+
+    TODO 目前这个函数分别在BranchModel和DrawIBModelWWMI中被调用，
+    这是因为我们对indexid_vertexid_dict的组合还没有搞清楚导致的
+    实际上全部都应该在BranchModel中进行调用。
+
+    TODO 且获取indexid_vertexid_dict很明显导致导出速度变慢，算法仍然有问题
     '''
     # TimerUtils.Start("get_buffer_ib_vb_fast")
     buffer_model = BufferModel(d3d11GameType=d3d11GameType)
@@ -31,7 +38,7 @@ def get_buffer_ib_vb_fast(d3d11GameType:D3D11GameType):
     # 读取并解析数据
     buffer_model.parse_elementname_ravel_ndarray_dict(mesh)
 
-    obj_model = ObjModel()
+    obj_model = ObjDataModel(mesh.name)
 
     # 因为只有存在TANGENT时，顶点数才会增加，所以如果是GF2并且存在TANGENT才使用共享TANGENT防止增加顶点数
     if GlobalConfig.logic_name == LogicName.UnityCPU and "TANGENT" in buffer_model.d3d11GameType.OrderedFullElementList:
@@ -46,8 +53,6 @@ def get_buffer_ib_vb_fast(d3d11GameType:D3D11GameType):
     else:
         # 计算IndexBuffer和CategoryBufferDict
         obj_model = buffer_model.calc_index_vertex_buffer_universal(obj, mesh)
-    
-
         
     # TimerUtils.End("get_buffer_ib_vb_fast")
     

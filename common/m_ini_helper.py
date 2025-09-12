@@ -7,14 +7,14 @@ from ..config.main_config import GlobalConfig,LogicName
 from ..config.properties_generate_mod import Properties_GenerateMod
 from .branch_model import M_GlobalKeyCounter
 from .draw_ib_model import DrawIBModel
-from ..common.migoto_format import ObjModel, M_Key
+from ..common.migoto_format import ObjDataModel, M_Key
 
 class M_IniHelperV2:
     @classmethod
     def get_drawindexed_str_list(cls,ordered_draw_obj_model_list) -> list[str]:
         # print("M_IniHelperV2.get_drawindexed_str_list()")
         # 在输出之前，我们需要根据condition对obj_model进行分组
-        condition_str_obj_model_list_dict:dict[str,list[ObjModel]] = {}
+        condition_str_obj_model_list_dict:dict[str,list[ObjDataModel]] = {}
         for obj_model in ordered_draw_obj_model_list:
 
             obj_model_list = condition_str_obj_model_list_dict.get(obj_model.condition.condition_str,[])
