@@ -60,7 +60,6 @@ class ModModelHonkaiStarRail:
 
             config_ini_builder.append_section(vertexlimit_section)
 
-
     
     def add_resource_texture_sections(self,ini_builder,draw_ib_model:DrawIBModel):
         '''

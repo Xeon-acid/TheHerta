@@ -43,7 +43,7 @@ class ModModelWWMI:
         # object_guid值为原模型的总的index_count 在metadata.json中有记录
         constants_section.append("global $object_guid = " + str(draw_ib_model.extracted_object.index_count))
         # 导出模型的总顶点数
-        constants_section.append("global $mesh_vertex_count = " + str(draw_ib_model.draw_number))
+        constants_section.append("global $mesh_vertex_count = " + str(draw_ib_model.mesh_vertex_count))
 
         # 哦，总算搞明白了，WWMI的代码中的注释也有问题，它说的Number of shapekeyed vertices in custom model原来不是字面意思，而是指的是shapekey_vertex_id的数量。
         # 因为这玩意是用来改变Shapekey的UAV的大小的

@@ -50,7 +50,7 @@ class M_IniHelperV2:
         # 先统计当前标记的具有Slot风格的Hash值，后续Render里搞图片的时候跳过这些
         slot_style_texture_hash_list = []
         for draw_ib_model in drawib_drawibmodel_dict.values():
-            for texture_file_name in draw_ib_model.TextureResource_Name_FileName_Dict.values():
+            for texture_file_name in draw_ib_model.import_config.TextureResource_Name_FileName_Dict.values():
                 if "_Slot_" in texture_file_name:
                     texture_hash = texture_file_name.split("_")[2]
                     slot_style_texture_hash_list.append(texture_hash)
@@ -63,7 +63,7 @@ class M_IniHelperV2:
             render_texture_files = os.listdir(render_texture_folder_path)
 
             # 添加标记的Hash风格贴图
-            for texture_file_name in draw_ib_model.TextureResource_Name_FileName_Dict.values():
+            for texture_file_name in draw_ib_model.import_config.TextureResource_Name_FileName_Dict.values():
                 if "_Hash_" in texture_file_name:
                     texture_hash = texture_file_name.split("_")[2]
 
@@ -159,7 +159,7 @@ class M_IniHelperV2:
         if Properties_GenerateMod.forbid_auto_texture_ini():
             return
         
-        for texture_filename in draw_ib_model.TextureResource_Name_FileName_Dict.values():
+        for texture_filename in draw_ib_model.import_config.TextureResource_Name_FileName_Dict.values():
             # 只有槽位风格会移动到目标位置
             if "_Slot_" in texture_filename:
                 target_path = GlobalConfig.path_generatemod_texture_folder(draw_ib=draw_ib_model.draw_ib) + texture_filename

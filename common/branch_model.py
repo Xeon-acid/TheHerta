@@ -197,6 +197,25 @@ class BranchModel:
                 self.ordered_draw_obj_data_model_list.append(obj_model)
                 # LOG.newline()
 
+    def get_obj_data_model_list_by_draw_ib(self,draw_ib:str):
+        '''
+        只返回指定draw_ib的obj列表
+        这个方法存在的目的是为了兼容鸣潮的MergedObj
+        这里只是根据IB获取一下对应的obj列表，不需要额外计算其它东西，因为WWMI的逻辑是融合后计算。
+        '''
+    
+        final_ordered_draw_obj_model_list:list[ObjDataModel] = [] 
+        
+        for obj_model in self.ordered_draw_obj_data_model_list:
+
+            # 只统计给定DrawIB的数据
+            if obj_model.draw_ib != draw_ib:
+                continue
+
+            final_ordered_draw_obj_model_list.append(copy.deepcopy(obj_model))
+        
+        return final_ordered_draw_obj_model_list
+    
 
     def get_buffered_obj_data_model_list_by_draw_ib_and_game_type(self,draw_ib:str,d3d11_game_type:D3D11GameType):
         # print("BranchModel.get_buffered_obj_data_model_list_by_draw_ib_and_game_type()")

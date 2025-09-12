@@ -130,6 +130,8 @@ class PanelButtons(bpy.types.Panel):
         # 生成Mod按钮
         if GlobalConfig.logic_name == LogicName.WutheringWaves:
             layout.label(text="不支持鸣潮Mod生成，请使用WWMITools",icon='INFO')
+            layout.operator("ssmt.generate_mod",icon='EXPORT')
+
         else:
             layout.operator("ssmt.generate_mod",icon='EXPORT')
     

@@ -48,29 +48,25 @@ class DrawIBModelWWMI:
         # (2) 读取工作空间中配置文件的配置项
         self.import_config = ImportConfig(draw_ib=self.draw_ib)
         self.d3d11GameType:D3D11GameType = self.import_config.d3d11GameType
-
-        # (3) 读取WWMI专属配置
+        # 读取WWMI专属配置
         self.extracted_object:ExtractedObject = ExtractedObjectHelper.read_metadata(GlobalConfig.path_extract_gametype_folder(draw_ib=self.draw_ib,gametype_name=self.d3d11GameType.GameTypeName)  + "Metadata.json")
-        
-        self.PartName_SlotTextureReplaceDict_Dict = self.import_config.PartName_SlotTextureReplaceDict_Dict
-        self.TextureResource_Name_FileName_Dict = self.import_config.TextureResource_Name_FileName_Dict
 
         '''
         这里是要得到每个Component对应的obj_data_model列表
-        在这一步之前，需要对当前DrawIB的所有的obj_data_model填充ib和category_buf_dict属性
         '''
-        self.draw_ib_ordered_obj_data_model_list:list[ObjDataModel] = branch_model.get_buffered_obj_data_model_list_by_draw_ib_and_game_type(draw_ib=draw_ib,d3d11_game_type=self.import_config.d3d11GameType)
+        self.ordered_obj_data_model_list:list[ObjDataModel] = branch_model.get_obj_data_model_list_by_draw_ib(draw_ib=draw_ib)
+        
+        # (3) 组装成特定格式？
         self.component_model_list:list[ComponentModel] = []
         self.component_name_component_model_dict:dict[str,ComponentModel] = {}
+
         for part_name in self.import_config.part_name_list:
             print("part_name: " + part_name)
             component_obj_data_model_list = []
-            for obj_data_model in self.draw_ib_ordered_obj_data_model_list:
+            for obj_data_model in self.ordered_obj_data_model_list:
                 if part_name == str(obj_data_model.component_count):
                     component_obj_data_model_list.append(obj_data_model)
-
-                    print("obj_data_model: " + obj_data_model.drawindexed_obj.get_draw_str())
-                    # print(part_name + " 已赋值")
+                    print("obj_data_model: " + obj_data_model.obj_name)
 
             component_model = ComponentModel()
             component_model.component_name = "Component " + part_name
@@ -81,22 +77,14 @@ class DrawIBModelWWMI:
         LOG.newline()
 
         # (4) 根据之前解析集合架构的结果，读取obj对象内容到字典中
-        self.draw_number = 0 # 每个DrawIB都有总的顶点数，对应CategoryBuffer里的顶点数。
-        
+        self.mesh_vertex_count = 0 # 每个DrawIB都有总的顶点数，对应CategoryBuffer里的顶点数。
 
-        # (5) 导出Buffer文件，Export Index Buffer files, Category Buffer files. (And Export ShapeKey Buffer Files.(WWMI))
-        # 用于写出IB时使用
-        self.PartName_IBResourceName_Dict = {}
-        self.PartName_IBBufferFileName_Dict = {}
-        self.combine_partname_ib_resource_and_filename_dict()
-
-        # (6) 对所有obj进行融合，得到一个最终的用于导出的临时obj
-
+        # (5) 对所有obj进行融合，得到一个最终的用于导出的临时obj
         self.merged_object = self.build_merged_object(
             extracted_object=self.extracted_object
         )
 
-        # (7) 填充每个obj的drawindexed值，给每个obj的属性统计好，后面就能直接用了。
+        # (6) 填充每个obj的drawindexed值，给每个obj的属性统计好，后面就能直接用了。
         self.obj_name_drawindexed_dict:dict[str,M_DrawIndexed] = {} 
         for comp in self.merged_object.components:
             for comp_obj in comp.objects:
@@ -106,6 +94,7 @@ class DrawIBModelWWMI:
                 draw_indexed_obj.AliasName = comp_obj.name
                 self.obj_name_drawindexed_dict[comp_obj.name] = draw_indexed_obj
         
+        # (7) 填充到component_name为key的字典中，方便后续操作
         for component_model in self.component_model_list:
             new_ordered_obj_model_list = []
             for obj_model in component_model.final_ordered_draw_obj_model_list:
@@ -121,28 +110,17 @@ class DrawIBModelWWMI:
         bpy.context.view_layer.objects.active = merged_obj
         
         # 计算得到MergedObj的IndexBuffer和CategoryBuffer
-        print("DrawIBWWMI")
         ib, category_buffer_dict,index_vertex_id_dict = get_buffer_ib_vb_fast(self.d3d11GameType)
-
         # 写出到文件
         self.write_out_index_buffer(ib=ib)
         self.write_out_category_buffer(category_buffer_dict=category_buffer_dict)
         self.write_out_shapekey_buffer(merged_obj=merged_obj, index_vertex_id_dict=index_vertex_id_dict)
         
         # 删除临时融合的obj对象
-        bpy.data.objects.remove(merged_obj, do_unlink=True)
+        # bpy.data.objects.remove(merged_obj, do_unlink=True)
 
     
-    def combine_partname_ib_resource_and_filename_dict(self):
-        '''
-        拼接每个PartName对应的IB文件的Resource和filename,这样生成ini的时候以及导出Mod的时候就可以直接使用了。
-        '''
-        for partname in self.import_config.part_name_list:
-            style_part_name = "Component" + partname
-            ib_resource_name = "Resource_" + self.draw_ib + "_" + style_part_name
-            ib_buf_filename = self.draw_ib + "-" + style_part_name + ".buf"
-            self.PartName_IBResourceName_Dict[partname] = ib_resource_name
-            self.PartName_IBBufferFileName_Dict[partname] = ib_buf_filename
+
 
 
 
@@ -175,7 +153,7 @@ class DrawIBModelWWMI:
         # 顺便计算一下步长得到总顶点数
         position_stride = self.d3d11GameType.CategoryStrideDict["Position"]
         position_bytelength = len(__categoryname_bytelist_dict["Position"])
-        self.draw_number = int(position_bytelength/position_stride)
+        self.mesh_vertex_count = int(position_bytelength/position_stride)
 
         buf_output_folder = GlobalConfig.path_generatemod_buffer_folder(draw_ib=self.draw_ib)
             
