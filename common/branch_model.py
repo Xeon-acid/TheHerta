@@ -7,9 +7,9 @@ from ..utils.collection_utils import CollectionUtils, CollectionColor
 from ..utils.config_utils import ConfigUtils
 
 from ..common.migoto_format import M_Key, ObjDataModel, M_Condition, D3D11GameType
-from ..generate_mod.m_counter import M_Counter
+from ..common.m_counter import M_Counter
 
-from ..generate_mod.m_export import get_buffer_ib_vb_fast
+from ..common.m_export import get_buffer_ib_vb_fast
 
 '''
 分支模型

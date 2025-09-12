@@ -3,14 +3,14 @@ import math
 
 from ..common.migoto_format import M_Key, ObjDataModel, M_DrawIndexed, M_Condition,D3D11GameType,TextureReplace
 from ..config.main_config import GlobalConfig, LogicName
-from ..generate_mod.m_counter import M_Counter
-from ..generate_mod.draw_ib_model import DrawIBModel
+from ..common.m_counter import M_Counter
+from ..common.draw_ib_model import DrawIBModel
 
-from ..generate_mod.branch_model import BranchModel
-from ..generate_mod.m_ini_builder import M_IniBuilder,M_IniSection,M_SectionType
+from ..common.branch_model import BranchModel
+from ..common.m_ini_builder import M_IniBuilder,M_IniSection,M_SectionType
 from ..properties.properties_generate_mod import Properties_GenerateMod
-from ..generate_mod.m_ini_helper import M_IniHelperV2,M_IniHelperV3
-from ..generate_mod.m_ini_helper_gui import M_IniHelperGUI
+from ..common.m_ini_helper import M_IniHelperV2,M_IniHelperV3
+from ..common.m_ini_helper_gui import M_IniHelperGUI
 
 class ModModelUnity:
     def __init__(self,workspace_collection:bpy.types.Collection):

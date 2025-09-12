@@ -3,7 +3,7 @@ import struct
 import re
 import copy
 
-from ..generate_mod.m_export import get_buffer_ib_vb_fast
+from ..common.m_export import get_buffer_ib_vb_fast
 
 from ..common.migoto_format import *
 
@@ -19,7 +19,7 @@ from ..utils.obj_utils import ExtractedObject, ExtractedObjectHelper
 from ..common.migoto_format import M_DrawIndexed, TextureReplace,ObjModel
 from ..config.import_config import ImportConfig
 
-from ..generate_mod.m_counter import M_Counter
+from ..common.m_counter import M_Counter
 from .branch_model import BranchModel
 
 from ..properties.properties_wwmi import Properties_WWMI

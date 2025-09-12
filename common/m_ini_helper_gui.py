@@ -2,7 +2,7 @@
 import os
 import shutil
 
-from ..generate_mod.m_ini_builder import *
+from ..common.m_ini_builder import *
 from ..config.main_config import GlobalConfig
 from ..properties.properties_generate_mod import Properties_GenerateMod
 from ..common.migoto_format import ObjModel, M_Key

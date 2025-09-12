@@ -6,7 +6,7 @@ from ..utils.command_utils import CommandUtils
 from ..utils.collection_utils import CollectionUtils
 
 from ..config.main_config import GlobalConfig, LogicName
-from ..generate_mod.m_counter import M_Counter
+from ..common.m_counter import M_Counter
 
 
 from ..mod_ini_generate.Unity import ModModelUnity
