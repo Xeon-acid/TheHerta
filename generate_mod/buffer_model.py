@@ -2,7 +2,7 @@ import bpy
 import numpy
 import collections
 
-from ..migoto.migoto_format import D3D11GameType,ObjModel
+from ..common.migoto_format import D3D11GameType,ObjModel
 from .mesh_data import MeshData
 from .mesh_format_converter import MeshFormatConverter
 from ..utils.migoto_utils import MigotoUtils, Fatal

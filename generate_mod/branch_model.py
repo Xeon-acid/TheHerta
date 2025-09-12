@@ -6,7 +6,7 @@ from ..utils.log_utils import LOG
 from ..utils.collection_utils import CollectionUtils, CollectionColor
 from ..utils.config_utils import ConfigUtils
 
-from ..migoto.migoto_format import M_Key, ObjDataModel, M_Condition, D3D11GameType
+from ..common.migoto_format import M_Key, ObjDataModel, M_Condition, D3D11GameType
 from ..generate_mod.m_counter import M_Counter
 
 from ..generate_mod.m_export import get_buffer_ib_vb_fast

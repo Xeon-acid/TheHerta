@@ -2,7 +2,7 @@ import bpy
 
 from ..utils.obj_utils import ObjUtils
 
-from ..migoto.migoto_format import D3D11GameType,ObjModel
+from ..common.migoto_format import D3D11GameType,ObjModel
 from ..config.main_config import GlobalConfig, LogicName
 from .buffer_model import BufferModel
 from ..utils.timer_utils import TimerUtils

@@ -7,7 +7,7 @@ from ..config.main_config import GlobalConfig,LogicName
 from ..properties.properties_generate_mod import Properties_GenerateMod
 from .m_counter import M_Counter
 from .draw_ib_model import DrawIBModel
-from ..migoto.migoto_format import ObjModel, M_Key
+from ..common.migoto_format import ObjModel, M_Key
 
 class M_IniHelperV2:
     @classmethod

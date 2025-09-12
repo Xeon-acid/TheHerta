@@ -5,7 +5,7 @@ import copy
 
 from ..generate_mod.m_export import get_buffer_ib_vb_fast
 
-from ..migoto.migoto_format import *
+from ..common.migoto_format import *
 
 from ..utils.config_utils import ConfigUtils
 from ..utils.collection_utils import *
@@ -16,7 +16,7 @@ from ..utils.migoto_utils import Fatal
 from ..utils.obj_utils import *
 
 from ..utils.obj_utils import ExtractedObject, ExtractedObjectHelper
-from ..migoto.migoto_format import M_DrawIndexed, TextureReplace,ObjModel
+from ..common.migoto_format import M_DrawIndexed, TextureReplace,ObjModel
 from ..config.import_config import ImportConfig
 
 from ..generate_mod.m_counter import M_Counter
