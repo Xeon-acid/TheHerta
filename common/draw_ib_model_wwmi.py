@@ -117,11 +117,7 @@ class DrawIBModelWWMI:
         self.write_out_shapekey_buffer(merged_obj=merged_obj, index_vertex_id_dict=index_vertex_id_dict)
         
         # 删除临时融合的obj对象
-        # bpy.data.objects.remove(merged_obj, do_unlink=True)
-
-    
-
-
+        bpy.data.objects.remove(merged_obj, do_unlink=True)
 
 
     def write_out_index_buffer(self,ib):
@@ -176,6 +172,8 @@ class DrawIBModelWWMI:
             print(f'No shapekeys found to process!')
         else:
             shapekey_offsets,shapekey_vertex_ids,shapekey_vertex_offsets_np = ShapeKeyUtils.extract_shapekey_data(merged_obj=merged_obj,index_vertex_id_dict=index_vertex_id_dict)
+            # extract_shapekey_data_v2
+            # shapekey_offsets,shapekey_vertex_ids,shapekey_vertex_offsets_np = ShapeKeyUtils.extract_shapekey_data_v2(mesh=mesh,index_vertex_id_dict=index_vertex_id_dict)
 
             self.shapekey_offsets = shapekey_offsets
             self.shapekey_vertex_ids = shapekey_vertex_ids

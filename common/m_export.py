@@ -38,13 +38,17 @@ def get_buffer_ib_vb_fast(d3d11GameType:D3D11GameType):
         obj_model = buffer_model.calc_index_vertex_buffer_girlsfrontline2(obj, mesh)
     elif GlobalConfig.logic_name == LogicName.WutheringWaves:
         print("calc_index_vertex_buffer_wwmi::")
+        
         obj_model = buffer_model.calc_index_vertex_buffer_wwmi(obj, mesh)
+
     elif GlobalConfig.logic_name == LogicName.SnowBreak:
         obj_model = buffer_model.calc_index_vertex_buffer_wwmi(obj, mesh)
     else:
         # 计算IndexBuffer和CategoryBufferDict
         obj_model = buffer_model.calc_index_vertex_buffer_universal(obj, mesh)
     
+
+        
     # TimerUtils.End("get_buffer_ib_vb_fast")
     
     return obj_model.ib, obj_model.category_buffer_dict, obj_model.index_vertex_id_dict
