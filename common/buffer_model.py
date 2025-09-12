@@ -3,10 +3,10 @@ import numpy
 import collections
 
 from ..common.migoto_format import D3D11GameType,ObjModel
-from .mesh_data import MeshData
 
 from ..utils.format_utils import FormatUtils, Fatal
 from ..utils.timer_utils import TimerUtils
+from ..utils.vertexgroup_utils import VertexGroupUtils
 
 from ..config.main_config import GlobalConfig, LogicName
 from ..config.properties_import_model import Properties_ImportModel
@@ -91,13 +91,12 @@ class BufferModel:
         self.element_vertex_ndarray = numpy.zeros(mesh_loops_length,dtype=self.dtype)
 
 
-        mesh_data = MeshData(mesh=mesh)
 
         normalize_weights = "Blend" in self.d3d11GameType.OrderedCategoryNameList
 
         # normalize_weights = False
 
-        blendweights_dict, blendindices_dict = mesh_data.get_blendweights_blendindices_v3(normalize_weights = normalize_weights)
+        blendweights_dict, blendindices_dict = VertexGroupUtils.get_blendweights_blendindices_v3(normalize_weights = normalize_weights)
 
         # 对每一种Element都获取对应的数据
         for d3d11_element_name in self.d3d11GameType.OrderedFullElementList:
