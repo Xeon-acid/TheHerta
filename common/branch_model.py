@@ -7,9 +7,25 @@ from ..utils.collection_utils import CollectionUtils, CollectionColor
 from ..utils.config_utils import ConfigUtils
 
 from ..common.migoto_format import M_Key, ObjDataModel, M_Condition, D3D11GameType
-from ..common.m_counter import M_Counter
 
 from ..common.m_export import get_buffer_ib_vb_fast
+
+
+
+class M_GlobalKeyCounter:
+    '''
+    在新版的生成Mod架构中用于统计一个Mod中全局的按键索引
+    以及当前生成Mod的数量，每个DrawIB都是一个Mod。
+    使用全局变量来避免过于复杂的变量传递。
+    '''
+
+    global_key_index:int = 0
+    generated_mod_number:int = 0
+
+    @classmethod
+    def initialize(cls):        
+        cls.global_key_index = 0
+        cls.generated_mod_number = 0
 
 '''
 分支模型
@@ -85,7 +101,7 @@ class BranchModel:
                 # Create Toggle Key.
                 m_key = M_Key()
                 current_add_key_index = len(self.keyname_mkey_dict.keys())
-                m_key.key_name = "$swapkey" + str(M_Counter.global_key_index)
+                m_key.key_name = "$swapkey" + str(M_GlobalKeyCounter.global_key_index)
                 # LOG.info("设置KEYname: " + m_key.key_name)
                 # 按键开关的value_list是默认的0,1
                 m_key.value_list = [0,1]
@@ -99,14 +115,14 @@ class BranchModel:
                 
                 # 如果未解析到人工设定的初始值，则从按键列表里默认选一个
                 if m_key.initialize_vk_str == "":
-                    m_key.key_value = ConfigUtils.get_mod_switch_key(M_Counter.global_key_index)
+                    m_key.key_value = ConfigUtils.get_mod_switch_key(M_GlobalKeyCounter.global_key_index)
 
                 # 创建的key要加入全局key列表
                 self.keyname_mkey_dict[m_key.key_name] = m_key
 
                 if len(self.keyname_mkey_dict.keys()) > current_add_key_index:
                     # LOG.info("Global Key Index ++")
-                    M_Counter.global_key_index = M_Counter.global_key_index + 1
+                    M_GlobalKeyCounter.global_key_index = M_GlobalKeyCounter.global_key_index + 1
 
                 # 创建的key要加入chain_key_list传递下去
                 # 因为传递解析下去的话，要让这个key生效，而又因为它是按键开关key，所以value为1生效，所以tmp_value设为1
@@ -140,7 +156,7 @@ class BranchModel:
                 m_key = M_Key()
                 current_add_key_index = len(self.keyname_mkey_dict.keys())
           
-                m_key.key_name = "$swapkey" + str(M_Counter.global_key_index)
+                m_key.key_name = "$swapkey" + str(M_GlobalKeyCounter.global_key_index)
                 # LOG.info("设置KEYname: " + m_key.key_name)
                 m_key.value_list = list(range(len(switch_collection_list)))
                 
@@ -157,7 +173,7 @@ class BranchModel:
                 
                 # 如果未解析到人工设定的初始值，则从按键列表里默认选一个
                 if m_key.initialize_vk_str == "":
-                    m_key.key_value = ConfigUtils.get_mod_switch_key(M_Counter.global_key_index)
+                    m_key.key_value = ConfigUtils.get_mod_switch_key(M_GlobalKeyCounter.global_key_index)
 
 
                 # 创建的key要加入全局key列表
@@ -165,7 +181,7 @@ class BranchModel:
 
                 if len(self.keyname_mkey_dict.keys()) > current_add_key_index:
                     # LOG.info("Global Key Index ++")
-                    M_Counter.global_key_index = M_Counter.global_key_index + 1
+                    M_GlobalKeyCounter.global_key_index = M_GlobalKeyCounter.global_key_index + 1
 
                 key_tmp_value = 0
                 for switch_collection in switch_collection_list:

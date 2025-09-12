@@ -6,7 +6,7 @@ from ..utils.command_utils import CommandUtils
 from ..utils.collection_utils import CollectionUtils
 
 from ..config.main_config import GlobalConfig, LogicName
-from ..common.m_counter import M_Counter
+from ..common.branch_model import M_GlobalKeyCounter
 
 
 from ..games.Unity import ModModelUnity
@@ -66,7 +66,7 @@ class SSMTGenerateMod(bpy.types.Operator):
     def execute(self, context):
         TimerUtils.Start("GenerateMod Mod")
 
-        M_Counter.initialize()
+        M_GlobalKeyCounter.initialize()
 
         # 先校验当前选中的工作空间是不是一个有效的工作空间集合
         workspace_collection = bpy.context.collection

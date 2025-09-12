@@ -19,7 +19,6 @@ from ..utils.obj_utils import ExtractedObject, ExtractedObjectHelper
 from ..common.migoto_format import M_DrawIndexed, TextureReplace,ObjModel
 from ..config.import_config import ImportConfig
 
-from ..common.m_counter import M_Counter
 from .branch_model import BranchModel
 
 from ..config.properties_wwmi import Properties_WWMI

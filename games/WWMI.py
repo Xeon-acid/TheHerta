@@ -3,10 +3,9 @@ import math
 
 from ..common.migoto_format import M_Key, ObjDataModel, M_DrawIndexed, M_Condition,D3D11GameType,TextureReplace
 from ..config.import_config import GlobalConfig
-from ..common.m_counter import M_Counter
 from ..common.draw_ib_model_wwmi import DrawIBModelWWMI
 
-from ..common.branch_model import BranchModel
+from ..common.branch_model import BranchModel,M_GlobalKeyCounter
 from ..common.m_ini_builder import M_IniBuilder,M_IniSection,M_SectionType
 from ..config.properties_generate_mod import Properties_GenerateMod
 from ..common.m_ini_helper import M_IniHelperV2,M_IniHelperV3
@@ -521,7 +520,7 @@ class ModModelWWMI:
             # 移动槽位贴图
             M_IniHelperV2.move_slot_style_textures(draw_ib_model=draw_ib_model)
 
-            M_Counter.generated_mod_number = M_Counter.generated_mod_number + 1
+            M_GlobalKeyCounter.generated_mod_number = M_GlobalKeyCounter.generated_mod_number + 1
 
         M_IniHelperV3.add_branch_key_sections(ini_builder=config_ini_builder,key_name_mkey_dict=self.branch_model.keyname_mkey_dict)
 

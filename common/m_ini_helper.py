@@ -5,7 +5,7 @@ from .m_ini_builder import *
 from ..utils.json_utils import JsonUtils
 from ..config.main_config import GlobalConfig,LogicName
 from ..config.properties_generate_mod import Properties_GenerateMod
-from .m_counter import M_Counter
+from .branch_model import M_GlobalKeyCounter
 from .draw_ib_model import DrawIBModel
 from ..common.migoto_format import ObjModel, M_Key
 
@@ -177,7 +177,7 @@ class M_IniHelperV2:
         if len(draw_ib_model.key_name_mkey_dict.keys()) != 0:
             constants_section = M_IniSection(M_SectionType.Constants)
             constants_section.SectionName = "Constants"
-            constants_section.append("global $active" + str(M_Counter.generated_mod_number))
+            constants_section.append("global $active" + str(M_GlobalKeyCounter.generated_mod_number))
             for mkey in draw_ib_model.key_name_mkey_dict.values():
                 key_str = "global persist " + mkey.key_name + " = " + str(mkey.initialize_value)
                 constants_section.append(key_str) 
@@ -192,7 +192,7 @@ class M_IniHelperV2:
         if len(draw_ib_model.key_name_mkey_dict.keys()) != 0:
             present_section = M_IniSection(M_SectionType.Present)
             present_section.SectionName = "Present"
-            present_section.append("post $active" + str(M_Counter.generated_mod_number) + " = 0")
+            present_section.append("post $active" + str(M_GlobalKeyCounter.generated_mod_number) + " = 0")
             ini_builder.append_section(present_section)
     
     @classmethod
@@ -205,9 +205,9 @@ class M_IniHelperV2:
 
             for mkey in draw_ib_model.key_name_mkey_dict.values():
                 key_section = M_IniSection(M_SectionType.Key)
-                key_section.append("[KeySwap_" + str(M_Counter.generated_mod_number) + "_" + str(key_number) + "]")
+                key_section.append("[KeySwap_" + str(M_GlobalKeyCounter.generated_mod_number) + "_" + str(key_number) + "]")
                 if draw_ib_model.d3d11GameType.GPU_PreSkinning:
-                    key_section.append("condition = $active" + str(M_Counter.generated_mod_number) + " == 1")
+                    key_section.append("condition = $active" + str(M_GlobalKeyCounter.generated_mod_number) + " == 1")
                 key_section.append("key = " + mkey.key_value)
                 key_section.append("type = cycle")
 
@@ -234,7 +234,7 @@ class M_IniHelperV3:
         if len(key_name_mkey_dict.keys()) != 0:
             constants_section = M_IniSection(M_SectionType.Constants)
             constants_section.SectionName = "Constants"
-            constants_section.append("global $active" + str(M_Counter.generated_mod_number))
+            constants_section.append("global $active" + str(M_GlobalKeyCounter.generated_mod_number))
             for mkey in key_name_mkey_dict.values():
                 key_str = "global persist " + mkey.key_name + " = " + str(mkey.initialize_value)
                 constants_section.append(key_str) 
@@ -249,7 +249,7 @@ class M_IniHelperV3:
         if len(key_name_mkey_dict.keys()) != 0:
             present_section = M_IniSection(M_SectionType.Present)
             present_section.SectionName = "Present"
-            present_section.append("post $active" + str(M_Counter.generated_mod_number) + " = 0")
+            present_section.append("post $active" + str(M_GlobalKeyCounter.generated_mod_number) + " = 0")
             ini_builder.append_section(present_section)
     
     @classmethod
@@ -262,8 +262,8 @@ class M_IniHelperV3:
 
             for mkey in key_name_mkey_dict.values():
                 key_section = M_IniSection(M_SectionType.Key)
-                key_section.append("[KeySwap_" + str(M_Counter.generated_mod_number) + "_" + str(key_number) + "]")
-                key_section.append("condition = $active" + str(M_Counter.generated_mod_number) + " == 1")
+                key_section.append("[KeySwap_" + str(M_GlobalKeyCounter.generated_mod_number) + "_" + str(key_number) + "]")
+                key_section.append("condition = $active" + str(M_GlobalKeyCounter.generated_mod_number) + " == 1")
                 key_section.append("key = " + mkey.key_value)
                 key_section.append("type = cycle")
 
@@ -288,7 +288,7 @@ class M_IniHelperV3:
             constants_section = M_IniSection(M_SectionType.Constants)
             constants_section.SectionName = "Constants"
 
-            for i in range(M_Counter.generated_mod_number):
+            for i in range(M_GlobalKeyCounter.generated_mod_number):
                 constants_section.append("global $active" + str(i))
 
             for mkey in key_name_mkey_dict.values():
@@ -302,7 +302,7 @@ class M_IniHelperV3:
             present_section = M_IniSection(M_SectionType.Present)
             present_section.SectionName = "Present"
 
-            for i in range(M_Counter.generated_mod_number):
+            for i in range(M_GlobalKeyCounter.generated_mod_number):
                 present_section.append("post $active" + str(i) + " = 0")
             ini_builder.append_section(present_section)
 
