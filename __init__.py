@@ -18,12 +18,12 @@ importlib.reload(addon_updater_ops)
 from bpy.types import SpaceView3D
 
 # 全局配置
-from .properties.properties_global import Properties_Global
-from .properties.properties_dbmt_path import Properties_DBMT_Path
-from .properties.properties_import_model import Properties_ImportModel
-from .properties.properties_generate_mod import Properties_GenerateMod
-from .properties.properties_wwmi import Properties_WWMI
-from .properties.properties_extract_model import Properties_ExtractModel
+from .config.properties_global import Properties_Global
+from .config.properties_dbmt_path import Properties_DBMT_Path
+from .config.properties_import_model import Properties_ImportModel
+from .config.properties_generate_mod import Properties_GenerateMod
+from .config.properties_wwmi import Properties_WWMI
+from .config.properties_extract_model import Properties_ExtractModel
 
 
 bl_info = {

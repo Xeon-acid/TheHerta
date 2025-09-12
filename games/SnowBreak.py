@@ -8,12 +8,12 @@ from ..common.draw_ib_model import DrawIBModel
 
 from ..common.branch_model import BranchModel
 from ..common.m_ini_builder import M_IniBuilder,M_IniSection,M_SectionType
-from ..properties.properties_generate_mod import Properties_GenerateMod
+from ..config.properties_generate_mod import Properties_GenerateMod
 from ..common.m_ini_helper import M_IniHelperV2,M_IniHelperV3
 from ..common.m_ini_helper_gui import M_IniHelperGUI
 
 
-class ModModelIdentityV:
+class ModModelSnowBreak:
     def __init__(self,workspace_collection:bpy.types.Collection):
         # (1) 统计全局分支模型
         self.branch_model = BranchModel(workspace_collection=workspace_collection)
@@ -166,6 +166,13 @@ class ModModelIdentityV:
 
             # Add ib replace
             texture_override_ib_section.append(self.vlr_filter_index_indent + "ib = " + ib_resource_name)
+
+            # 逐个资源替换
+            # 遍历获取所有在当前分类hash下进行替换的分类，并添加对应的资源替换
+            for original_category_name, draw_category_name in d3d11GameType.CategoryDrawCategoryDict.items():
+                category_original_slot = d3d11GameType.CategoryExtractSlotDict[original_category_name]
+                texture_override_ib_section.append(category_original_slot + " = Resource" + draw_ib + original_category_name)
+
 
             # Add slot style texture slot replace.
             if not Properties_GenerateMod.forbid_auto_texture_ini():
@@ -392,7 +399,7 @@ class ModModelIdentityV:
 
         ini_builder.append_section(texture_filter_index_section)
 
-    def generate_unity_vs_config_ini(self):
+    def generate_ini(self):
         config_ini_builder = M_IniBuilder()
 
         M_IniHelperV2.generate_hash_style_texture_ini(ini_builder=config_ini_builder,drawib_drawibmodel_dict=self.drawib_drawibmodel_dict)
@@ -402,7 +409,7 @@ class ModModelIdentityV:
 
         for draw_ib, draw_ib_model in self.drawib_drawibmodel_dict.items():
             # self.add_unity_vs_texture_override_vlr_section(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
-            self.add_unity_vs_texture_override_vb_sections(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            # elf.add_unity_vs_texture_override_vb_sections(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
             self.add_unity_vs_texture_override_ib_sections(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
             self.add_unity_vs_resource_vb_sections(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
             self.add_resource_texture_sections(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)

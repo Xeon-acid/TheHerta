@@ -9,12 +9,12 @@ from ..config.main_config import GlobalConfig, LogicName
 from ..common.m_counter import M_Counter
 
 
-from ..mod_ini_generate.Unity import ModModelUnity
-from ..mod_ini_generate.HonkaiStarRail import ModModelHonkaiStarRail
-from ..mod_ini_generate.IdentityV import ModModelIdentityV
-from ..mod_ini_generate.YYSLS import ModModelYYSLS
-from ..mod_ini_generate.WWMI import ModModelWWMI
-from ..mod_ini_generate.SnowBreak import ModModelSnowBreak
+from ..games.Unity import ModModelUnity
+from ..games.HonkaiStarRail import ModModelHonkaiStarRail
+from ..games.IdentityV import ModModelIdentityV
+from ..games.YYSLS import ModModelYYSLS
+from ..games.WWMI import ModModelWWMI
+from ..games.SnowBreak import ModModelSnowBreak
 
 class PanelGenerateModConfig(bpy.types.Panel):
     bl_label = "生成Mod配置"

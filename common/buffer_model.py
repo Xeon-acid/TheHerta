@@ -9,7 +9,7 @@ from ..utils.migoto_utils import MigotoUtils, Fatal
 from ..config.main_config import GlobalConfig
 
 from ..config.main_config import GlobalConfig, LogicName
-from ..properties.properties_import_model import Properties_ImportModel
+from ..config.properties_import_model import Properties_ImportModel
 
 class BufferModel:
     '''

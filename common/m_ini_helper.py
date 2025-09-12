@@ -4,7 +4,7 @@ import shutil
 from .m_ini_builder import *
 from ..utils.json_utils import JsonUtils
 from ..config.main_config import GlobalConfig,LogicName
-from ..properties.properties_generate_mod import Properties_GenerateMod
+from ..config.properties_generate_mod import Properties_GenerateMod
 from .m_counter import M_Counter
 from .draw_ib_model import DrawIBModel
 from ..common.migoto_format import ObjModel, M_Key

@@ -3,7 +3,7 @@ import os
 import json
 
 
-from ..properties.properties_dbmt_path import Properties_DBMT_Path
+from ..config.properties_dbmt_path import Properties_DBMT_Path
 
 '''
 执行逻辑名称

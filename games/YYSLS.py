@@ -8,12 +8,16 @@ from ..common.draw_ib_model import DrawIBModel
 
 from ..common.branch_model import BranchModel
 from ..common.m_ini_builder import M_IniBuilder,M_IniSection,M_SectionType
-from ..properties.properties_generate_mod import Properties_GenerateMod
+from ..config.properties_generate_mod import Properties_GenerateMod
 from ..common.m_ini_helper import M_IniHelperV2,M_IniHelperV3
 from ..common.m_ini_helper_gui import M_IniHelperGUI
 
-
-class ModModelSnowBreak:
+class ModModelYYSLS:
+    '''
+    支持的游戏：
+    - 燕云十六声 YYSLS
+    - 死或生：沙滩排球 （待确定，由于多个BLENDWEIGHTS仍然无法正确处理）
+    '''
     def __init__(self,workspace_collection:bpy.types.Collection):
         # (1) 统计全局分支模型
         self.branch_model = BranchModel(workspace_collection=workspace_collection)
@@ -35,7 +39,8 @@ class ModModelSnowBreak:
         for draw_ib in self.branch_model.draw_ib__component_count_list__dict.keys():
             draw_ib_model = DrawIBModel(draw_ib=draw_ib,branch_model=self.branch_model)
             self.drawib_drawibmodel_dict[draw_ib] = draw_ib_model
-        
+
+ 
     def add_unity_vs_texture_override_vb_sections(self,config_ini_builder:M_IniBuilder,commandlist_ini_builder:M_IniBuilder,draw_ib_model:DrawIBModel):
         # 声明TextureOverrideVB部分，只有使用GPU-PreSkinning时是直接替换hash对应槽位
         d3d11GameType = draw_ib_model.d3d11GameType
@@ -54,11 +59,6 @@ class ModModelSnowBreak:
             texture_override_vb_name_suffix = "VB_" + draw_ib + "_" + draw_ib_model.draw_ib_alias + "_" + category_name
             texture_override_vb_section.append("[TextureOverride_" + texture_override_vb_name_suffix + "]")
             texture_override_vb_section.append("hash = " + category_hash)
-
-            if category_name == d3d11GameType.CategoryDrawCategoryDict["Position"]:
-                texture_override_vb_section.append("override_byte_stride = " + str(d3d11GameType.CategoryStrideDict["Position"]))
-                texture_override_vb_section.append("override_vertex_count = " + str(draw_ib_model.draw_number))
-                texture_override_vb_section.append("uav_byte_stride = 4")
 
             
             # (1) 先初始化CommandList
@@ -96,11 +96,8 @@ class ModModelSnowBreak:
             
             # 分支架构，如果是Position则需提供激活变量
             if category_name == d3d11GameType.CategoryDrawCategoryDict["Position"]:
-                if len(self.branch_model.keyname_mkey_dict.values()) != 0:
+                if len(draw_ib_model.key_name_mkey_dict.keys()) != 0:
                     texture_override_vb_section.append("$active" + str(M_Counter.generated_mod_number) + " = 1")
-
-                    if Properties_GenerateMod.generate_branch_mod_gui():
-                        texture_override_vb_section.append("$ActiveCharacter = 1")
 
             texture_override_vb_section.new_line()
 
@@ -126,8 +123,7 @@ class ModModelSnowBreak:
             ib_resource_name = ""
             ib_resource_name = draw_ib_model.PartName_IBResourceName_Dict.get(part_name,None)
             
-            # XXX 第五必须用槽位恢复技术，绕过顶点限制
-            texture_override_ib_section.append("[Resource_IB_Bak_" + str(count_i) + "]")
+
             texture_override_ib_section.append("[TextureOverride_" + texture_override_name_suffix + "]")
             texture_override_ib_section.append("hash = " + draw_ib)
             texture_override_ib_section.append("match_first_index = " + match_first_index)
@@ -137,42 +133,27 @@ class ModModelSnowBreak:
 
             texture_override_ib_section.append(self.vlr_filter_index_indent + "handling = skip")
 
-            # 第五不需要这样，因为第五需要完整的IB还原维持模型稳定
             # If ib buf is emprt, continue to avoid add ib resource replace.
-            # ib_buf = draw_ib_model.componentname_ibbuf_dict.get("Component " + part_name,None)
-            # if ib_buf is None or len(ib_buf) == 0:
-            #     # 不导出对应部位时，要写ib = null，否则在部分场景会发生卡顿，原因未知但是这就是解决方案。
-            #     texture_override_ib_section.append("ib = null")
-            #     texture_override_ib_section.new_line()
-            #     continue
+            ib_buf = draw_ib_model.componentname_ibbuf_dict.get("Component " + part_name,None)
+            if ib_buf is None or len(ib_buf) == 0:
+                # 不导出对应部位时，要写ib = null，否则在部分场景会发生卡顿，原因未知但是这就是解决方案。
+                texture_override_ib_section.append("ib = null")
+                texture_override_ib_section.new_line()
+                continue
 
             # if ZZZ ,use run = CommandListSkinTexture solve slot check problems.
             if GlobalConfig.logic_name == LogicName.ZenlessZoneZero:
                 texture_override_ib_section.append(self.vlr_filter_index_indent + "run = CommandListSkinTexture")
 
-            texture_override_ib_section.append("Resource_IB_Bak_" + str(count_i) + " = ref ib")
-            # XXX 第五人格特有的check vb0 配合VSCheck使用
-            texture_override_ib_section.append("checktextureoverride = vb0")
-
-            # add slot check
-            if not Properties_GenerateMod.forbid_auto_texture_ini():
-                slot_texture_replace_dict:dict[str,TextureReplace] = draw_ib_model.PartName_SlotTextureReplaceDict_Dict.get(part_name,None)
-                # It may not have auto texture
-                if slot_texture_replace_dict is not None:
-                    for slot,texture_replace in slot_texture_replace_dict.items():
-
-                        if texture_replace.style == "Hash":
-                            texture_override_ib_section.append("checktextureoverride = " + slot)
-
-            # Add ib replace
-            texture_override_ib_section.append(self.vlr_filter_index_indent + "ib = " + ib_resource_name)
-
-            # 逐个资源替换
+            
             # 遍历获取所有在当前分类hash下进行替换的分类，并添加对应的资源替换
             for original_category_name, draw_category_name in d3d11GameType.CategoryDrawCategoryDict.items():
                 category_original_slot = d3d11GameType.CategoryExtractSlotDict[original_category_name]
                 texture_override_ib_section.append(category_original_slot + " = Resource" + draw_ib + original_category_name)
 
+
+            # Add ib replace
+            texture_override_ib_section.append(self.vlr_filter_index_indent + "ib = " + ib_resource_name)
 
             # Add slot style texture slot replace.
             if not Properties_GenerateMod.forbid_auto_texture_ini():
@@ -210,10 +191,6 @@ class ModModelSnowBreak:
             for drawindexed_str in drawindexed_str_list:
                 texture_override_ib_section.append(drawindexed_str)
             
-            # Draw之后恢复IB
-            texture_override_ib_section.append("ib = Resource_IB_Bak_" + str(count_i))
-
-
             # 补全endif
             if self.vlr_filter_index_indent:
                 texture_override_ib_section.append("endif")
@@ -253,6 +230,7 @@ class ModModelSnowBreak:
             vertexlimit_section.append("override_byte_stride = " + str(d3d11GameType.CategoryStrideDict["Position"]))
             vertexlimit_section.append("override_vertex_count = " + str(draw_ib_model.draw_number))
             vertexlimit_section.append("uav_byte_stride = 4")
+
             vertexlimit_section.new_line()
 
             commandlist_ini_builder.append_section(vertexlimit_section)
@@ -325,6 +303,7 @@ class ModModelSnowBreak:
                         texture_override_vb_section.append("[TextureOverride_" + texture_override_vb_namesuffix + "_VertexLimitRaise]")
                         texture_override_vb_section.append("override_byte_stride = " + str(d3d11GameType.CategoryStrideDict["Position"]))
                         texture_override_vb_section.append("override_vertex_count = " + str(draw_ib_model.draw_number))
+                        texture_override_vb_section.append("uav_byte_stride = 4")
                     else:
                         texture_override_vb_section.append("[TextureOverride_" + texture_override_vb_namesuffix + "]")
                 else:
@@ -399,17 +378,29 @@ class ModModelSnowBreak:
 
         ini_builder.append_section(texture_filter_index_section)
 
-    def generate_ini(self):
+    def generate_unity_vs_config_ini(self):
+        '''
+        Supported Games:
+        - Genshin Impact
+        - Honkai Impact 3rd
+        - Honkai StarRail
+        - Zenless Zone Zero
+        - Bloody Spell
+        - Unity-CPU-PreSkinning (All DX11 Unity games who allow 3Dmigoto inject, mostly used by GF2 now.)
+        '''
         config_ini_builder = M_IniBuilder()
 
         M_IniHelperV2.generate_hash_style_texture_ini(ini_builder=config_ini_builder,drawib_drawibmodel_dict=self.drawib_drawibmodel_dict)
+
 
         if Properties_GenerateMod.slot_style_texture_add_filter_index():
             self.add_texture_filter_index(ini_builder= config_ini_builder)
 
         for draw_ib, draw_ib_model in self.drawib_drawibmodel_dict.items():
-            # self.add_unity_vs_texture_override_vlr_section(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
-            # elf.add_unity_vs_texture_override_vb_sections(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+
+            if GlobalConfig.logic_name != LogicName.YYSLS:
+                self.add_unity_vs_texture_override_vlr_section(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
+            # self.add_unity_vs_texture_override_vb_sections(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
             self.add_unity_vs_texture_override_ib_sections(config_ini_builder=config_ini_builder,commandlist_ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
             self.add_unity_vs_resource_vb_sections(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
             self.add_resource_texture_sections(ini_builder=config_ini_builder,draw_ib_model=draw_ib_model)
@@ -418,13 +409,12 @@ class ModModelSnowBreak:
 
             M_Counter.generated_mod_number = M_Counter.generated_mod_number + 1
 
+        
         M_IniHelperV3.add_branch_key_sections(ini_builder=config_ini_builder,key_name_mkey_dict=self.branch_model.keyname_mkey_dict)
 
         M_IniHelperGUI.add_branch_mod_gui_section(ini_builder=config_ini_builder,key_name_mkey_dict=self.branch_model.keyname_mkey_dict)
 
         config_ini_builder.save_to_file(GlobalConfig.path_generate_mod_folder() + GlobalConfig.workspacename + ".ini")
-
-
 
 
 

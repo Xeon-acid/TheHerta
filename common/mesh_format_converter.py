@@ -1,7 +1,7 @@
 import math
 import numpy
 
-from ..properties.properties_generate_mod import Properties_GenerateMod
+from ..config.properties_generate_mod import Properties_GenerateMod
 from ..utils.timer_utils import TimerUtils
 from ..utils.log_utils import LOG
 

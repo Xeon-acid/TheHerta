@@ -2,7 +2,7 @@
 import subprocess
 
 from ..config.main_config import *
-from ..properties.properties_generate_mod import Properties_GenerateMod
+from ..config.properties_generate_mod import Properties_GenerateMod
 
 class CommandUtils:
 

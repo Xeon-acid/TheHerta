@@ -18,8 +18,8 @@ from ..config.main_config import GlobalConfig, LogicName
 
 from ..common.migoto_format import MigotoBinaryFile
 
-from ..properties.properties_import_model import Properties_ImportModel
-from ..properties.properties_wwmi import Properties_WWMI
+from ..config.properties_import_model import Properties_ImportModel
+from ..config.properties_wwmi import Properties_WWMI
 
 # 用于解决 AttributeError: 'IMPORT_MESH_OT_migoto_raw_buffers_mmt' object has no attribute 'filepath'
 from bpy_extras.io_utils import ImportHelper 

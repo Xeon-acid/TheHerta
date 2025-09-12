@@ -22,7 +22,7 @@ from ..config.import_config import ImportConfig
 from ..common.m_counter import M_Counter
 from .branch_model import BranchModel
 
-from ..properties.properties_wwmi import Properties_WWMI
+from ..config.properties_wwmi import Properties_WWMI
 
 class ComponentModel:
 

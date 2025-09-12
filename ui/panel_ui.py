@@ -3,8 +3,8 @@ import blf
 import os
 
 from ..config.main_config import GlobalConfig, LogicName
-from ..properties.properties_dbmt_path import Properties_DBMT_Path
-from ..properties.properties_global import Properties_Global
+from ..config.properties_dbmt_path import Properties_DBMT_Path
+from ..config.properties_global import Properties_Global
 
 # 3Dmigoto属性绘制
 def draw_migoto_overlay():
