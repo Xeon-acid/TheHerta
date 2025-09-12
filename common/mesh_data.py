@@ -11,12 +11,14 @@ class MeshData:
         self.mesh = mesh
 
     '''
-    # TODO 下面这里是获取BLENDWEIGHTS和BLENDINDICES的代码，但是只支持前四个BLENDWEIGHTS和BLENDINDICES
+    # 下面这里是获取BLENDWEIGHTS和BLENDINDICES的代码，但是只支持前四个BLENDWEIGHTS和BLENDINDICES
     # 我们需要扩展让它支持任意多个，并且每四个为一组
     # 比如BLENDWEIGHTS R8G8B8A8_UNORM  BLENDWEIGHTS1 R8G8B8A8_UNORM  
     # 也会有对应的BLENDINDICES和BLENDINDICES1，数据类型为R8G8B8A8_UINT等等
     # 数据类型是后面决定的，但是我们这里要提前准备好BLENDWEIGHTS和BLENDINDICES的内容，反正肯定不是4个
     # 创建一个包含所有循环顶点索引的NumPy数组
+
+    这个V1要留着参考，V3目前正在使用，但是后续仍然有可能有更新的版本。
     '''
     def get_blendweights_blendindices_v1(self,normalize_weights:bool = False):
 

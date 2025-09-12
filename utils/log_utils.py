@@ -17,7 +17,7 @@ BACKGROUND_YELLOW = '\033[43m'
 
 print(BACKGROUND_YELLOW + BLACK + BOLD + "Warning: This is a warningg message" + RESET)
 '''
-from .migoto_utils import Fatal
+from .format_utils import Fatal
 # Nico: notice, all print() and output should call these method, so we can make them log to file easily when switch to GUI.
 
 class LOG:

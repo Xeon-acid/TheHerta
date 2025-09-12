@@ -4,20 +4,20 @@ import io
 import numpy
 import os
 
-from ..utils.migoto_utils import MigotoUtils, Fatal
+from ..utils.format_utils import FormatUtils, Fatal
 from dataclasses import dataclass, field, asdict
 from ..utils.log_utils import LOG
 
 
-from ..utils.migoto_utils import *
-from ..utils.migoto_utils import *
+from ..utils.format_utils import *
+from ..utils.format_utils import *
 from ..config.main_config import *
 from ..utils.timer_utils import *
 
 from typing import List, Dict, Union
 from pathlib import Path
 
-from ..utils.migoto_utils import *
+from ..utils.format_utils import *
 
 
 from dataclasses import dataclass, field, asdict
@@ -114,7 +114,7 @@ class FMTFile:
                     self.elements.append(D3D11Element(
                           SemanticName=element_info["SemanticName"], SemanticIndex=int(element_info["SemanticIndex"]),
                     Format= element_info["Format"],AlignedByteOffset= int(element_info["AlignedByteOffset"]),
-                    ByteWidth=MigotoUtils.format_size(element_info["Format"]),
+                    ByteWidth=FormatUtils.format_size(element_info["Format"]),
                     ExtractSlot="0",ExtractTechnique="",Category=""
                     ))
                     element_info.clear()  # 清空当前element信息
@@ -129,7 +129,7 @@ class FMTFile:
             self.elements.append(D3D11Element(
                     SemanticName=element_info["SemanticName"], SemanticIndex=int(element_info["SemanticIndex"]),
                     Format= element_info["Format"],AlignedByteOffset= int(element_info["AlignedByteOffset"]),
-                    ByteWidth=MigotoUtils.format_size(element_info["Format"]),
+                    ByteWidth=FormatUtils.format_size(element_info["Format"]),
                     ExtractSlot="0",ExtractTechnique="",Category=""
             ))
 
@@ -141,8 +141,8 @@ class FMTFile:
         fields = []
         for elemnt in self.elements:
             # print("element: "+ elemnt.ElementName)
-            numpy_type = MigotoUtils.get_nptype_from_format(elemnt.Format)
-            size = MigotoUtils.format_components(elemnt.Format)
+            numpy_type = FormatUtils.get_nptype_from_format(elemnt.Format)
+            size = FormatUtils.format_components(elemnt.Format)
 
             # print(numpy_type)
             # print(size)
@@ -202,11 +202,11 @@ class MigotoBinaryFile:
         self.init_data()
 
     def init_data(self):
-        ib_stride = MigotoUtils.format_size(self.fmt_file.format)
+        ib_stride = FormatUtils.format_size(self.fmt_file.format)
 
         self.ib_count = int(self.ib_file_size / ib_stride)
         self.ib_polygon_count = int(self.ib_count / 3)
-        self.ib_data = numpy.fromfile(self.ib_bin_path, dtype=MigotoUtils.get_nptype_from_format(self.fmt_file.format), count=self.ib_count)
+        self.ib_data = numpy.fromfile(self.ib_bin_path, dtype=FormatUtils.get_nptype_from_format(self.fmt_file.format), count=self.ib_count)
         
         # 读取fmt文件，解析出后面要用的dtype
         fmt_dtype = self.fmt_file.get_dtype()

@@ -12,7 +12,7 @@ from ..utils.collection_utils import *
 from ..config.main_config import *
 from ..utils.json_utils import *
 from ..utils.timer_utils import *
-from ..utils.migoto_utils import Fatal
+from ..utils.format_utils import Fatal
 from ..utils.obj_utils import *
 
 from ..utils.obj_utils import ExtractedObject, ExtractedObjectHelper

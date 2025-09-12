@@ -3,7 +3,7 @@ import itertools
 
 from mathutils import Vector,Matrix
 
-from ..utils.migoto_utils import Fatal
+from .format_utils import Fatal
 
 
 class VertexGroupUtils:

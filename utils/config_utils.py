@@ -4,7 +4,7 @@ import json
 import subprocess
 from ..config.main_config import *
 from .json_utils import *
-from .migoto_utils import Fatal
+from .format_utils import Fatal
 
 
 class DrawIBPair:

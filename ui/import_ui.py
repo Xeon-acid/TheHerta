@@ -10,7 +10,7 @@ from ..utils.config_utils import ConfigUtils
 from ..utils.collection_utils import CollectionColor, CollectionUtils
 from ..utils.timer_utils import TimerUtils
 from ..utils.translate_utils import TR
-from ..utils.migoto_utils import Fatal,MigotoUtils
+from ..utils.format_utils import Fatal,FormatUtils
 from ..utils.obj_utils import ExtractedObjectHelper
 from ..utils.texture_utils import TextureUtils
 
@@ -58,7 +58,7 @@ class MeshImporter:
         for element in mbf.fmt_file.elements:
             data = mbf.vb_data[element.ElementName]
 
-            data = MigotoUtils.apply_format_conversion(data, element.Format)
+            data = FormatUtils.apply_format_conversion(data, element.Format)
 
             if element.SemanticName == "POSITION":
                 if len(data[0]) == 4:

@@ -13,7 +13,7 @@ from math import *
 from typing import List, Dict, Union
 from dataclasses import dataclass, field, asdict
 
-from .migoto_utils import Fatal
+from .format_utils import Fatal
 from .shapekey_utils import ShapeKeyUtils
 from ..config.properties_wwmi import Properties_WWMI
 from operator import attrgetter, itemgetter

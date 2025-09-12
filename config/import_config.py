@@ -4,7 +4,7 @@ import os
 from .main_config import GlobalConfig
 from ..utils.json_utils import JsonUtils
 from ..common.migoto_format import D3D11GameType, TextureReplace
-from ..utils.migoto_utils import Fatal
+from ..utils.format_utils import Fatal
 
 
 

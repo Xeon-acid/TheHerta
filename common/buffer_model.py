@@ -4,12 +4,13 @@ import collections
 
 from ..common.migoto_format import D3D11GameType,ObjModel
 from .mesh_data import MeshData
-from .mesh_format_converter import MeshFormatConverter
-from ..utils.migoto_utils import MigotoUtils, Fatal
-from ..config.main_config import GlobalConfig
+
+from ..utils.format_utils import FormatUtils, Fatal
+from ..utils.timer_utils import TimerUtils
 
 from ..config.main_config import GlobalConfig, LogicName
 from ..config.properties_import_model import Properties_ImportModel
+from ..config.properties_generate_mod import Properties_GenerateMod
 
 class BufferModel:
     '''
@@ -74,8 +75,8 @@ class BufferModel:
         blendweights_formatlen = 0
         for d3d11_element_name in self.d3d11GameType.OrderedFullElementList:
             d3d11_element = self.d3d11GameType.ElementNameD3D11ElementDict[d3d11_element_name]
-            np_type = MigotoUtils.get_nptype_from_format(d3d11_element.Format)
-            format_len = MigotoUtils.format_components(d3d11_element.Format)
+            np_type = FormatUtils.get_nptype_from_format(d3d11_element.Format)
+            format_len = FormatUtils.format_components(d3d11_element.Format)
 
             # 因为YYSLS出现了多个BLENDWEIGHTS的情况，所以这里只能用这个StartWith判断
             if d3d11_element_name.startswith("BLENDWEIGHT"):
@@ -172,7 +173,7 @@ class BufferModel:
                     
                     result = result.reshape(-1, 4)
 
-                    self.element_vertex_ndarray[d3d11_element_name] = MeshFormatConverter.convert_4x_float32_to_r8g8b8a8_snorm(result)
+                    self.element_vertex_ndarray[d3d11_element_name] = FormatUtils.convert_4x_float32_to_r8g8b8a8_snorm(result)
 
 
                 elif d3d11_element.Format == 'R8G8B8A8_UNORM':
@@ -201,7 +202,7 @@ class BufferModel:
                         result[i][1] = DeConvert(result[i][1])
                         result[i][2] = DeConvert(result[i][2])
 
-                    self.element_vertex_ndarray[d3d11_element_name] = MeshFormatConverter.convert_4x_float32_to_r8g8b8a8_unorm(result)
+                    self.element_vertex_ndarray[d3d11_element_name] = FormatUtils.convert_4x_float32_to_r8g8b8a8_unorm(result)
                 
                 else:
                     result = numpy.empty(mesh_loops_length * 3, dtype=numpy.float32)
@@ -251,10 +252,10 @@ class BufferModel:
                     result = result.astype(numpy.float16)
 
                 elif d3d11_element.Format == 'R8G8B8A8_SNORM':
-                    result = MeshFormatConverter.convert_4x_float32_to_r8g8b8a8_snorm(result)
+                    result = FormatUtils.convert_4x_float32_to_r8g8b8a8_snorm(result)
 
                 elif d3d11_element.Format == 'R8G8B8A8_UNORM':
-                    result = MeshFormatConverter.convert_4x_float32_to_r8g8b8a8_unorm(result)
+                    result = FormatUtils.convert_4x_float32_to_r8g8b8a8_unorm(result)
                 
                 # 第五人格格式
                 elif d3d11_element.Format == "R32G32B32_FLOAT":
@@ -268,7 +269,7 @@ class BufferModel:
 
                 # 燕云十六声格式
                 elif d3d11_element.Format == 'R16G16B16A16_SNORM':
-                    result = MeshFormatConverter.convert_4x_float32_to_r16g16b16a16_snorm(result)
+                    result = FormatUtils.convert_4x_float32_to_r16g16b16a16_snorm(result)
                     
 
                 self.element_vertex_ndarray[d3d11_element_name] = result
@@ -291,7 +292,7 @@ class BufferModel:
 
                 if d3d11_element.Format == 'R16G16B16A16_SNORM':
                     #  燕云十六声格式
-                    result = MeshFormatConverter.convert_4x_float32_to_r16g16b16a16_snorm(result)
+                    result = FormatUtils.convert_4x_float32_to_r16g16b16a16_snorm(result)
                     
                 self.element_vertex_ndarray[d3d11_element_name] = result
             elif d3d11_element_name.startswith('COLOR'):
@@ -307,7 +308,7 @@ class BufferModel:
                     elif d3d11_element.Format == "R16G16_FLOAT":
                         result = result[:, :2]
                     elif d3d11_element.Format == 'R8G8B8A8_UNORM':
-                        result = MeshFormatConverter.convert_4x_float32_to_r8g8b8a8_unorm(result)
+                        result = FormatUtils.convert_4x_float32_to_r8g8b8a8_unorm(result)
 
                     self.element_vertex_ndarray[d3d11_element_name] = result
 
@@ -353,9 +354,9 @@ class BufferModel:
                 elif d3d11_element.Format == "R32_UINT":
                     self.element_vertex_ndarray[d3d11_element_name] = blendindices[:, :1]
                 elif d3d11_element.Format == 'R8G8B8A8_SNORM':
-                    self.element_vertex_ndarray[d3d11_element_name] = MeshFormatConverter.convert_4x_float32_to_r8g8b8a8_snorm(blendindices)
+                    self.element_vertex_ndarray[d3d11_element_name] = FormatUtils.convert_4x_float32_to_r8g8b8a8_snorm(blendindices)
                 elif d3d11_element.Format == 'R8G8B8A8_UNORM':
-                    self.element_vertex_ndarray[d3d11_element_name] = MeshFormatConverter.convert_4x_float32_to_r8g8b8a8_unorm(blendindices)
+                    self.element_vertex_ndarray[d3d11_element_name] = FormatUtils.convert_4x_float32_to_r8g8b8a8_unorm(blendindices)
                 elif d3d11_element.Format == 'R8G8B8A8_UINT':
                     # print("uint8")
                     blendindices.astype(numpy.uint8)
@@ -378,10 +379,10 @@ class BufferModel:
                     self.element_vertex_ndarray[d3d11_element_name] = blendweights[:, :2]
                 elif d3d11_element.Format == 'R8G8B8A8_SNORM':
                     # print("BLENDWEIGHT R8G8B8A8_SNORM")
-                    self.element_vertex_ndarray[d3d11_element_name] = MeshFormatConverter.convert_4x_float32_to_r8g8b8a8_snorm(blendweights)
+                    self.element_vertex_ndarray[d3d11_element_name] = FormatUtils.convert_4x_float32_to_r8g8b8a8_snorm(blendweights)
                 elif d3d11_element.Format == 'R8G8B8A8_UNORM':
                     # print("BLENDWEIGHT R8G8B8A8_UNORM")
-                    self.element_vertex_ndarray[d3d11_element_name] = MeshFormatConverter.convert_4x_float32_to_r8g8b8a8_unorm_blendweights(blendweights)
+                    self.element_vertex_ndarray[d3d11_element_name] = FormatUtils.convert_4x_float32_to_r8g8b8a8_unorm_blendweights(blendweights)
                 elif d3d11_element.Format == 'R16G16B16A16_FLOAT':
                     self.element_vertex_ndarray[d3d11_element_name] = blendweights.astype(numpy.float16)
                     
@@ -548,10 +549,10 @@ class BufferModel:
         # TimerUtils.End("Calc IB VB")
 
         # 重计算TANGENT步骤
-        indexed_vertices = MeshFormatConverter.average_normal_tangent(obj=obj, indexed_vertices=indexed_vertices, d3d11GameType=self.d3d11GameType,dtype=self.dtype)
+        indexed_vertices = self.average_normal_tangent(obj=obj, indexed_vertices=indexed_vertices, d3d11GameType=self.d3d11GameType,dtype=self.dtype)
         
         # 重计算COLOR步骤
-        indexed_vertices = MeshFormatConverter.average_normal_color(obj=obj, indexed_vertices=indexed_vertices, d3d11GameType=self.d3d11GameType,dtype=self.dtype)
+        indexed_vertices = self.average_normal_color(obj=obj, indexed_vertices=indexed_vertices, d3d11GameType=self.d3d11GameType,dtype=self.dtype)
 
         # print("indexed_vertices:")
         # print(str(len(indexed_vertices)))
@@ -602,3 +603,141 @@ class BufferModel:
         obj_model.category_buffer_dict = category_buffer_dict
         obj_model.index_vertex_id_dict = None
         return obj_model
+
+
+    def average_normal_tangent(self,obj,indexed_vertices,d3d11GameType,dtype):
+        '''
+        Nico: 米游所有游戏都能用到这个，还有曾经的GPU-PreSkinning的GF2也会用到这个，崩坏三2.0新角色除外。
+        尽管这个可以起到相似的效果，但是仍然无法完美获取模型本身的TANGENT数据，只能做到身体轮廓线99%近似。
+        经过测试，头发轮廓线部分并不是简单的向量归一化，也不是算术平均归一化。
+        '''
+        # TimerUtils.Start("Recalculate TANGENT")
+
+        if "TANGENT" not in d3d11GameType.OrderedFullElementList:
+            return indexed_vertices
+        allow_calc = False
+        if Properties_GenerateMod.recalculate_tangent():
+            allow_calc = True
+        elif obj.get("3DMigoto:RecalculateTANGENT",False): 
+            allow_calc = True
+        
+        if not allow_calc:
+            return indexed_vertices
+        
+        # 不用担心这个转换的效率，速度非常快
+        vb = bytearray()
+        for vertex in indexed_vertices:
+            vb += bytes(vertex)
+        vb = numpy.frombuffer(vb, dtype = dtype)
+
+        # 开始重计算TANGENT
+        positions = numpy.array([val['POSITION'] for val in vb])
+        normals = numpy.array([val['NORMAL'] for val in vb], dtype=float)
+
+        # 对位置进行排序，以便相同的位置会相邻
+        sort_indices = numpy.lexsort(positions.T)
+        sorted_positions = positions[sort_indices]
+        sorted_normals = normals[sort_indices]
+
+        # 找出位置变化的地方，即我们需要分组的地方
+        group_indices = numpy.flatnonzero(numpy.any(sorted_positions[:-1] != sorted_positions[1:], axis=1))
+        group_indices = numpy.r_[0, group_indices + 1, len(sorted_positions)]
+
+        # 累加法线和计算计数
+        unique_positions = sorted_positions[group_indices[:-1]]
+        accumulated_normals = numpy.add.reduceat(sorted_normals, group_indices[:-1], axis=0)
+        counts = numpy.diff(group_indices)
+
+        # 归一化累积法线向量
+        normalized_normals = accumulated_normals / numpy.linalg.norm(accumulated_normals, axis=1)[:, numpy.newaxis]
+        normalized_normals[numpy.isnan(normalized_normals)] = 0  # 处理任何可能出现的零向量导致的除零错误
+
+        # 构建结果字典
+        position_normal_dict = dict(zip(map(tuple, unique_positions), normalized_normals))
+
+        # TimerUtils.End("Recalculate TANGENT")
+
+        # 获取所有位置并转换为元组，用于查找字典
+        positions = [tuple(pos) for pos in vb['POSITION']]
+
+        # 从字典中获取对应的标准化法线
+        normalized_normals = numpy.array([position_normal_dict[pos] for pos in positions])
+
+        # 计算 w 并调整 tangent 的第四个分量
+        w = numpy.where(vb['TANGENT'][:, 3] >= 0, -1.0, 1.0)
+
+        # 更新 TANGENT 分量，注意这里的切片操作假设 TANGENT 有四个分量
+        vb['TANGENT'][:, :3] = normalized_normals
+        vb['TANGENT'][:, 3] = w
+
+        # TimerUtils.End("Recalculate TANGENT")
+
+        return vb
+
+
+    def average_normal_color(self,obj,indexed_vertices,d3d11GameType,dtype):
+        '''
+        Nico: 算数平均归一化法线，HI3 2.0角色使用的方法
+        '''
+        if "COLOR" not in d3d11GameType.OrderedFullElementList:
+            return indexed_vertices
+        allow_calc = False
+        if Properties_GenerateMod.recalculate_color():
+            allow_calc = True
+        elif obj.get("3DMigoto:RecalculateCOLOR",False): 
+            allow_calc = True
+        if not allow_calc:
+            return indexed_vertices
+
+        # 开始重计算COLOR
+        TimerUtils.Start("Recalculate COLOR")
+
+        # 不用担心这个转换的效率，速度非常快
+        vb = bytearray()
+        for vertex in indexed_vertices:
+            vb += bytes(vertex)
+        vb = numpy.frombuffer(vb, dtype = dtype)
+
+        # 首先提取所有唯一的位置，并创建一个索引映射
+        unique_positions, position_indices = numpy.unique(
+            [tuple(val['POSITION']) for val in vb], 
+            return_inverse=True, 
+            axis=0
+        )
+
+        # 初始化累积法线和计数器为零
+        accumulated_normals = numpy.zeros((len(unique_positions), 3), dtype=float)
+        counts = numpy.zeros(len(unique_positions), dtype=int)
+
+        # 累加法线并增加计数（这里假设vb是一个list）
+        for i, val in enumerate(vb):
+            accumulated_normals[position_indices[i]] += numpy.array(val['NORMAL'], dtype=float)
+            counts[position_indices[i]] += 1
+
+        # 对所有位置的法线进行一次性规范化处理
+        mask = counts > 0
+        average_normals = numpy.zeros_like(accumulated_normals)
+        average_normals[mask] = (accumulated_normals[mask] / counts[mask][:, None])
+
+        # 归一化到[0,1]，然后映射到颜色值
+        normalized_normals = ((average_normals + 1) / 2 * 255).astype(numpy.uint8)
+
+        # 更新颜色信息
+        new_color = []
+        for i, val in enumerate(vb):
+            color = [0, 0, 0, val['COLOR'][3]]  # 保留原来的Alpha通道
+            
+            if mask[position_indices[i]]:
+                color[:3] = normalized_normals[position_indices[i]]
+
+            new_color.append(color)
+
+        # 将新的颜色列表转换为NumPy数组
+        new_color_array = numpy.array(new_color, dtype=numpy.uint8)
+
+        # 更新vb中的颜色信息
+        for i, val in enumerate(vb):
+            val['COLOR'] = new_color_array[i]
+
+        TimerUtils.End("Recalculate COLOR")
+        return vb

@@ -12,7 +12,7 @@ from ..utils.collection_utils import *
 from ..config.main_config import *
 from ..utils.json_utils import *
 from ..utils.timer_utils import *
-from ..utils.migoto_utils import Fatal
+from ..utils.format_utils import Fatal
 from ..utils.obj_utils import ObjUtils
 
 from ..utils.obj_utils import ExtractedObject, ExtractedObjectHelper
@@ -22,7 +22,9 @@ from ..config.import_config import ImportConfig
 from .branch_model import BranchModel
 
 class ComponentModel:
-
+    '''
+    一个小数据结构，用来更方便的表示数据之间的关系，用于传递数据
+    '''
     def __init__(self):
         self.component_name = ""
         self.final_ordered_draw_obj_model_list = []
