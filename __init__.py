@@ -29,7 +29,7 @@ from .config.properties_extract_model import Properties_ExtractModel
 bl_info = {
     "name": "TheHerta",
     "description": "TheHerta",
-    "blender": (3, 6, 0),
+    "blender": (4, 5, 3),
     "version": (2, 1, 3),
     "location": "View3D",
     "category": "Generic"
