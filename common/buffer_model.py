@@ -460,7 +460,7 @@ class BufferModel:
             category_buffer_dict[categoryname] = data_matrix[:,stride_offset:stride_offset + category_stride].flatten()
             stride_offset += category_stride
 
-        obj_model = ObjDataModel()
+        obj_model = ObjDataModel(mesh.name)
         obj_model.ib = flattened_ib
         obj_model.category_buffer_dict = category_buffer_dict
         obj_model.index_vertex_id_dict = None
@@ -580,7 +580,7 @@ class BufferModel:
             category_buffer_dict[categoryname] = data_matrix[:,stride_offset:stride_offset + category_stride].flatten()
             stride_offset += category_stride
 
-        obj_model = ObjDataModel()
+        obj_model = ObjDataModel(mesh.name)
 
         
 

@@ -1,7 +1,7 @@
 import bpy
 import math
 
-from ..common.migoto_format import M_Key, ObjDataModel, M_DrawIndexed, M_Condition,D3D11GameType,TextureReplace
+from ..common.migoto_format import M_Key, M_DrawIndexed, M_Condition,D3D11GameType,TextureReplace
 from ..config.main_config import GlobalConfig,LogicName
 from ..common.draw_ib_model import DrawIBModel
 
