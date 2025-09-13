@@ -507,115 +507,89 @@ class ExtractSubmeshOperator(bpy.types.Operator):
             self.report({'ERROR'}, "Select a mesh object")
             return {'CANCELLED'}
 
-        # 原始网格数据
+        # 获取原始网格
         original_mesh = obj.data
         original_mesh.calc_loop_triangles()
-        # original_mesh.calc_normals_split()
-
-        # 获取顶点索引数据
-        loop_count = len(original_mesh.loops)
-        orig_indices = numpy.zeros(loop_count, dtype=numpy.int32)
-        original_mesh.loops.foreach_get('vertex_index', orig_indices)
-
+        
         start = self.start_index
         count = self.index_count
         end_index = start + count - 1
-
-        # 输入验证
-        if start + count > loop_count:
-            self.report({'ERROR'}, "Index range exceeds buffer")
+        
+        # 验证输入
+        if start + count > len(original_mesh.loops):
+            self.report({'ERROR'}, f"Index range exceeds buffer, max loop count: {len(original_mesh.loops)}")
             return {'CANCELLED'}
+            
         if count % 3 != 0:
             self.report({'ERROR'}, "Index count must be multiple of 3")
             return {'CANCELLED'}
 
-        # 提取子集索引
-        subset_indices = orig_indices[start:start+count]
-
-        # 创建唯一顶点映射
-        unique_verts, inverse = numpy.unique(subset_indices, return_inverse=True)
+        # 创建网格副本
+        new_mesh_name = original_mesh.name +  ".Split-" + str(start) + "_" + str(end_index)
+        new_mesh = original_mesh.copy()
+        new_mesh.name = new_mesh_name
         
-        # 创建新网格
-        new_mesh = bpy.data.meshes.new(f"Submesh_{start}_{end_index}")
-        new_mesh.from_pydata(
-            [original_mesh.vertices[i].co for i in unique_verts],
-            [],
-            []
-        )
-
-        # 使用BMesh构建几何
+        # 使用BMesh处理网格
         bm = bmesh.new()
         bm.from_mesh(new_mesh)
-        bm.verts.ensure_lookup_table()
-
-        # 添加面
+        
+        # 获取所有面
+        faces = list(bm.faces)
+        
+        # 确定要保留的面
+        faces_to_keep = set()
         for i in range(0, count, 3):
-            try:
-                face_verts = [bm.verts[inverse[i+j]] for j in range(3)]
-                bm.faces.new(face_verts)
-            except:
-                pass
-
-        # 传输网格数据
+            # 计算面的索引
+            face_index = (start + i) // 3
+            if face_index < len(faces):
+                faces_to_keep.add(faces[face_index])
+        
+        # 删除不需要的面
+        for face in list(bm.faces):
+            if face not in faces_to_keep:
+                bm.faces.remove(face)
+        
+        # 删除孤立的顶点
+        bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.0001)
+        
+        # 更新网格
         bm.to_mesh(new_mesh)
         bm.free()
-
-        # 复制法线数据
-        loop_normals = [original_mesh.loops[start+i].normal for i in range(count)]
-        # new_mesh.use_auto_smooth = True
-        new_mesh.normals_split_custom_set(loop_normals)
+        
+        # 清理网格
+        new_mesh.validate()
         new_mesh.update()
-
-        # 复制UV数据
-        if original_mesh.uv_layers:
-            # 复制UV数据
-            for uv_layer in original_mesh.uv_layers:
-                uv_data = uv_layer.data
-                new_uv = new_mesh.uv_layers.new(name=uv_layer.name)
-                for i in range(count):
-                    new_uv.data[i].uv = uv_data[start+i].uv
         
-
-
-        # 创建集合
-        collection_name = f"Mesh_{start}_{end_index}"
-        collection = bpy.data.collections.get(collection_name) or \
-                     bpy.data.collections.new(collection_name)
-        
-        if not collection.users:
-            context.scene.collection.children.link(collection)
-
         # 创建新对象
-        new_obj = bpy.data.objects.new(new_mesh.name, new_mesh)
-        new_obj.matrix_world = obj.matrix_world  # 保持变换矩阵
+        new_obj = bpy.data.objects.new(new_mesh_name, new_mesh)
+        new_obj.matrix_world = obj.matrix_world
         
-        # 复制顶点组（权重数据）
-        if obj.vertex_groups:
-            # 创建新对象的顶点组
-            for vg in obj.vertex_groups:
-                new_obj.vertex_groups.new(name=vg.name)
-            
-            # 获取原始网格的顶点组数据
-            for i, orig_vert_idx in enumerate(unique_verts):
-                # 对于每个顶点，复制其所有权重数据
-                for vg in obj.vertex_groups:
-                    try:
-                        weight = vg.weight(orig_vert_idx)
-                        if weight > 0:
-                            new_obj.vertex_groups[vg.name].add([i], weight, 'REPLACE')
-                    except:
-                        # 如果顶点不在顶点组中，跳过
-                        pass
-        # 添加到集合
-        for coll in new_obj.users_collection:
-            coll.objects.unlink(new_obj)
+        # 复制材质
+        if obj.material_slots:
+            for slot in obj.material_slots:
+                new_obj.data.materials.append(slot.material)
+        
+        # 创建或获取集合
+        collection_name = new_mesh_name
+        collection = bpy.data.collections.get(collection_name)
+        if not collection:
+            collection = bpy.data.collections.new(collection_name)
+            context.scene.collection.children.link(collection)
+        
+        # 链接对象到集合
         collection.objects.link(new_obj)
-
+        
+        # 取消在其他集合中的链接
+        for coll in new_obj.users_collection:
+            if coll != collection:
+                coll.objects.unlink(new_obj)
+        
+        # 选择并激活新对象
         context.view_layer.objects.active = new_obj
         new_obj.select_set(True)
-
+        obj.select_set(False)
+        
         return {'FINISHED'}
-    
 
 class PanelModelProcess(bpy.types.Panel):
     '''

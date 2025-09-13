@@ -657,7 +657,6 @@ class ObjUtils:
                 link_object_to_collection(new_obj, collection)
             return new_obj
     
- 
     
     @classmethod
     def reset_obj_rotation(cls,obj):
