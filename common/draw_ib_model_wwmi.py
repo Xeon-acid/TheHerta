@@ -14,6 +14,8 @@ from ..utils.json_utils import *
 from ..utils.timer_utils import *
 from ..utils.format_utils import Fatal
 from ..utils.obj_utils import *
+from ..utils.shapekey_utils import ShapeKeyUtils
+
 
 from ..utils.obj_utils import ExtractedObject, ExtractedObjectHelper
 from ..common.migoto_format import M_DrawIndexed, TextureReplace,ObjDataModel

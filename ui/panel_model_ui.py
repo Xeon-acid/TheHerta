@@ -4,11 +4,11 @@ import numpy
 
 from bpy.props import BoolProperty,  CollectionProperty
 
-from ..utils.obj_utils import ObjUtils,SmoothNormal
+from ..utils.obj_utils import ObjUtils
 from ..utils.collection_utils import CollectionUtils
 from ..utils.vertexgroup_utils import VertexGroupUtils
 from ..utils.shapekey_utils import ShapeKeyUtils
-
+from ..utils.algorithm_utils import AlgorithmUtils
 
 class ModelSplitByLoosePart(bpy.types.Operator):
     bl_idname = "panel_model.split_by_loose_part"
@@ -279,7 +279,7 @@ class SmoothNormalSaveToUV(bpy.types.Operator):
     bl_description = "平滑法线存UV算法，可用于修复ZZZ,WuWa的某些UV(只是近似实现60%的效果)" 
 
     def execute(self, context):
-        SmoothNormal.smooth_normal_save_to_uv()
+        AlgorithmUtils.smooth_normal_save_to_uv()
         return {'FINISHED'}
     
 
