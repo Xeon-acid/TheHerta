@@ -12,10 +12,6 @@ from ..utils.collection_utils import *
 from ..config.main_config import *
 from ..utils.json_utils import *
 from ..utils.timer_utils import *
-from ..utils.format_utils import Fatal
-from ..utils.obj_utils import ObjUtils
-
-from ..utils.obj_utils import ExtractedObject, ExtractedObjectHelper
 from ..common.migoto_format import M_DrawIndexed, TextureReplace,ObjDataModel
 from ..config.import_config import ImportConfig
 

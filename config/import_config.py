@@ -1,37 +1,46 @@
 import os 
+import json
+import bpy
+import json
+import math
+import bmesh
+import os
 
 
-from .main_config import GlobalConfig
+from typing import List, Dict, Union
+from dataclasses import dataclass, field, asdict
+
 from ..utils.json_utils import JsonUtils
-from ..common.migoto_format import D3D11GameType, TextureReplace
 from ..utils.format_utils import Fatal
 
+from .main_config import GlobalConfig
+
+from ..common.migoto_format import D3D11GameType, TextureReplace
 
 
+@dataclass
 class ImportConfig:
     '''
     在一键导入工作空间时，Import.json会记录导入的GameType，在生成Mod时需要用到
     所以这里我们读取Import.json来确定要从哪个提取出来的数据类型文件夹中读取
     然后读取tmp.json来初始化D3D11GameType
     '''
-    def __init__(self,draw_ib:str):
-        self.draw_ib = draw_ib # DrawIB
+    draw_ib: str  # DrawIB
+    
+    # 使用field(default_factory)来初始化可变默认值
+    category_hash_dict: Dict[str, str] = field(init=False,default_factory=dict)
+    import_model_list: List[str] = field(init=False,default_factory=list)
+    match_first_index_list: List[int] = field(init=False,default_factory=list)
+    part_name_list: List[str] = field(init=False,default_factory=list)
+    vshash_list: List[str] = field(init=False,default_factory=list)
+    
+    vertex_limit_hash: str = ""
+    work_game_type: str = ""
+    
+    TextureResource_Name_FileName_Dict: Dict[str, str] = field(init=False,default_factory=dict)  # 自动贴图配置项
+    PartName_SlotTextureReplaceDict_Dict: Dict[str, Dict[str, TextureReplace]] = field(init=False,default_factory=dict)  # 自动贴图配置项
 
-        self.category_hash_dict = {}
-        self.import_model_list = []
-        self.match_first_index_list = []
-        self.part_name_list = []
-        self.vshash_list = []
-
-        self.vertex_limit_hash = ""
-        self.work_game_type = ""
-
-        self.TextureResource_Name_FileName_Dict:dict[str,str] = {} # 自动贴图配置项
-        self.PartName_SlotTextureReplaceDict_Dict:dict[str,dict[str,TextureReplace]] = {} # 自动贴图配置项
-
-        self.parse_attributes()
-
-    def parse_attributes(self):
+    def __post_init__(self):
         workspace_import_json_path = os.path.join(GlobalConfig.path_workspace_folder(), "Import.json")
         draw_ib_gametypename_dict = JsonUtils.LoadFromFile(workspace_import_json_path)
         gametypename = draw_ib_gametypename_dict.get(self.draw_ib,"")

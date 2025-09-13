@@ -9,7 +9,7 @@ import math
 from ..utils.timer_utils import TimerUtils
 from ..utils.translate_utils import TR
 from ..utils.format_utils import Fatal,FormatUtils
-from ..utils.obj_utils import ExtractedObjectHelper
+from .extracted_object import ExtractedObjectHelper
 from ..utils.texture_utils import TextureUtils
 from ..utils.mesh_utils import MeshUtils
 
