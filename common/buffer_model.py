@@ -314,11 +314,14 @@ class BufferModel:
                         result = result.astype(numpy.float16)
                         result = result[:, :2]
                         result = FormatUtils.convert_2x_float32_to_r16g16_unorm(result)
-
+                    elif d3d11_element.Format == "R16G16_FLOAT":
+                        # 
+                        result = result[:, :2]
                     elif d3d11_element.Format == 'R8G8B8A8_UNORM':
                         result = FormatUtils.convert_4x_float32_to_r8g8b8a8_unorm(result)
 
-                    # print(d3d11_element_name)
+                    print(d3d11_element.Format)
+                    print(d3d11_element_name)
                     # print(result.shape)
                     # print(self.element_vertex_ndarray[d3d11_element_name].shape)
                     self.element_vertex_ndarray[d3d11_element_name] = result
