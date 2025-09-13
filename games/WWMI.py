@@ -13,7 +13,6 @@ from ..common.m_ini_helper_gui import M_IniHelperGUI
 from ..config.properties_wwmi import Properties_WWMI
 
 
-
 class ModModelWWMI:
     def __init__(self,workspace_collection:bpy.types.Collection):
         # (1) 统计全局分支模型

@@ -87,6 +87,8 @@ class BufferModel:
                 self.dtype = numpy.dtype(self.dtype.descr + [(d3d11_element_name, (np_type, (1,)))])
             else:
                 self.dtype = numpy.dtype(self.dtype.descr + [(d3d11_element_name, (np_type, format_len))])
+            
+            # print("d3d11Element: " + d3d11_element_name + "  Dtype" + str(self.dtype))
 
         self.element_vertex_ndarray = numpy.zeros(mesh_loops_length,dtype=self.dtype)
 
@@ -155,6 +157,8 @@ class BufferModel:
                     result = result.astype(numpy.float32)
                     self.element_vertex_ndarray[d3d11_element_name] = result
                 elif d3d11_element.Format == 'R8G8B8A8_SNORM':
+                    # WWMI 这里已经确定过NORMAL没问题
+
                     result = numpy.ones(mesh_loops_length * 4, dtype=numpy.float32)
                     normals = numpy.empty(mesh_loops_length * 3, dtype=numpy.float32)
                     mesh_loops.foreach_get('normal', normals)
@@ -167,7 +171,6 @@ class BufferModel:
                         bitangent_signs = numpy.empty(mesh_loops_length, dtype=numpy.float32)
                         mesh_loops.foreach_get("bitangent_sign", bitangent_signs)
                         result[3::4] = bitangent_signs * -1
-
                         # print("Unreal: Set NORMAL.W to bitangent_sign")
                     
                     result = result.reshape(-1, 4)
@@ -251,6 +254,7 @@ class BufferModel:
                     result = result.astype(numpy.float16)
 
                 elif d3d11_element.Format == 'R8G8B8A8_SNORM':
+                    # print("WWMI TANGENT To SNORM")
                     result = FormatUtils.convert_4x_float32_to_r8g8b8a8_snorm(result)
 
                 elif d3d11_element.Format == 'R8G8B8A8_UNORM':
@@ -295,23 +299,30 @@ class BufferModel:
                     
                 self.element_vertex_ndarray[d3d11_element_name] = result
             elif d3d11_element_name.startswith('COLOR'):
-                # TimerUtils.Start("Get COLOR")
-
                 if d3d11_element_name in mesh.vertex_colors:
                     # 因为COLOR属性存储在Blender里固定是float32类型所以这里只能用numpy.float32
                     result = numpy.zeros(mesh_loops_length, dtype=(numpy.float32, 4))
+                    # result = numpy.zeros((mesh_loops_length,4), dtype=(numpy.float32))
+
                     mesh.vertex_colors[d3d11_element_name].data.foreach_get("color", result.ravel())
                     
                     if d3d11_element.Format == 'R16G16B16A16_FLOAT':
                         result = result.astype(numpy.float16)
-                    elif d3d11_element.Format == "R16G16_FLOAT":
+                    elif d3d11_element.Format == "R16G16_UNORM":
+                        # 鸣潮的平滑法线存UV，在WWMI中的处理方式是转为R16G16_UNORM。
+                        # 但是这里很可能存在转换问题。
+                        result = result.astype(numpy.float16)
                         result = result[:, :2]
+                        result = FormatUtils.convert_2x_float32_to_r16g16_unorm(result)
+
                     elif d3d11_element.Format == 'R8G8B8A8_UNORM':
                         result = FormatUtils.convert_4x_float32_to_r8g8b8a8_unorm(result)
 
+                    # print(d3d11_element_name)
+                    # print(result.shape)
+                    # print(self.element_vertex_ndarray[d3d11_element_name].shape)
                     self.element_vertex_ndarray[d3d11_element_name] = result
 
-                # TimerUtils.End("Get COLOR") # 0:00:00.030605 
             elif d3d11_element_name.startswith('TEXCOORD') and d3d11_element.Format.endswith('FLOAT'):
                 # TimerUtils.Start("GET TEXCOORD")
                 for uv_name in ('%s.xy' % d3d11_element_name, '%s.zw' % d3d11_element_name):

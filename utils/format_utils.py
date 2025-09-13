@@ -178,13 +178,42 @@ class FormatUtils:
     def dot_product(cls,v1, v2):
         return sum(a * b for a, b in zip(v1, v2))
 
+
+    @classmethod
+    def convert_2x_float32_to_r16g16_unorm(cls, input_array):
+        """
+        把 shape=(…,2) 的 float32 [0,1] 区间量
+        量化成 uint16 [0,65535] 并返回同样 shape 的 uint16 数组。
+        如果 input 是一维的，也会按元素逐个量化。
+        """
+        # 先拷贝，避免原地修改
+        arr = numpy.asarray(input_array, dtype=numpy.float32)
+        # 钳位到 [0,1]
+        numpy.clip(arr, 0.0, 1.0, out=arr)
+        # 量化：65535 是 R16G16_UNORM 的最大值
+        return numpy.round(arr * 65535).astype(numpy.uint16)
+
     '''
     这四个UNORM和SNORM比较特殊需要这样处理，其它float类型转换直接astype就行
     '''
+    # @classmethod
+    # def convert_4x_float32_to_r8g8b8a8_snorm(cls, input_array):
+    #     return numpy.round(input_array * 127).astype(numpy.int8)
+
     @classmethod
     def convert_4x_float32_to_r8g8b8a8_snorm(cls, input_array):
-        return numpy.round(input_array * 127).astype(numpy.int8)
-    
+        '''
+        TODO 疑似有问题
+        '''
+        arr = numpy.asarray(input_array, dtype=numpy.float32)
+        # 1. 钳位到 [-1, 1]
+        numpy.clip(arr, -1.0, 1.0, out=arr)
+        # 2. 量化到 [-127, 127]
+        arr = numpy.round(arr * 127).astype(numpy.int8)
+        # 3. 确保不出现 -128（理论上 clip+round 后已不可能，但再保险一次）
+        #    其实可省略，因为 -1.0*-127=127, 1.0*127=127，已覆盖不到 -128
+        return arr
+
     @classmethod
     def convert_4x_float32_to_r8g8b8a8_unorm(cls,input_array):
         return numpy.round(input_array * 255).astype(numpy.uint8)
