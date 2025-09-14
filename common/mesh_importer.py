@@ -89,11 +89,11 @@ class MeshImporter:
                     blend_indices[element.SemanticIndex] = data_2d
                 else:
                     blend_indices[element.SemanticIndex] = data
-                print("Import BLENDINDICES Shape: " + str(blend_indices[element.SemanticIndex].shape))
+                # print("Import BLENDINDICES Shape: " + str(blend_indices[element.SemanticIndex].shape))
                 
             elif element.SemanticName.startswith("BLENDWEIGHT"):
                 blend_weights[element.SemanticIndex] = data
-                print("Import BLENDWEIGHT Shape: " + str(blend_indices[element.SemanticIndex].shape))
+                # print("Import BLENDWEIGHT Shape: " + str(blend_indices[element.SemanticIndex].shape))
 
             elif element.SemanticName.startswith("TEXCOORD"):
                 texcoords[element.SemanticIndex] = data
