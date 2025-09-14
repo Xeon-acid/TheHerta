@@ -28,7 +28,7 @@ class D3D11Element:
     SemanticName:str
     SemanticIndex:int
     Format:str
-    ByteWidth:int = field(default=0,init=False)
+    ByteWidth:int
     # Which type of slot and slot number it use? eg:vb0
     ExtractSlot:str
     # Is it from pointlist or trianglelist or compute shader?
@@ -113,6 +113,7 @@ class FMTFile:
                     append_d3delement = D3D11Element(
                         SemanticName=element_info["SemanticName"], SemanticIndex=int(element_info["SemanticIndex"]),
                         Format= element_info["Format"],AlignedByteOffset= int(element_info["AlignedByteOffset"]),
+                        ByteWidth=0,
                         ExtractSlot="0",ExtractTechnique="",Category="")
                     
                     if "ByteWidth" in element_info:
@@ -135,6 +136,7 @@ class FMTFile:
             append_d3delement = D3D11Element(
                 SemanticName=element_info["SemanticName"], SemanticIndex=int(element_info["SemanticIndex"]),
                 Format= element_info["Format"],AlignedByteOffset= int(element_info["AlignedByteOffset"]),
+                ByteWidth=0,
                 ExtractSlot="0",ExtractTechnique="",Category=""
             )
 
@@ -159,6 +161,7 @@ class FMTFile:
             numpy_type = FormatUtils.get_nptype_from_format(elemnt.Format)
 
             # 这里我们用ByteWidth / numpy_type.itemsize 得到总的维度数量，也就是列数
+            # XXX 注意这里计算出正常Size的前提是numpy_type确定是对应真实的字节数，且ByteWidth正确，也就是数据类型必须完全正确。
             size = int( elemnt.ByteWidth / numpy.dtype(numpy_type).itemsize)
 
             # print("element: "+ elemnt.ElementName)
@@ -167,7 +170,7 @@ class FMTFile:
             fields.append((elemnt.ElementName,numpy_type , size))
         dtype = numpy.dtype(fields)
         return dtype
-    
+
 
 
 class MigotoBinaryFile:

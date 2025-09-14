@@ -1,6 +1,7 @@
 import bpy
 import itertools
 import numpy
+import math
 
 from mathutils import Vector,Matrix
 
@@ -313,16 +314,6 @@ class VertexGroupUtils:
 
     @classmethod
     def get_blendweights_blendindices_v1(cls,mesh,normalize_weights:bool = False):
-        '''
-        # 下面这里是获取BLENDWEIGHTS和BLENDINDICES的代码，但是只支持前四个BLENDWEIGHTS和BLENDINDICES
-        # 我们需要扩展让它支持任意多个，并且每四个为一组
-        # 比如BLENDWEIGHTS R8G8B8A8_UNORM  BLENDWEIGHTS1 R8G8B8A8_UNORM  
-        # 也会有对应的BLENDINDICES和BLENDINDICES1，数据类型为R8G8B8A8_UINT等等
-        # 数据类型是后面决定的，但是我们这里要提前准备好BLENDWEIGHTS和BLENDINDICES的内容，反正肯定不是4个
-        # 创建一个包含所有循环顶点索引的NumPy数组
-
-        这个V1要留着参考，V3目前正在使用，但是后续仍然有可能有更新的版本。
-        '''
         mesh_loops = mesh.loops
         mesh_loops_length = len(mesh_loops)
         mesh_vertices = mesh.vertices
@@ -472,3 +463,68 @@ class VertexGroupUtils:
 
         return blendweights_dict, blendindices_dict
     
+
+
+
+    @classmethod
+    def get_blendweights_blendindices_v4(cls, mesh, normalize_weights: bool = False):
+        """
+        目前只有鸣潮在使用，尚未在其它游戏中进行测试
+        TODO 需要测试其它游戏是否兼容。
+        """
+        # -------------------- 基础数据 --------------------
+        mesh_loops = mesh.loops
+        mesh_verts = mesh.vertices
+        n_loops = len(mesh_loops)
+
+        # 提前把每条 loop 对应的顶点索引抓出来
+        loop_vertex_indices = numpy.empty(n_loops, dtype=int)
+        mesh_loops.foreach_get("vertex_index", loop_vertex_indices)
+
+        # -------------------- 1. 收集每个顶点的所有非零权重组 --------------------
+        # 用 Python list 先存，因为每组数量不固定
+        vert_groups_weights = []   # [[(group_id, weight), ...], ...] 长度 = 顶点数
+        for v in mesh_verts:
+            # 只保留 weight > 0 的组，防止空数据
+            gw = [(g.group, g.weight) for g in v.groups if g.weight > 0]
+            # 按权重从大到小排序，方便后续直接取前 N 个
+            gw.sort(key=lambda x: x[1], reverse=True)
+            vert_groups_weights.append(gw)
+
+        # -------------------- 2. 计算“真实最大组数”并补齐到 4 的倍数 --------------------
+        # 先找所有顶点里真实存在的最大组数
+        real_max_groups = max(len(gw) for gw in vert_groups_weights) if vert_groups_weights else 0
+        # 补齐到 4 的倍数
+        aligned_max_groups = 4 * math.ceil(real_max_groups / 4) if real_max_groups else 4
+
+        # -------------------- 3. 一次性申请对齐后的 ndarray --------------------
+        # 所有顶点一起存，方便后面用高级索引一次性映射到 loop
+        all_groups = numpy.zeros((len(mesh_verts), aligned_max_groups), dtype=int)
+        all_weights = numpy.zeros((len(mesh_verts), aligned_max_groups), dtype=numpy.float32)
+
+        # -------------------- 4. 填充数据 & 可选归一化 --------------------
+        for v_idx, gw in enumerate(vert_groups_weights):
+            # 把真实数据写进去
+            for col, (g_id, w) in enumerate(gw):
+                all_groups[v_idx, col] = g_id
+                all_weights[v_idx, col] = w
+
+            # 如果 normalize_weights=True，对该顶点权重归一化（保留 0 的位置仍为 0）
+            weight_sum = all_weights[v_idx].sum()
+            if weight_sum > 0:
+                all_weights[v_idx] /= weight_sum
+
+        # -------------------- 5. 把“逐顶点”数据映射到“逐 loop” --------------------
+        # 先检查索引合法性，防止越界
+        valid_mask = (0 <= loop_vertex_indices) & (loop_vertex_indices < len(mesh_verts))
+        valid_vidx = loop_vertex_indices[valid_mask]
+
+        blendindices = numpy.zeros((n_loops, aligned_max_groups), dtype=numpy.uint32)
+        blendweights = numpy.zeros((n_loops, aligned_max_groups), dtype=numpy.float32)
+
+        # 高级索引一次性拷贝
+        blendindices[valid_mask] = all_groups[valid_vidx]
+        blendweights[valid_mask] = all_weights[valid_vidx]
+
+        # -------------------- 6. 返回兼容旧接口的字典 --------------------
+        return {0: blendweights}, {0: blendindices}

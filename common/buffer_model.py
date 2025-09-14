@@ -72,14 +72,11 @@ class BufferModel:
 
         self.dtype = numpy.dtype([])
 
-        blendweights_formatlen = 0
         for d3d11_element_name in self.d3d11GameType.OrderedFullElementList:
             d3d11_element = self.d3d11GameType.ElementNameD3D11ElementDict[d3d11_element_name]
             np_type = FormatUtils.get_nptype_from_format(d3d11_element.Format)
-            format_len = d3d11_element.ByteWidth
-            # 因为YYSLS出现了多个BLENDWEIGHTS的情况，所以这里只能用这个StartWith判断
-            if d3d11_element_name.startswith("BLENDWEIGHT"):
-                blendweights_formatlen = format_len
+
+            format_len = int(d3d11_element.ByteWidth / numpy.dtype(np_type).itemsize)
 
             # XXX 长度为1时必须手动指定为(1,)否则会变成1维数组
             if format_len == 1:
@@ -97,7 +94,13 @@ class BufferModel:
 
         # normalize_weights = False
 
-        blendweights_dict, blendindices_dict = VertexGroupUtils.get_blendweights_blendindices_v3(mesh=mesh,normalize_weights = normalize_weights)
+
+        if GlobalConfig.logic_name == LogicName.WutheringWaves:
+            print("鸣潮专属测试版权重处理：")
+            blendweights_dict, blendindices_dict = VertexGroupUtils.get_blendweights_blendindices_v4(mesh=mesh,normalize_weights = normalize_weights)
+        else:
+            blendweights_dict, blendindices_dict = VertexGroupUtils.get_blendweights_blendindices_v3(mesh=mesh,normalize_weights = normalize_weights)
+
 
         # 对每一种Element都获取对应的数据
         for d3d11_element_name in self.d3d11GameType.OrderedFullElementList:
@@ -373,6 +376,13 @@ class BufferModel:
                     # print("uint8")
                     blendindices.astype(numpy.uint8)
                     self.element_vertex_ndarray[d3d11_element_name] = blendindices
+                elif d3d11_element.Format == "R8_UINT" and d3d11_element.ByteWidth == 8:
+                    blendindices.astype(numpy.uint8)
+                    self.element_vertex_ndarray[d3d11_element_name] = blendindices
+                    print("WWMI R8_UINT特殊处理")
+                else:
+                    print(blendindices.shape)
+                    raise Fatal("未知的BLENDINDICES格式")
                 
             elif d3d11_element_name.startswith('BLENDWEIGHT'):
                 blendweights = blendweights_dict.get(d3d11_element.SemanticIndex, None)
@@ -397,7 +407,13 @@ class BufferModel:
                     self.element_vertex_ndarray[d3d11_element_name] = FormatUtils.convert_4x_float32_to_r8g8b8a8_unorm_blendweights(blendweights)
                 elif d3d11_element.Format == 'R16G16B16A16_FLOAT':
                     self.element_vertex_ndarray[d3d11_element_name] = blendweights.astype(numpy.float16)
-                    
+                elif d3d11_element.Format == "R8_UNORM" and d3d11_element.ByteWidth == 8:
+                    blendweights = FormatUtils.convert_4x_float32_to_r8g8b8a8_unorm_blendweights(blendweights)
+                    self.element_vertex_ndarray[d3d11_element_name] = blendweights
+                    print("WWMI R8_UNORM特殊处理")
+                else:
+                    print(blendweights.shape)
+                    raise Fatal("未知的BLENDWEIGHTS格式")
 
     def calc_index_vertex_buffer_girlsfrontline2(self,obj,mesh:bpy.types.Mesh)->ObjDataModel:
         '''
