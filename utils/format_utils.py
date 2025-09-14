@@ -132,21 +132,14 @@ class FormatUtils:
         decoded_data = decode_func(data)
         return decoded_data
 
-
-    @classmethod
-    def format_components(cls,fmt):
-        '''
-        输入FORMAT返回该FORMAT的元素个数
-        例如输入R32G32B32_FLOAT 返回元素个数：3
-        这里R32G32B32_FLOAT的元素个数是3，所以就返回3
-        '''
-        return len(cls.components_pattern.findall(fmt))
-
     @classmethod
     def format_size(cls,fmt):
         '''
         输入FORMAT返回该FORMAT的字节数
         例如输入R32G32B32_FLOAT 返回字节数：12
+
+        XXX 注意这里的结果并不可靠，应该在数据类型中定义正确的ByteWidth，而不是调用这里，这里仅用于兼容古董架构的fmt文件。
+        这里的东西将在未来被移除，但可能会持续存在很长一段时间。
         '''
         matches = cls.components_pattern.findall(fmt)
         return sum(map(int, matches)) // 8

@@ -54,7 +54,10 @@ class MeshImporter:
         for element in mbf.fmt_file.elements:
             data = mbf.vb_data[element.ElementName]
 
+            print("当前Element: " + element.ElementName)
+            print("当前数据转换前 Shape: " + str(data.shape))
             data = FormatUtils.apply_format_conversion(data, element.Format)
+            print("当前数据转换后 Shape: " + str(data.shape))
 
             if element.SemanticName == "POSITION":
                 if len(data[0]) == 4:
@@ -78,6 +81,7 @@ class MeshImporter:
                 color_layer = mesh.vertex_colors[element.ElementName].data
                 for l in mesh.loops:
                     color_layer[l.index].color = list(data[l.vertex_index]) + [0] * (4 - len(data[l.vertex_index]))
+                
             elif element.SemanticName.startswith("BLENDINDICES"):
                 if data.ndim == 1:
                     # 如果data是一维数组，转换为包含元组的2D数组，用于处理只有一个R32_UINT的情况
@@ -85,8 +89,12 @@ class MeshImporter:
                     blend_indices[element.SemanticIndex] = data_2d
                 else:
                     blend_indices[element.SemanticIndex] = data
+                print("Import BLENDINDICES Shape: " + str(blend_indices[element.SemanticIndex].shape))
+                
             elif element.SemanticName.startswith("BLENDWEIGHT"):
                 blend_weights[element.SemanticIndex] = data
+                print("Import BLENDWEIGHT Shape: " + str(blend_indices[element.SemanticIndex].shape))
+
             elif element.SemanticName.startswith("TEXCOORD"):
                 texcoords[element.SemanticIndex] = data
             elif element.SemanticName.startswith("SHAPEKEY"):
@@ -297,8 +305,8 @@ class MeshImporter:
         '''
         component: 如果是一键导入WWMI的模型则不为None，其它情况默认为None
         '''
-        # print(blend_indices[0][0])
-        # print(blend_indices[0][1])
+        print(blend_indices[0][0])
+        print(blend_indices[0][1])
         '''
         这里的处理是很必要的，因为如果BLENDINDICES的格式是R16G16B16A16_UINT，那么长度为8
         此时游戏中可能会出现值为FF FF 的无效索引表示，虽然在HLSL中表示无效索引，但是导入进来之后，按照R16G16B16A16_UINT来解析就是65535

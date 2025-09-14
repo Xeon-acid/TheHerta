@@ -28,7 +28,7 @@ class D3D11Element:
     SemanticName:str
     SemanticIndex:int
     Format:str
-    ByteWidth:int
+    ByteWidth:int = field(default=0,init=False)
     # Which type of slot and slot number it use? eg:vb0
     ExtractSlot:str
     # Is it from pointlist or trianglelist or compute shader?
@@ -110,28 +110,43 @@ class FMTFile:
             elif key.startswith("element"):
                 # 处理element块
                 if "SemanticName" in element_info:
+                    append_d3delement = D3D11Element(
+                        SemanticName=element_info["SemanticName"], SemanticIndex=int(element_info["SemanticIndex"]),
+                        Format= element_info["Format"],AlignedByteOffset= int(element_info["AlignedByteOffset"]),
+                        ExtractSlot="0",ExtractTechnique="",Category="")
+                    
+                    if "ByteWidth" in element_info:
+                        # print("读取到ByteWidth存在: " + element_info["ByteWidth"])
+                        append_d3delement.ByteWidth = int(element_info["ByteWidth"])
+                    else:
+                        append_d3delement.ByteWidth = FormatUtils.format_size(append_d3delement.Format)
+                    
                     # 如果已经有一个element信息，则先添加到列表中
-                    self.elements.append(D3D11Element(
-                          SemanticName=element_info["SemanticName"], SemanticIndex=int(element_info["SemanticIndex"]),
-                    Format= element_info["Format"],AlignedByteOffset= int(element_info["AlignedByteOffset"]),
-                    ByteWidth=FormatUtils.format_size(element_info["Format"]),
-                    ExtractSlot="0",ExtractTechnique="",Category=""
-                    ))
+                    self.elements.append(append_d3delement)
                     element_info.clear()  # 清空当前element信息
 
                 # 将新的element属性添加到element_info字典中
                 element_info[key.split()[0]] = value
-            elif key in ["SemanticName", "SemanticIndex", "Format", "InputSlot", "AlignedByteOffset", "InputSlotClass", "InstanceDataStepRate"]:
+            elif key in ["SemanticName", "SemanticIndex", "Format","ByteWidth", "InputSlot", "AlignedByteOffset", "InputSlotClass", "InstanceDataStepRate"]:
                 element_info[key] = value
 
         # 添加最后一个element
         if "SemanticName" in element_info:
-            self.elements.append(D3D11Element(
-                    SemanticName=element_info["SemanticName"], SemanticIndex=int(element_info["SemanticIndex"]),
-                    Format= element_info["Format"],AlignedByteOffset= int(element_info["AlignedByteOffset"]),
-                    ByteWidth=FormatUtils.format_size(element_info["Format"]),
-                    ExtractSlot="0",ExtractTechnique="",Category=""
-            ))
+            append_d3delement = D3D11Element(
+                SemanticName=element_info["SemanticName"], SemanticIndex=int(element_info["SemanticIndex"]),
+                Format= element_info["Format"],AlignedByteOffset= int(element_info["AlignedByteOffset"]),
+                ExtractSlot="0",ExtractTechnique="",Category=""
+            )
+
+            if "ByteWidth" in element_info:
+                # print("读取到ByteWidth存在: " + element_info["ByteWidth"])
+                append_d3delement.ByteWidth = int(element_info["ByteWidth"])
+            else:
+                append_d3delement.ByteWidth = FormatUtils.format_size(append_d3delement.Format)
+
+            self.elements.append(append_d3delement)
+
+            
 
     def __repr__(self):
         return (f"FMTFile(stride={self.stride}, topology='{self.topology}', format='{self.format}', "
@@ -140,13 +155,15 @@ class FMTFile:
     def get_dtype(self):
         fields = []
         for elemnt in self.elements:
-            # print("element: "+ elemnt.ElementName)
+            # Numpy类型由Format决定，此时即使是WWMI的特殊R8_UINT也能得到正确的numpy.uint8
             numpy_type = FormatUtils.get_nptype_from_format(elemnt.Format)
-            size = FormatUtils.format_components(elemnt.Format)
 
+            # 这里我们用ByteWidth / numpy_type.itemsize 得到总的维度数量，也就是列数
+            size = int( elemnt.ByteWidth / numpy.dtype(numpy_type).itemsize)
+
+            # print("element: "+ elemnt.ElementName)
             # print(numpy_type)
             # print(size)
-
             fields.append((elemnt.ElementName,numpy_type , size))
         dtype = numpy.dtype(fields)
         return dtype

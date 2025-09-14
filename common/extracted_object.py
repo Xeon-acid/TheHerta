@@ -5,8 +5,26 @@ from typing import List, Dict, Union
 from dataclasses import dataclass, field, asdict
 
 from ..utils.format_utils import Fatal
+from enum import Enum
+
+    
+@dataclass
+class ExtractedObjectBufferSemantic:
+    name: str
+    index: int
+    format: str
+    stride: int = 0
+
+    def __post_init__(self):
+        if self.stride == 0:
+            self.stride = self.format.byte_width
+
+@dataclass
+class ExtractedObjectBuffer:
+    semantics: List[ExtractedObjectBufferSemantic]
 
 
+    
 @dataclass
 class ExtractedObjectComponent:
     vertex_offset: int
@@ -35,6 +53,7 @@ class ExtractedObject:
     index_count: int
     components: List[ExtractedObjectComponent]
     shapekeys: ExtractedObjectShapeKeys
+    export_format: Dict[str, ExtractedObjectBuffer]
 
     def __post_init__(self):
         if isinstance(self.shapekeys, dict):

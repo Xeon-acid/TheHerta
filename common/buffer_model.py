@@ -76,8 +76,7 @@ class BufferModel:
         for d3d11_element_name in self.d3d11GameType.OrderedFullElementList:
             d3d11_element = self.d3d11GameType.ElementNameD3D11ElementDict[d3d11_element_name]
             np_type = FormatUtils.get_nptype_from_format(d3d11_element.Format)
-            format_len = FormatUtils.format_components(d3d11_element.Format)
-
+            format_len = d3d11_element.ByteWidth
             # 因为YYSLS出现了多个BLENDWEIGHTS的情况，所以这里只能用这个StartWith判断
             if d3d11_element_name.startswith("BLENDWEIGHT"):
                 blendweights_formatlen = format_len
