@@ -305,8 +305,10 @@ class MeshImporter:
         '''
         component: 如果是一键导入WWMI的模型则不为None，其它情况默认为None
         '''
-        print(blend_indices[0][0])
-        print(blend_indices[0][1])
+
+        # 注意，这里的打印，如果是CPU类型则会直接报错，不是测试时期不要开启
+        # print(blend_indices[0][0])
+        # print(blend_indices[0][1])
         '''
         这里的处理是很必要的，因为如果BLENDINDICES的格式是R16G16B16A16_UINT，那么长度为8
         此时游戏中可能会出现值为FF FF 的无效索引表示，虽然在HLSL中表示无效索引，但是导入进来之后，按照R16G16B16A16_UINT来解析就是65535
