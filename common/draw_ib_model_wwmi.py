@@ -3,7 +3,7 @@ import struct
 import re
 import copy
 
-from ..common.m_export import get_buffer_ib_vb_fast
+from ..common.m_export import MeshExporter
 
 from ..common.migoto_format import *
 
@@ -111,7 +111,7 @@ class DrawIBModelWWMI:
         bpy.context.view_layer.objects.active = merged_obj
         
         # 计算得到MergedObj的IndexBuffer和CategoryBuffer
-        ib, category_buffer_dict,index_vertex_id_dict = get_buffer_ib_vb_fast(self.d3d11GameType)
+        ib, category_buffer_dict,index_vertex_id_dict = MeshExporter.get_buffer_ib_vb_fast(self.d3d11GameType)
         # 写出到文件
         self.write_out_index_buffer(ib=ib)
         self.write_out_category_buffer(category_buffer_dict=category_buffer_dict)

@@ -10,8 +10,7 @@ from ..utils.translate_utils import TR
 
 from ..config.main_config import GlobalConfig, LogicName
 
-from ..common.migoto_format import MigotoBinaryFile
-from ..common.mesh_importer import MeshImporter
+from ..common.mesh_importer import MeshImporter,MigotoBinaryFile
 
 # 用于解决 AttributeError: 'IMPORT_MESH_OT_migoto_raw_buffers_mmt' object has no attribute 'filepath'
 from bpy_extras.io_utils import ImportHelper 
@@ -72,8 +71,8 @@ class Import3DMigotoRaw(bpy.types.Operator, ImportHelper):
                     if filename.endswith(".fmt"):
                         import_filename_list.append(filename)
         else:
-            for fmtfile in self.files:
-                import_filename_list.append(fmtfile.name)
+            for fmt_file in self.files:
+                import_filename_list.append(fmt_file.name)
 
         # 逐个fmt文件导入
         for fmt_file_name in import_filename_list:

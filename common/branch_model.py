@@ -8,7 +8,7 @@ from ..utils.config_utils import ConfigUtils
 
 from ..common.migoto_format import M_Key, ObjDataModel, M_Condition, D3D11GameType
 
-from ..common.m_export import get_buffer_ib_vb_fast
+from ..common.m_export import MeshExporter
 
 
 
@@ -274,7 +274,7 @@ class BranchModel:
                         ObjUtils.normalize_all(obj)
 
                 # print("DrawIB BranchModel")
-                ib, category_buffer_dict, index_vertex_id_dict = get_buffer_ib_vb_fast(d3d11_game_type)
+                ib, category_buffer_dict, index_vertex_id_dict = MeshExporter.get_buffer_ib_vb_fast(d3d11_game_type)
 
                 # print(len(category_buffer_dict["Blend"]))
                 # print(len(index_vertex_id_dict))

@@ -3,8 +3,6 @@ import struct
 import re
 import copy
 
-from ..common.m_export import get_buffer_ib_vb_fast
-
 from ..common.migoto_format import *
 
 from ..utils.config_utils import ConfigUtils
