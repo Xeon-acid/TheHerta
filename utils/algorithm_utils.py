@@ -87,8 +87,7 @@ class AlgorithmUtils:
     def smooth_normal_save_to_uv(cls):
         mesh = bpy.context.active_object.data
         uvdata = mesh.uv_layers.active.data
-
-        # TODO 这里只计算一个UV和不填任何参数结果有什么区别？需要测试
+        
         mesh.calc_tangents(uvmap="TEXCOORD.xy")
         # mesh.calc_tangents()
 

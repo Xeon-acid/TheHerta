@@ -196,7 +196,7 @@ class FormatUtils:
     @classmethod
     def convert_4x_float32_to_r8g8b8a8_snorm(cls, input_array):
         '''
-        TODO 疑似有问题
+        这里听了DeepSeek的建议改成这样了，也许可以避免某些问题
         '''
         arr = numpy.asarray(input_array, dtype=numpy.float32)
         # 1. 钳位到 [-1, 1]

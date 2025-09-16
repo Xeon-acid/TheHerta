@@ -57,10 +57,6 @@ class BufferModel:
         '''
         - 注意这里是从mesh.loops中获取数据，而不是从mesh.vertices中获取数据
         - 所以后续使用的时候要用mesh.loop里的索引来进行获取数据
-
-        TODO 
-        目前的权重导出架构，无法处理存在多个BLENDWEIGHTS的清空
-        需要重新开发权重导出代码
         '''
 
         mesh_loops = mesh.loops
@@ -241,10 +237,6 @@ class BufferModel:
                 if GlobalConfig.logic_name == LogicName.YYSLS:
                     # 燕云十六声的TANGENT.w固定为1
                     tangent_w = numpy.ones(mesh_loops_length, dtype=numpy.float32)
-                    # TODO 这里仍然不知道是什么，可能是平滑法线？
-                    # result[0::4] *= -1
-                    # result[1::4] *= -1
-                    # result[2::4] *= -1
                     result[3::4] = tangent_w
                 elif GlobalConfig.logic_name == LogicName.WutheringWaves:
                     # Unreal引擎中这里要填写固定的1

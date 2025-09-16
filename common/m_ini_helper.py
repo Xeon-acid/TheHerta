@@ -305,10 +305,7 @@ class M_IniHelperV3:
             for i in range(M_GlobalKeyCounter.generated_mod_number):
                 present_section.append("post $active" + str(i) + " = 0")
             ini_builder.append_section(present_section)
-
-
-        # TODO 这里的condition = 有一定的几率和声明的active对不上。
-
+        
         key_number = 0
         if len(key_name_mkey_dict.keys()) != 0:
 

@@ -186,8 +186,6 @@ class ModModelWWMI:
             commandlist_section.new_line()
 
 
-
-
         # TODO ShapeKey的CommandList只有在ShapeKey存在时才加入，物体Mod不加入
         # CommandListSetupShapeKeys
         commandlist_section.append("[CommandListSetupShapeKeys]")
@@ -219,7 +217,7 @@ class ModModelWWMI:
     def add_resource_mod_info_section_default(self,ini_builder:M_IniBuilder,draw_ib_model:DrawIBModelWWMI):
         '''
         这里第一个版本我们暂时不提供可以指定Mod信息的功能，所以全部都用的是默认的值
-        TODO 这个可以放入M_IniHelper中
+        # TODO 这个可以放入M_IniHelper中，等后面添加了Mod作者信息之后再搞
         '''
         resource_mod_info_section = M_IniSection(M_SectionType.ResourceModInfo)
 

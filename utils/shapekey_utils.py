@@ -296,7 +296,6 @@ class ShapeKeyUtils:
         shapekey_cache = {}
         shapekey_pattern = re.compile(r'.*(?:deform|custom)[_ -]*(\d+).*')
 
-        # TODO 这里的形态键是不是忘了排序？这里不排序是否影响？
         # 处理每个形态键
         for shapekey in mesh_shapekeys.key_blocks:
             # 跳过基础形态键

@@ -384,7 +384,7 @@ class MeshImporter:
         设置导入时的初始属性
         '''
         # 设置默认不重计算TANGNET和COLOR
-        # TODO 这里每个游戏的属性都不一样，后面拆分为不同游戏的流程。
+        # 这里每个游戏的属性都不一样，所以预设为False，让用户自己选择是否启用
         obj["3DMigoto:RecalculateTANGENT"] = False
         obj["3DMigoto:RecalculateCOLOR"] = False
         # 设置GameTypeName，方便在Catter的Properties面板中查看
@@ -526,7 +526,7 @@ class MeshImporter:
             arr = numpy.where(arr == 65535, -1, arr)
             blend_indices[semantic_index] = arr  # 或 .tolist() 如果后面要用 list
         
-        
+
 
 
         assert (len(blend_indices) == len(blend_weights))
