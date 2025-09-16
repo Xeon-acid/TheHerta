@@ -72,11 +72,17 @@ class BufferModel:
 
         self.dtype = numpy.dtype([])
 
+        # 预设的权重个数，也就是每个顶点组受多少个权重影响
+        blend_size = 4
+
         for d3d11_element_name in self.d3d11GameType.OrderedFullElementList:
             d3d11_element = self.d3d11GameType.ElementNameD3D11ElementDict[d3d11_element_name]
             np_type = FormatUtils.get_nptype_from_format(d3d11_element.Format)
 
             format_len = int(d3d11_element.ByteWidth / numpy.dtype(np_type).itemsize)
+
+            if d3d11_element_name.startswith("BLENDINDICES") or d3d11_element_name.startswith("BLENDWEIGHT"):
+                blend_size = format_len
 
             # XXX 长度为1时必须手动指定为(1,)否则会变成1维数组
             if format_len == 1:
@@ -97,7 +103,10 @@ class BufferModel:
 
         if GlobalConfig.logic_name == LogicName.WutheringWaves:
             print("鸣潮专属测试版权重处理：")
-            blendweights_dict, blendindices_dict = VertexGroupUtils.get_blendweights_blendindices_v4(mesh=mesh,normalize_weights = normalize_weights)
+            blendweights_dict, blendindices_dict = VertexGroupUtils.get_blendweights_blendindices_v4(mesh=mesh,normalize_weights = normalize_weights,blend_size=blend_size)
+        elif GlobalConfig.logic_name == LogicName.SnowBreak:
+            print("尘白禁区权重处理")
+            blendweights_dict, blendindices_dict = VertexGroupUtils.get_blendweights_blendindices_v4(mesh=mesh,normalize_weights = normalize_weights,blend_size=blend_size)
         else:
             blendweights_dict, blendindices_dict = VertexGroupUtils.get_blendweights_blendindices_v3(mesh=mesh,normalize_weights = normalize_weights)
 

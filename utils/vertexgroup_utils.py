@@ -467,7 +467,7 @@ class VertexGroupUtils:
 
 
     @classmethod
-    def get_blendweights_blendindices_v4(cls, mesh, normalize_weights: bool = False):
+    def get_blendweights_blendindices_v4(cls, mesh, normalize_weights: bool = False,blend_size = 4):
         """
         目前只有鸣潮在使用，尚未在其它游戏中进行测试
         TODO 需要测试其它游戏是否兼容。
@@ -496,6 +496,9 @@ class VertexGroupUtils:
         real_max_groups = max(len(gw) for gw in vert_groups_weights) if vert_groups_weights else 0
         # 补齐到 4 的倍数
         aligned_max_groups = 4 * math.ceil(real_max_groups / 4) if real_max_groups else 4
+
+        if aligned_max_groups < blend_size:
+            aligned_max_groups = blend_size
 
         # -------------------- 3. 一次性申请对齐后的 ndarray --------------------
         # 所有顶点一起存，方便后面用高级索引一次性映射到 loop
