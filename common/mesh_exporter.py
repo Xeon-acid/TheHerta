@@ -1,25 +1,17 @@
 import bpy
-import bpy
 import numpy
 import collections
-
-from ..common.migoto_format import D3D11GameType,ObjDataModel
 
 from ..utils.format_utils import FormatUtils, Fatal
 from ..utils.timer_utils import TimerUtils
 from ..utils.vertexgroup_utils import VertexGroupUtils
+from ..utils.obj_utils import ObjUtils
 
 from ..config.main_config import GlobalConfig, LogicName
 from ..config.properties_import_model import Properties_ImportModel
 from ..config.properties_generate_mod import Properties_GenerateMod
 
-from ..utils.obj_utils import ObjUtils
-
-from ..common.migoto_format import D3D11GameType,ObjDataModel
-from ..config.main_config import GlobalConfig, LogicName
-from ..utils.timer_utils import TimerUtils
-
-
+from .migoto_format import D3D11GameType,ObjDataModel
 
 class BufferModel:
     '''

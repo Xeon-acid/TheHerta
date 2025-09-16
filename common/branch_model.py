@@ -8,7 +8,7 @@ from ..utils.config_utils import ConfigUtils
 
 from ..common.migoto_format import M_Key, ObjDataModel, M_Condition, D3D11GameType
 
-from ..common.m_export import MeshExporter
+from .mesh_exporter import MeshExporter
 
 
 

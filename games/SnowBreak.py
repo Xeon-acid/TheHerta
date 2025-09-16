@@ -155,7 +155,7 @@ class ModModelSnowBreak:
 
             # add slot check
             if not Properties_GenerateMod.forbid_auto_texture_ini():
-                slot_texture_replace_dict:dict[str,TextureReplace] = draw_ib_model.PartName_SlotTextureReplaceDict_Dict.get(part_name,None)
+                slot_texture_replace_dict:dict[str,TextureReplace] = draw_ib_model.import_config.PartName_SlotTextureReplaceDict_Dict.get(part_name,None)
                 # It may not have auto texture
                 if slot_texture_replace_dict is not None:
                     for slot,texture_replace in slot_texture_replace_dict.items():
@@ -175,7 +175,7 @@ class ModModelSnowBreak:
 
             # Add slot style texture slot replace.
             if not Properties_GenerateMod.forbid_auto_texture_ini():
-                slot_texture_replace_dict:dict[str,TextureReplace] = draw_ib_model.PartName_SlotTextureReplaceDict_Dict.get(part_name,None)
+                slot_texture_replace_dict:dict[str,TextureReplace] = draw_ib_model.import_config.PartName_SlotTextureReplaceDict_Dict.get(part_name,None)
                 # It may not have auto texture
                 if slot_texture_replace_dict is not None:
                     for slot,texture_replace in slot_texture_replace_dict.items():
@@ -297,7 +297,7 @@ class ModModelSnowBreak:
             return 
         
         resource_texture_section = M_IniSection(M_SectionType.ResourceTexture)
-        for resource_name, texture_filename in draw_ib_model.TextureResource_Name_FileName_Dict.items():
+        for resource_name, texture_filename in draw_ib_model.import_config.TextureResource_Name_FileName_Dict.items():
             if "_Slot_" in texture_filename:
                 resource_texture_section.append("[" + resource_name + "]")
                 resource_texture_section.append("filename = Texture/" + texture_filename)
@@ -379,7 +379,7 @@ class ModModelSnowBreak:
 
         filter_index_count = 0
         for draw_ib, draw_ib_model in self.drawib_drawibmodel_dict.items():
-            for partname,slot_texture_replace_dict in draw_ib_model.PartName_SlotTextureReplaceDict_Dict.items():
+            for partname,slot_texture_replace_dict in draw_ib_model.import_config.PartName_SlotTextureReplaceDict_Dict.items():
                 for slot, texture_replace in slot_texture_replace_dict.items():
                     if texture_replace.hash in self.texture_hash_filter_index_dict:
                         continue

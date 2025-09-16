@@ -3,7 +3,7 @@ import struct
 import re
 import copy
 
-from ..common.m_export import MeshExporter
+from .mesh_exporter import MeshExporter
 
 from ..common.migoto_format import *
 

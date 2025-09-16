@@ -42,12 +42,8 @@ class DrawIBModel:
         self.draw_ib_alias = draw_ib_alias_name_dict.get(draw_ib,draw_ib)
 
         # (2) 读取工作空间中配置文件的配置项
-        # TODO 这里的PartName_SlotTextureReplaceDict_Dict和TextureResource_Name_FileName_Dict
-        # 可以隐含到import_config中，无需再次声明
         self.import_config = ImportConfig(draw_ib=self.draw_ib)
         self.d3d11GameType:D3D11GameType = self.import_config.d3d11GameType
-        self.PartName_SlotTextureReplaceDict_Dict = self.import_config.PartName_SlotTextureReplaceDict_Dict
-        self.TextureResource_Name_FileName_Dict = self.import_config.TextureResource_Name_FileName_Dict
 
         '''
         这里是要得到每个Component对应的obj_data_model列表
