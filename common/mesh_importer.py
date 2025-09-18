@@ -137,7 +137,6 @@ class FMTFile:
         return dtype
 
 
-
 class MigotoBinaryFile:
 
     '''
@@ -256,6 +255,9 @@ class MeshImporter:
         use_normals = False
         normals = []
 
+
+
+
         for element in mbf.fmt_file.elements:
             data = mbf.vb_data[element.ElementName]
 
@@ -287,7 +289,7 @@ class MeshImporter:
                 for l in mesh.loops:
                     color_layer[l.index].color = list(data[l.vertex_index]) + [0] * (4 - len(data[l.vertex_index]))
                 
-            elif element.SemanticName.startswith("BLENDINDICES"):
+            elif element.SemanticName == "BLENDINDICES":
                 if data.ndim == 1:
                     # 如果data是一维数组，转换为包含元组的2D数组，用于处理只有一个R32_UINT的情况
                     data_2d = numpy.array([(x,) for x in data])
@@ -295,11 +297,12 @@ class MeshImporter:
                 else:
                     blend_indices[element.SemanticIndex] = data
                 # print("Import BLENDINDICES Shape: " + str(blend_indices[element.SemanticIndex].shape))
-                
-            elif element.SemanticName.startswith("BLENDWEIGHT"):
+            
+            # 因为历史遗留问题，部分名为BLENDWEIGHT部分名为BLENDWEIGHTS，所以这里俩都判断
+            # 而由于YYSLS中出现了BLENDWEIGHTEXT，BLENDINDICESEXT，所以不能用StartsWith("BLENDWEIGHT")来判断
+            elif element.SemanticName == "BLENDWEIGHT" or element.SemanticName == "BLENDWEIGHTS":
                 blend_weights[element.SemanticIndex] = data
                 # print("Import BLENDWEIGHT Shape: " + str(blend_indices[element.SemanticIndex].shape))
-
             elif element.SemanticName.startswith("TEXCOORD"):
                 texcoords[element.SemanticIndex] = data
             elif element.SemanticName.startswith("SHAPEKEY"):
@@ -353,8 +356,8 @@ class MeshImporter:
                     partname_count = int(mbf.mesh_name.split("-")[1]) - 1
                     print("import partname count: " + str(partname_count))
                     component = extracted_object.components[partname_count]
-        print(len(blend_indices))
-        print(len(blend_weights))
+        # print(len(blend_indices))
+        # print(len(blend_weights))
 
         print("导入顶点组")
         MeshImporter.import_vertex_groups(mesh, obj, blend_indices, blend_weights, component)
@@ -510,8 +513,11 @@ class MeshImporter:
         '''
 
         # 注意，这里的打印，如果是CPU类型则会直接报错，不是测试时期不要开启
-        # print(blend_indices[0][0])
-        # print(blend_indices[0][1])
+        # if len(blend_indices) > 0:
+        #     print(blend_indices[0][0])
+        #     print(blend_indices[0][1])
+        #     LOG.newline()
+
         '''
         这里的处理是很必要的，因为如果BLENDINDICES的格式是R16G16B16A16_UINT，那么长度为8
         此时游戏中可能会出现值为FF FF 的无效索引表示，虽然在HLSL中表示无效索引，但是导入进来之后，按照R16G16B16A16_UINT来解析就是65535
@@ -525,8 +531,6 @@ class MeshImporter:
             arr = numpy.array(bone_indices_list)
             arr = numpy.where(arr == 65535, -1, arr)
             blend_indices[semantic_index] = arr  # 或 .tolist() 如果后面要用 list
-        
-
 
 
         assert (len(blend_indices) == len(blend_weights))

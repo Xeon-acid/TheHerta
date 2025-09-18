@@ -4,7 +4,7 @@
 from .ui.panel_ui import * 
 from .ui.panel_model_ui import *
 from .ui.collection_rightclick_ui import *
-
+from .ui.import_texture_ui import *
 from .ui.export_ui import SSMTGenerateMod, PanelGenerateModConfig
 from .ui.import_ui import Import3DMigotoRaw, SSMTImportAllFromCurrentWorkSpaceV3, PanelModelImportConfig
 
@@ -30,7 +30,7 @@ bl_info = {
     "name": "TheHerta",
     "description": "TheHerta",
     "blender": (4, 5, 3),
-    "version": (2, 1, 6),
+    "version": (2, 1, 7),
     "location": "View3D",
     "category": "Generic"
 }
@@ -167,10 +167,21 @@ register_classes = (
 
     HertaUpdatePreference,
     UpdaterPanel,
+
+    SSMT_ImportTexture_IMAGE_UL_List,
+    SSMT_ImportTexture_ImageListItem,
+    SSMT_ImportTexture_VIEW3D_PT_ImageMaterialPanel,
+    SSMT_ImportTexture_WM_OT_ApplyImageToMaterial,
+    SSMT_ImportTexture_WM_OT_RefreshPreviews,
+    SSMT_ImportTexture_WM_OT_SelectImageFolder,
+    SSMT_ImportTexture_WM_OT_AutoDetectTextureFolder
 )
 
 
 def register():
+    # 创建预览集合
+    pcoll = bpy.utils.previews.new()
+    preview_collections["main"] = pcoll
 
     for cls in register_classes:
         bpy.utils.register_class(cls)
@@ -210,12 +221,28 @@ def register():
         'POST_PIXEL'
     )
 
+    # 在场景属性中存储图片列表和索引
+    bpy.types.Scene.image_list = CollectionProperty(type=SSMT_ImportTexture_ImageListItem)
+    bpy.types.Scene.image_list_index = IntProperty(default=0)
+
 
 
 
 def unregister():
+
+    # 清除预览集合
+    for pcoll in preview_collections.values():
+        bpy.utils.previews.remove(pcoll)
+    preview_collections.clear()
+
     for cls in reversed(register_classes):
         bpy.utils.unregister_class(cls)
+    
+    # 删除场景属性
+    del bpy.types.Scene.image_list
+    del bpy.types.Scene.image_list_index
+
+
 
     addon_updater_ops.unregister()
 
