@@ -30,7 +30,7 @@ bl_info = {
     "name": "TheHerta",
     "description": "TheHerta",
     "blender": (4, 5, 3),
-    "version": (2, 1, 7),
+    "version": (2, 1, 8),
     "location": "View3D",
     "category": "Generic"
 }

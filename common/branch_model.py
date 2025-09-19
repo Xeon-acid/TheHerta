@@ -206,7 +206,7 @@ class BranchModel:
                 # for chain_key in chain_key_list:
                     # print(chain_key)
 
-                obj_model = ObjDataModel(obj_name=obj.data.name)
+                obj_model = ObjDataModel(obj_name=obj.name)
                 obj_model.condition = M_Condition(work_key_list=copy.deepcopy(chain_key_list)) 
 
                 # 这里每遇到一个obj，都把这个obj加入顺序渲染列表
