@@ -661,6 +661,10 @@ class MeshImporter:
 
                     # 因为tga格式贴图有alpha通道，所以必须用CHANNEL_PACKED才能显示正常颜色
                     tex_image.image.alpha_mode = "CHANNEL_PACKED"
+
+                    # 放置节点位置
+                    tex_image.location.x = bsdf.location.x - 400
+                    tex_image.location.y = bsdf.location.y
                 
                     # 链接Color到基础色
                     material.node_tree.links.new(bsdf.inputs['Base Color'], tex_image.outputs['Color'])
